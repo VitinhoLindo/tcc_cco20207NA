@@ -110,3 +110,30 @@
     </tr>
   </tbody>
 </table>
+
+<h4>Software edição de texto</h4>
+
+<table style="text-align:center;border:1px solid;">
+  <thead>
+    <tr>
+      <th>Software</th>
+      <th>Site</th>
+      <th>Open Source</th>
+      <th>Link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Visual Studio Code</td>
+      <td><a href="https://code.visualstudio.com/download">aqui</a></td>
+      <td>sim</td>
+      <td style="text-align:left;">https://code.visualstudio.com/download</td>
+    </tr>
+    <tr>
+      <td>Visual Studio Code Comunity</td>
+      <td><a href="https://visualstudio.microsoft.com/pt-br/vs/">aqui</a></td>
+      <td>sim</td>
+      <td style="text-align:left;">https://visualstudio.microsoft.com/pt-br/vs/</td>
+    </tr>
+  </tbody>
+</table>
