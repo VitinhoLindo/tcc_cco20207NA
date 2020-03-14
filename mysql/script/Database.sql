@@ -1,0 +1,3 @@
+DROP DATABASE `Focalli`;
+CREATE DATABASE IF NOT EXISTS `Focalli` CHAR SET 'utf8';
+USE `Focalli`;
