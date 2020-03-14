@@ -130,7 +130,7 @@
       <td style="text-align:left;">https://code.visualstudio.com/download</td>
     </tr>
     <tr>
-      <td>Visual Studio Code Comunity</td>
+      <td>Visual Studio 2019 Comunity</td>
       <td><a href="https://visualstudio.microsoft.com/pt-br/vs/">aqui</a></td>
       <td>sim</td>
       <td style="text-align:left;">https://visualstudio.microsoft.com/pt-br/vs/</td>
