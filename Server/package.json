@@ -4,7 +4,7 @@
   "description": "Projeto TCC 2020 7 Período",
   "main": "index.js",
   "scripts": {
-    "test": "nodemon index.js"
+    "serve": "nodemon index.js"
   },
   "author": "victorpsf@hotmail.com",
   "license": "ISC",
