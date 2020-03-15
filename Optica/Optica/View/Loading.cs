@@ -8,18 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Optica
+namespace Optica.View
 {
-    public partial class Form1 : Form
+    public partial class Loading : Form
     {
-        public Form1()
+        public Loading()
         {
             InitializeComponent();
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

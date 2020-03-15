@@ -2,8 +2,8 @@ F:\Optica\Optica\bin\Debug\Optica.exe.config
 F:\Optica\Optica\bin\Debug\Optica.exe
 F:\Optica\Optica\bin\Debug\Optica.pdb
 F:\Optica\Optica\obj\Debug\Optica.csprojAssemblyReference.cache
-F:\Optica\Optica\obj\Debug\Optica.Form1.resources
 F:\Optica\Optica\obj\Debug\Optica.Properties.Resources.resources
 F:\Optica\Optica\obj\Debug\Optica.csproj.GenerateResource.cache
 F:\Optica\Optica\obj\Debug\Optica.exe
 F:\Optica\Optica\obj\Debug\Optica.pdb
+F:\Optica\Optica\obj\Debug\Optica.AcessoSistema.resources
