@@ -14,27 +14,31 @@ namespace Optica.Services
     class AcessoSistemaService
     {
         private HttpClient httpClient = new HttpClient();
-        private string loginUserUrl = "";
+        private string loginUserUrl = "http://10.0.0.106:80/";
 
-        public AcessoSistema AcessarSistema(AcessoSistema model)
+        public AcessoSistemaService()
         {
-            Task<AcessoSistema> response = this.PostAcessoSistema(model);
-            response.Wait();
-
-            return response.Result;
         }
 
-        private async Task<AcessoSistema> PostAcessoSistema(AcessoSistema model)
+        public object AcessarSistema(AcessoSistema model)
         {
-            var response = await this.httpClient.PostAsJsonAsync(this.loginUserUrl, model);
-            MessageBox.Show(response.ToString());
-            //
-            //HttpResponseMessage response = await this.httpClient.Po;
-            //HttpRequestMessage response = await this.httpClient.PostAsJsonAsync("", model);
-            //HttpResponseMessage response = await this.httpClient.
-            //(new Uri(this.loginUser), model);
+            return this.PostAcessoSistema(model);
+        }
 
-            return new AcessoSistema("abc", "cde");
+        private object PostAcessoSistema(AcessoSistema model)
+        {
+            this.httpClient.BaseAddress = new Uri(this.loginUserUrl);
+            this.httpClient.DefaultRequestHeaders.Accept.Clear();
+            this.httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            HttpResponseMessage response = this.httpClient.PostAsJsonAsync("api/v1/user/", model).Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                return response.Content.ReadAsAsync<object>().Result;
+            }
+
+            return null;
         }
     }
 }

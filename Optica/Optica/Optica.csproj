@@ -77,11 +77,11 @@
     <Compile Include="Model\PessoaFisica.cs" />
     <Compile Include="Services\AcessoSistemaService.cs" />
     <Compile Include="Services\Requests.cs" />
-    <Compile Include="View\AcessoSistema.cs">
+    <Compile Include="View\AcessoSistemaForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\AcessoSistema.Designer.cs">
-      <DependentUpon>AcessoSistema.cs</DependentUpon>
+    <Compile Include="View\AcessoSistemaForm.Designer.cs">
+      <DependentUpon>AcessoSistemaForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -91,8 +91,8 @@
     <Compile Include="View\Loading.Designer.cs">
       <DependentUpon>Loading.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="View\AcessoSistema.resx">
-      <DependentUpon>AcessoSistema.cs</DependentUpon>
+    <EmbeddedResource Include="View\AcessoSistemaForm.resx">
+      <DependentUpon>AcessoSistemaForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -7,6 +7,7 @@ class Util extends Config {
     super();
     this.Express = require('express')();
     this.Router = Router();
+    this.BodyParser = require('body-parser');
     this.request = request;
     this.response = response;
     this.Server = Http.createServer({}, this.Express);

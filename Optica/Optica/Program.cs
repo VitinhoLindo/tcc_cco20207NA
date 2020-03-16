@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Optica
+namespace Optica.View
 {
     static class Program
     {
@@ -16,7 +16,7 @@ namespace Optica
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new AcessoSistema());
+            Application.Run(new AcessoSistemaForm());
         }
     }
 }

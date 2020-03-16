@@ -16,5 +16,10 @@ namespace Optica.View
         {
             InitializeComponent();
         }
+
+        public void progress(int progress)
+        {
+            this.progressBar1.Value = progress;
+        }
     }
 }

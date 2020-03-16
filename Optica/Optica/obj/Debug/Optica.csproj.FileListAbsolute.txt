@@ -6,4 +6,10 @@ F:\Optica\Optica\obj\Debug\Optica.Properties.Resources.resources
 F:\Optica\Optica\obj\Debug\Optica.csproj.GenerateResource.cache
 F:\Optica\Optica\obj\Debug\Optica.exe
 F:\Optica\Optica\obj\Debug\Optica.pdb
-F:\Optica\Optica\obj\Debug\Optica.AcessoSistema.resources
+F:\Optica\Optica\obj\Debug\Optica.View.Loading.resources
+F:\Optica\Optica\bin\Debug\System.Net.Http.Extensions.dll
+F:\Optica\Optica\bin\Debug\System.Net.Http.Formatting.dll
+F:\Optica\Optica\bin\Debug\System.Net.Http.Primitives.dll
+F:\Optica\Optica\bin\Debug\Newtonsoft.Json.dll
+F:\Optica\Optica\obj\Debug\Optica.csproj.CopyComplete
+F:\Optica\Optica\obj\Debug\Optica.View.AcessoSistemaForm.resources

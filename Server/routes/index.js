@@ -5,13 +5,12 @@ class Router extends Kernel {
   constructor() {
     super();
     this.Api = new Api;
-  }
 
-  async apiListen() {
-    this.Express.post('/', this.Api.Post);
-    this.Express.get('/', this.Api.Get);
-    this.Express.put('/', this.Api.Put);
-    this.Express.delete('/', this.Api.Delete);
+    this.Express.use(this.BodyParser.json());
+    this.Express.use(this.BodyParser.urlencoded({ extended: true }));
+    this.Express.use(this.Api.setHeader);
+    this.Express.route('/api/v1/user')
+      .post(this.Api.getUser);
   }
 }
 
