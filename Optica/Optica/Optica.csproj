@@ -76,7 +76,7 @@
     <Compile Include="Model\Funcionario.cs" />
     <Compile Include="Model\PessoaFisica.cs" />
     <Compile Include="Services\AcessoSistemaService.cs" />
-    <Compile Include="Services\Requests.cs" />
+    <Compile Include="Services\RequestService.cs" />
     <Compile Include="View\AcessoSistemaForm.cs">
       <SubType>Form</SubType>
     </Compile>

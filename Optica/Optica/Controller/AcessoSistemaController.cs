@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Optica.Model;
 using Optica.Services;
 using Optica.View;
+using System.Windows.Forms;
 
 
 namespace Optica.Controller
@@ -40,8 +41,7 @@ namespace Optica.Controller
             //this.loading.progress(99);
             //this.loading;
             //this.acesso = new AcessoSistema(login, senha);
-            //object responseApi = service.AcessarSistema(this.acesso);
-
+            object responseApi = service.AcessarSistema(this.acesso);
             //for (int x = 0; x < 1000000000; x++) ;
 
 

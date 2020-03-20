@@ -1,1 +1,2 @@
-sudo systemctl stop apache2 && sudo npm run serve
+sudo systemctl stop apache2
+sudo npm run serve

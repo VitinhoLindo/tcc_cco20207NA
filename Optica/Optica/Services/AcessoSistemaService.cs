@@ -11,11 +11,8 @@ using System.Windows.Forms;
 
 namespace Optica.Services
 {
-    class AcessoSistemaService
+    class AcessoSistemaService : RequestService
     {
-        private HttpClient httpClient = new HttpClient();
-        private string loginUserUrl = "http://10.0.0.106:80/";
-
         public AcessoSistemaService()
         {
         }
@@ -27,11 +24,11 @@ namespace Optica.Services
 
         private object PostAcessoSistema(AcessoSistema model)
         {
-            this.httpClient.BaseAddress = new Uri(this.loginUserUrl);
-            this.httpClient.DefaultRequestHeaders.Accept.Clear();
-            this.httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            this.Request.BaseAddress = this.Url;
+            this.Request.DefaultRequestHeaders.Accept.Clear();
+            this.Request.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            HttpResponseMessage response = this.httpClient.PostAsJsonAsync("api/v1/user/", model).Result;
+            HttpResponseMessage response = this.Request.PostAsJsonAsync("api/v1/user/", model).Result;
 
             if (response.IsSuccessStatusCode)
             {
