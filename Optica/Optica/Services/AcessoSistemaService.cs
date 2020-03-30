@@ -13,10 +13,6 @@ namespace Optica.Services
 {
     class AcessoSistemaService : RequestService
     {
-        public AcessoSistemaService()
-        {
-        }
-
         public object AcessarSistema(AcessoSistema model)
         {
             return this.PostAcessoSistema(model);
@@ -29,7 +25,6 @@ namespace Optica.Services
             this.Request.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             HttpResponseMessage response = this.Request.PostAsJsonAsync("api/v1/user/", model).Result;
-
             if (response.IsSuccessStatusCode)
             {
                 return response.Content.ReadAsAsync<object>().Result;

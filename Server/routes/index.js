@@ -6,11 +6,12 @@ class Router extends Kernel {
     super();
     this.Api = new Api;
 
+    this.Express.use(this.Api.setHeader);
     this.Express.use(this.BodyParser.json());
     this.Express.use(this.BodyParser.urlencoded({ extended: true }));
-    this.Express.use(this.Api.setHeader);
     this.Express.route('/api/v1/user')
       .post(this.Api.getUser);
+
   }
 }
 

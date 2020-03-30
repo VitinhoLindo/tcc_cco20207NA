@@ -13,6 +13,7 @@ namespace Optica.View
 {
     public partial class AcessoSistemaForm : Form
     {
+        AcessoSistemaController controller = new AcessoSistemaController();
         public AcessoSistemaForm()
         {
             InitializeComponent();
@@ -25,8 +26,7 @@ namespace Optica.View
          */
         private void button1_Click(object sender, EventArgs e)
         {
-            AcessoSistemaController controller = new AcessoSistemaController();
-            controller.AcessarSistema(textBox1.Text, textBox2.Text);
+            this.controller.AcessarSistema(textBox1.Text, textBox2.Text);
         }
     }
 }

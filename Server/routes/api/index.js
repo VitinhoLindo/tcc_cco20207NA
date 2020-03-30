@@ -7,81 +7,101 @@ class Api extends Kernel {
   }
 
   async getUser(req = request, res = response) {
-    console.log(req.url);
-    console.log(req.body);
-    console.log(req.query);
+    try {
+      console.log(req.body);
 
-    res.json({
-      id: 1,
-      funcionario: {
-        id: 1,
-        carteiraTrabalho: 2546547894,
-        funcao: {
-          id: 1,
-          funcao: 'admin',
-          atuacao: {
-            id: 1,
-            atuacao: 'administracao'
-          },
-          nivelAcesso: 1
+      let atuacao = {
+        Id: 1,
+        Atuacao: 'administracao'
+      };
+
+      let funcao = {
+        Id: 1,
+        Funcao: 'admin',
+        Atuacao: atuacao,
+        NivelAcesso: 1
+      };
+
+      let lotacao_contato = {
+        Id: 2,
+        Email: "victorpsf2@hotmail.com",
+        EmailComplementar: "victorpsf2@gmail.com",
+        TelefoneFixo: '33447574',
+        TelefoneFixoComplementar: '33415547',
+        TelefoneMovel: '81999366708',
+        TelefoneModelComplementar: '81986186306',
+      };
+
+      let lotacao_endereco = {
+        Id: 2,
+        Cep: 53441570,
+        Pais: 'br',
+        Estado: 'pe',
+        Cidade: 'paulista',
+        Bairro: 'maranguape I',
+        Endereco: 'rua 126',
+        Complemento: '06 b'
+      };
+
+      let lotacao = {
+        Id: 1,
+        Classificacao: '',
+        Contato: lotacao_contato,
+        Endereco: lotacao_endereco,
+        Logo: null
+      };
+
+      let fardamento = {
+        Id: 1,
+        Camiseta: 'P',
+        Calca: 'P',
+        Sapato: '40',
+        InfAdicional: ""
+      };
+
+      let contato = {
+        Id: 1,
+        Email: "victorpsf2@hotmail.com",
+        EmailComplementar: "victorpsf2@gmail.com",
+        TelefoneFixo: '33447574',
+        TelefoneFixoComplementar: '33415547',
+        TelefoneMovel: '81999366708',
+        TelefoneModelComplementar: '81986186306',
+      };
+
+      let endereco = {
+        Id: 1,
+        Cep: 53441570,
+        Pais: 'br',
+        Estado: 'pe',
+        Cidade: 'paulista',
+        Bairro: 'maranguape I',
+        Endereco: 'rua 126',
+        Complemento: '06 b'
+      };
+
+      res.json({
+        Id: 1,
+        Cadastro: {
+          Id: 1,
+          CarteiraTrabalho: 2546547894,
+          Funcao: funcao,
+          Lotacao: lotacao,
+          Fardamento: fardamento,
+          Contatos: contato,
+          Enderecos: endereco
         },
-        lotacao: {
-          id: 1,
-          classificacao: '',
-          contato: {
-            id: 2,
-            email: "victorpsf2@hotmail.com",
-            emailComplementar: "victorpsf2@gmail.com",
-            telefoneFixo: '33447574',
-            telefoneFixoComplementar: '33415547',
-            telefoneMovel: '81999366708',
-            telefoneModelComplementar: '81986186306',
-          },
-          endereco: {
-            id: 2,
-            cep: 53441570,
-            pais: 'br',
-            estado: 'pe',
-            cidade: 'paulista',
-            bairro: 'maranguape I',
-            endereco: 'rua 126',
-            complemento: '06 b'
-          },
-          logo: null
-        },
-        fardamento: {
-          id: 1,
-          camiseta: 'P',
-          calca: 'P',
-          sapato: '40',
-          infAdicional: ""
-        },
-        contatos: {
-          id: 1,
-          email: "victorpsf2@hotmail.com",
-          emailComplementar: "victorpsf2@gmail.com",
-          telefoneFixo: '33447574',
-          telefoneFixoComplementar: '33415547',
-          telefoneMovel: '81999366708',
-          telefoneModelComplementar: '81986186306',
-        },
-        enderecos: {
-          id: 1,
-          cep: 53441570,
-          pais: 'br',
-          estado: 'pe',
-          cidade: 'paulista',
-          bairro: 'maranguape I',
-          endereco: 'rua 126',
-          complemento: '06 b'
-        }
-      },
-      login: 'victorpsf2',
-      senha: '10189727Jv!'
-    });
-    res.status(500);
-    res.end();
-    return true;
+        Login: 'victorpsf2',
+        Senha: '10189727Jv!'
+      });
+
+      res.status(200);
+      res.end();
+    } catch (error) {
+      console.log(error);
+      res.status(500);
+      res.end();
+    }
   }
 
   setHeader(req = request, res = response, next) {

@@ -11,7 +11,7 @@ namespace Optica.Services
     class RequestService
     {
         private HttpClient request = new HttpClient();
-        private Uri url = new Uri("http://10.0.0.106:80/");
+        private Uri url = new Uri("http://10.0.0.109:80/");
 
         public HttpClient Request
         {
