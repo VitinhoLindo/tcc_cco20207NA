@@ -1,0 +1,19 @@
+{
+  "name": "tcc",
+  "version": "0.0.4",
+  "description": "TCC OPTICA PROJETO",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pirumole/tcc_cco20207NA.git"
+  },
+  "author": "João Victor Palmeira da Silva Ferreira",
+  "email": [
+    "victorpsf2@hotmail.com",
+    "victorpsf2@gmail.com"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pirumole/tcc_cco20207NA/issues"
+  },
+  "homepage": "https://github.com/pirumole/tcc_cco20207NA#readme"
+}
