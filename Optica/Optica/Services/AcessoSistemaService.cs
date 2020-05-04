@@ -13,12 +13,12 @@ namespace Optica.Services
 {
     class AcessoSistemaService : RequestService
     {
-        public object AcessarSistema(AcessoSistema model)
+        public object AcessarSistema(Acesso model)
         {
             return this.PostAcessoSistema(model);
         }
 
-        private object PostAcessoSistema(AcessoSistema model)
+        private object PostAcessoSistema(Acesso model)
         {
             this.Request.BaseAddress = this.Url;
             this.Request.DefaultRequestHeaders.Accept.Clear();

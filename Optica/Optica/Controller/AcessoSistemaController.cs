@@ -13,46 +13,21 @@ namespace Optica.Controller
 {
     class AcessoSistemaController
     {
-        private Loading loading;
-        private AcessoSistema acesso;
+        private Acesso acesso;
 
         private Funcao getFuncao(dynamic funcao)
         {
             return null;
         }
 
-        public AcessoSistema AcessarSistema(string login, string senha)
+        public Acesso AcessarSistema(string login, string senha)
         {
-            if (login.Length <= 5 || senha.Length <= 5) 
-                return null;
-            this.loading = new Loading();
-            this.loading.Show();
-
-
-            this.loading.progress(5);
-            this.loading.progress(25);
-            this.acesso = new AcessoSistema(login, senha);
-            dynamic responseApi = (new AcessoSistemaService()).AcessarSistema(this.acesso);
-
-            //for (int x = 0; x < 1000000000; x++) ;
-
-            //this.loading.progress(63);
-
-            //for (int x = 0; x < 1000000000; x++) ;
-
-            //this.loading.progress(99);
-            //this.loading;
-
-            int id = responseApi.Id;
-            MessageBox.Show(id.ToString(), "", MessageBoxButtons.OK);
-            //for (int x = 0; x < 1000000000; x++) ;
-
-
-            //this.loading.Close();
+            dynamic responseApi = (new AcessoSistemaService()).AcessarSistema(new Acesso(login, senha));
+            //Message
             return null;
         }
 
-        public AcessoSistema Acesso
+        public Acesso Acesso
         {
             get { return this.acesso; }
             set { this.acesso = value; }
