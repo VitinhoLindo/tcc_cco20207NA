@@ -29,10 +29,12 @@ namespace Optica.View
             switch (this.formOpened)
             {
                 case "CadastroClienteForm":
+                    this.CadastroClienteForm.CloseForm();
                     this.panel2.Controls.Remove(this.CadastroClienteForm);
                     this.CadastroClienteForm.Close();
                     break;
                 case "CadastroFuncionarioForm":
+                    this.CadastroFuncionarioForm.CloseForm();
                     this.panel2.Controls.Remove(this.CadastroFuncionarioForm);
                     this.CadastroFuncionarioForm.Close();
                     break;
@@ -101,6 +103,7 @@ namespace Optica.View
                 TopLevel = false,
                 TopMost = true
             };
+
             this.panel2.Controls.Add(this.CadastroClienteForm);
             this.CadastroClienteForm.Show();
             this.formOpened = "CadastroClienteForm";

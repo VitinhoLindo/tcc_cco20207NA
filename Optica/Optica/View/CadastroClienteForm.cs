@@ -26,9 +26,9 @@ namespace Optica.View
             this.CadastroClienteController = new CadastroClienteController();
         }
 
-        private void CloseForm()
+        public void CloseForm()
         {
-            switch(this.formOpened)
+            switch (this.formOpened)
             {
                 case "ContatoForm":
                     this.ContatoForm.Close();
@@ -47,35 +47,31 @@ namespace Optica.View
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (this.formOpened != "ContatoForm")
-            {
-                this.CloseForm();
-                this.ContatoForm = new ContatoForm(this);
-                this.formOpened = "ContatoForm";
-                this.ContatoForm.Show();
-            }
+            this.CloseForm();
+            this.ContatoForm = new ContatoForm(this);
+            this.formOpened = "ContatoForm";
+            this.ContatoForm.Show();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            if (this.formOpened != "EnderecoForm")
-            {
-                this.CloseForm();
-                this.EnderecoForm = new EnderecoForm(this);
-                this.formOpened = "EnderecoForm";
-                this.EnderecoForm.Show();
-            }
+            this.CloseForm();
+            this.EnderecoForm = new EnderecoForm(this);
+            this.formOpened = "EnderecoForm";
+            this.EnderecoForm.Show();
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            if (this.formOpened != "PerfilForm")
-            {
-                this.CloseForm();
-                this.PerfilForm = new PerfilForm(this);
-                this.formOpened = "PerfilForm";
-                this.PerfilForm.Show();
-            }
+            this.CloseForm();
+            this.PerfilForm = new PerfilForm(this);
+            this.formOpened = "PerfilForm";
+            this.PerfilForm.Show();
         }
 
         public void ClearFormOpened()

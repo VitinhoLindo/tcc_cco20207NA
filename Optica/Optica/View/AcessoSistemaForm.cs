@@ -31,7 +31,7 @@ namespace Optica.View
             if (logged.status) {
                 this.Visible = !logged.status;
                 this.MainController.Menu.AcessoSistemaForm = this;
-                MessageBox.Show(logged.message, logged.head, MessageBoxButtons.OK, MessageBoxIcon.None);
+                //MessageBox.Show(logged.message, logged.head, MessageBoxButtons.OK, MessageBoxIcon.None);
                 this.MainController.Menu.Show();
             }
             else {

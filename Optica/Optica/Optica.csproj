@@ -13,6 +13,21 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -78,7 +93,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>favicon.ico</ApplicationIcon>
+    <ApplicationIcon>eye_glasses_E6B_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -148,22 +163,46 @@
     <Compile Include="View\CadastroFuncionarioForm.Designer.cs">
       <DependentUpon>CadastroFuncionarioForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\ContatoForm.cs">
+    <Compile Include="View\Components\ContatoForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\ContatoForm.Designer.cs">
+    <Compile Include="View\Components\ContatoForm.Designer.cs">
       <DependentUpon>ContatoForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\EnderecoForm.cs">
+    <Compile Include="View\Components\ContratoForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\EnderecoForm.Designer.cs">
+    <Compile Include="View\Components\ContratoForm.Designer.cs">
+      <DependentUpon>ContratoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\ContratoFuncionarioForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\ContratoFuncionarioForm.Designer.cs">
+      <DependentUpon>ContratoFuncionarioForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Components\EnderecoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Components\EnderecoForm.Designer.cs">
       <DependentUpon>EnderecoForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\Loading.cs">
+    <Compile Include="View\Components\FardamentoForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\Loading.Designer.cs">
+    <Compile Include="View\Components\FardamentoForm.Designer.cs">
+      <DependentUpon>FardamentoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Components\FuncaoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Components\FuncaoForm.Designer.cs">
+      <DependentUpon>FuncaoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Components\Loading.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Components\Loading.Designer.cs">
       <DependentUpon>Loading.cs</DependentUpon>
     </Compile>
     <Compile Include="View\MenuForm.cs">
@@ -172,10 +211,10 @@
     <Compile Include="View\MenuForm.Designer.cs">
       <DependentUpon>MenuForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\PerfilForm.cs">
+    <Compile Include="View\Components\PerfilForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\PerfilForm.Designer.cs">
+    <Compile Include="View\Components\PerfilForm.Designer.cs">
       <DependentUpon>PerfilForm.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="View\AcessoSistemaForm.resx">
@@ -197,19 +236,25 @@
     <EmbeddedResource Include="View\CadastroFuncionarioForm.resx">
       <DependentUpon>CadastroFuncionarioForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\ContatoForm.resx">
+    <EmbeddedResource Include="View\Components\ContatoForm.resx">
       <DependentUpon>ContatoForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\EnderecoForm.resx">
+    <EmbeddedResource Include="View\Components\ContratoForm.resx">
+      <DependentUpon>ContratoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\ContratoFuncionarioForm.resx">
+      <DependentUpon>ContratoFuncionarioForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Components\EnderecoForm.resx">
       <DependentUpon>EnderecoForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\Loading.resx">
+    <EmbeddedResource Include="View\Components\Loading.resx">
       <DependentUpon>Loading.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\MenuForm.resx">
       <DependentUpon>MenuForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\PerfilForm.resx">
+    <EmbeddedResource Include="View\Components\PerfilForm.resx">
       <DependentUpon>PerfilForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
@@ -236,7 +281,20 @@
     <None Include="Resources\file.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="eye_glasses_E6B_icon.ico" />
     <Content Include="favicon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.8 %28x86 e x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

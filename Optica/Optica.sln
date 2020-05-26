@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Optica", "Optica\Optica.csproj", "{A5767B76-46C6-400A-A48D-02BBE3D4D07B}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Focalli", "Optica\Installer\Focalli\Focalli.vdproj", "{4F8A8BBD-FF63-4DC2-A2F9-2EA2F63708B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,12 @@ Global
 		{A5767B76-46C6-400A-A48D-02BBE3D4D07B}.Release|x64.Build.0 = Release|x64
 		{A5767B76-46C6-400A-A48D-02BBE3D4D07B}.Release|x86.ActiveCfg = Release|x86
 		{A5767B76-46C6-400A-A48D-02BBE3D4D07B}.Release|x86.Build.0 = Release|x86
+		{4F8A8BBD-FF63-4DC2-A2F9-2EA2F63708B8}.Debug|Any CPU.ActiveCfg = Debug
+		{4F8A8BBD-FF63-4DC2-A2F9-2EA2F63708B8}.Debug|x64.ActiveCfg = Debug
+		{4F8A8BBD-FF63-4DC2-A2F9-2EA2F63708B8}.Debug|x86.ActiveCfg = Debug
+		{4F8A8BBD-FF63-4DC2-A2F9-2EA2F63708B8}.Release|Any CPU.ActiveCfg = Release
+		{4F8A8BBD-FF63-4DC2-A2F9-2EA2F63708B8}.Release|x64.ActiveCfg = Release
+		{4F8A8BBD-FF63-4DC2-A2F9-2EA2F63708B8}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
