@@ -1,0 +1,23 @@
+{
+  "name": "plataforma-servidor",
+  "version": "0.1.0",
+  "description": "plataforma web",
+  "main": "main.js",
+  "scripts": {
+    "test": "nodemon main.js"
+  },
+  "keywords": [
+    "node-plataforma"
+  ],
+  "author": [
+    "victorpsf2@hotmail.com",
+    "victorpsf2@gmail.com"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongodb": "^3.5.8",
+    "mysql": "^2.18.1"
+  }
+}
