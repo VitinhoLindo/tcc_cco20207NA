@@ -15,7 +15,7 @@ class CssController extends Storage {
 
         let filexists = await this.fileExistsSync('utf8', this._dirname_, this.dirFiles.public.dir, this.dirFiles.public.css, `/${file}`);
 
-        if (filexists.bool) {
+        if (filexists.status) {
             this.response.status(200);
             this.response.write(filexists.file);
         } else {

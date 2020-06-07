@@ -14,7 +14,7 @@ class ImageController extends Storage {
         let file = this.request.params.file;
         let fileInfo = await this.getFileInfo('binary', this._dirname_ + this.dirFiles.public.dir + this.dirFiles.public.image + `/${file}`);
 
-        if (fileInfo.bool) {
+        if (fileInfo.status) {
             this.response.status(200);
             this.response.setHeader('Content-Type', fileInfo.mimeType);
             this.response.write(fileInfo.file);

@@ -13,7 +13,7 @@ class MainController extends Storage {
     async getContent() {
         let filexists = await this.fileExistsSync('utf8', this._dirname_, this.dirFiles.public.dir, this.dirFiles.public.html, '/index.html');
 
-        if (filexists.bool) {
+        if (filexists.status) {
             this.response.status(200);
             this.response.write(filexists.file);
         } else {
