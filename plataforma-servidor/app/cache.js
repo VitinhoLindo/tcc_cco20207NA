@@ -1,6 +1,6 @@
-const Util = require('../util/util');
+const Config = require('../config/config');
 
-class Cache extends Util {
+class Cache extends Config {
     constructor() {
         super();
     }
