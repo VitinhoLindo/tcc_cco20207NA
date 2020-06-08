@@ -1,8 +1,8 @@
-const Storage = require('./storage');
+const Config = require('../config/config');
 const Api     = require('../api');
 require('dotenv').config();
 
-class App extends Storage {
+class App extends Config {
     server = null;
 
     constructor() {
@@ -11,6 +11,15 @@ class App extends Storage {
 
     requestMiddleware(request, response, next) {
         request._dirname_ = this._dirname_; 
+        // let body = '';
+
+        // request.on('data', (chunk) => {
+        //     if (chunk) body += body.toString('utf8');
+        // })
+
+        // request.on('end', () => {
+        // });
+
         next();
     }
 

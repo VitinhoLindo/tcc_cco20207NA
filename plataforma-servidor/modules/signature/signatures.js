@@ -9,6 +9,24 @@ module.exports = [
     }
   },
   {
+    byteSeq: Buffer.from([0x3c, 0x21, 0x44, 0x4f, 0x43, 0x54, 0x59, 0x50, 0x45, 0x20, 0x68, 0x74, 0x6d, 0x6c, 0x3e]),
+    extension: 'html',
+    description: 'A commonly used method of lossy compression for digital photography (image).',
+    mimeType: {
+      mime: 'text/html',
+      extensions: ['html']
+    }
+  },
+  {
+    byteSeq: Buffer.from([0x3c, 0x68, 0x74, 0x6d, 0x6c]),
+    extension: 'html',
+    description: 'A commonly used method of lossy compression for digital photography (image).',
+    mimeType: {
+      mime: 'text/html',
+      extensions: ['html']
+    }
+  },
+  {
     byteSeq: Buffer.from([0x3c, 0x73, 0x76, 0x67]),
     extension: 'svg',
     mimeType: {

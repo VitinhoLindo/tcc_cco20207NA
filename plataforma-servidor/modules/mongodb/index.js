@@ -24,6 +24,11 @@ class Mongo extends MongoClient {
         this.client = await this.connect();
     }
 
+    async DBconnect() {
+        this.dbConn  = this.client.db(this.dbName);
+        this.colConn = this.dbConn.collection(this.colName);
+    }
+
     async _disconnect() {
         await this.client.logout();
         await this.client.close();

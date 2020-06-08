@@ -1,7 +1,7 @@
-const Util = require('../util/util');
+const Storage = require('../app/storage');
 const { Mongo: { MongoConnect }, Mysql: { MysqlConnection } } = require('../interfaces');
 
-class Config extends Util { 
+class Config extends Storage { 
     constructor() {
         super();
 

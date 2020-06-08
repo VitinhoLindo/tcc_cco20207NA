@@ -25,7 +25,6 @@ class MainController extends Storage {
     }
     
     async on() {
-        console.log(this.request.url);
         await this.getContent();
         this.response.end();
         return true;

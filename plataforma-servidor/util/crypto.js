@@ -1,10 +1,27 @@
-const Repository = require('./repositorio');
+const Util = require('./util');
 
-class Crypto extends Repository {
+class Crypto extends Util {
+    pass      = '';
+    key       = null;
+    crypto = require('crypto');
+    
     constructor() {
         super();
+        this.reset();
+    }
 
-        this.crypto = require('crypto');
+    async encrypt() {
+    }
+
+    async decrypt() {
+    }
+
+    async reset() {
+        if (!!this.pass) {
+
+        }
+
+        this.pass = this.randomText(this.passrange);
     }
 }
 

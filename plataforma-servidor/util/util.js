@@ -1,9 +1,10 @@
-const Crypto = require('./crypto');
+const Repository = require('./repositorio');
+const { Signature } = require('../modules');
 
-class Util extends Crypto {
+class Util extends Repository {
     constructor() {
         super();
-        this.ModuleSignature = require('../modules/signature');
+        this.ModuleSignature = Signature;
     }
 
     concatString(file = false, ...args) {
@@ -94,6 +95,68 @@ class Util extends Crypto {
         } else {
             return file;
         }
+    }
+
+    getObjectKeys(object = {}) {
+        return Object.keys(object);
+    }
+
+    arrayInfo(array = []) {
+        return {
+            min: 0,
+            max: (array.length == 1) ? 0 : array.length - 1
+        };
+    }
+
+    arrayValueIndex(index, array = []) {
+        let arrayInfo = this.arrayInfo(array);
+
+        if (index < arrayInfo.min) index = 0;
+        if (index > arrayInfo.max) index = arrayInfo.max;
+
+        let value = array[index] || null;
+
+        return {
+            min: arrayInfo.min,
+            max: arrayInfo.max,
+            value: value
+        };
+    }
+
+    objectValue(key, object = {}) {
+        return object[key] || null;
+    }
+
+    random(min = 0, max = 0, decimalHouse = 10) {
+        while (max > decimalHouse) decimalHouse *= 10;
+
+        let randValue = 0;
+        do {
+            randValue = Math.floor(Math.random() * decimalHouse);
+        } while(randValue < min || randValue > max)
+
+        return randValue;
+    }
+
+    randomText(range = 0) {
+        let randText = '';
+        var count    = 0 ;
+        if (range == 0) return randText;
+
+        let keys = this.getObjectKeys(this.characters);
+
+        do {
+            let _infoKeysArray  = this.arrayInfo(keys);
+            let _keyIndex       = this.random(_infoKeysArray.min, _infoKeysArray.max);
+            let _keyValue       = this.arrayValueIndex(_keyIndex, keys);
+            let _value          = this.objectValue(_keyValue.value, this.characters);
+            let _infoValue      = this.arrayInfo(_value);
+            let _valueIndex     = this.random(_infoValue.min, _infoValue.max);
+            randText           += this.arrayValueIndex(_valueIndex, _value).value; 
+            count += 1;
+        } while(range != count);
+
+        return randText;
     }
 }
 
