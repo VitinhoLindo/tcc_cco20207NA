@@ -4,10 +4,12 @@ const Storage = require('../app/storage');
 class JsController extends Storage {
     constructor(_request = request, _response = response) {
         super();
-        this.request  = _request;
-        this.response = _response;
-
-        this._dirname_ = this.request._dirname_;
+        if (_request && _response) {
+            this.request  = _request;
+            this.response = _response;
+    
+            this._dirname_ = this.request._dirname_;
+        }
     }
 
     async getFile() {
@@ -23,8 +25,10 @@ class JsController extends Storage {
     }
 
     async on() {
-        await this.getFile();
-        this.response.end();
+        if (this.request) {
+            await this.getFile();
+            this.response.end();
+        }
     }
 }
 

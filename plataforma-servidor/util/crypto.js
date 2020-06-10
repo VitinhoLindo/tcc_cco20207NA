@@ -1,7 +1,7 @@
 const Util = require('./util');
 
 class Crypto extends Util {
-    pass      = '';
+    pass      = 'aseqwease';
     key       = null;
     crypto = require('crypto');
     
@@ -18,7 +18,7 @@ class Crypto extends Util {
 
     async reset() {
         if (!!this.pass) {
-
+            
         }
 
         this.pass = this.randomText(this.passrange);

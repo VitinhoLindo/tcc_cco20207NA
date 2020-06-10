@@ -11,14 +11,20 @@ class MainController extends Storage {
     }
 
     async getContent() {
-        let filexists = await this.fileExistsSync('utf8', this._dirname_, this.dirFiles.public.dir, this.dirFiles.public.html, '/index.html');
+        let filexists = await this.fileExistsSync('binary', this._dirname_, this.dirFiles.public.dir, this.dirFiles.public.html, '/index.html');
 
         if (filexists.status) {
             this.response.status(200);
-            this.response.write(filexists.file);
+            try {
+                this.response.write(filexists.file);
+            } catch (error) {
+                
+            }
         } else {
             this.response.status(404);
         }
+
+        return true;
     }
 
     async getIco() {
@@ -26,8 +32,11 @@ class MainController extends Storage {
     
     async on() {
         await this.getContent();
-        this.response.end();
         return true;
+    }
+
+    async end() {
+        this.response.end();
     }
 }
 

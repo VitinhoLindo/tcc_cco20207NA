@@ -71,11 +71,11 @@ class Util extends Repository {
 
     async fileExistsSync(encoding, ...args) {
         if (!encoding) encoding = 'utf8';
+        var path;
 
         try {
-            let path = this.concatString(true, args);
+            path = this.concatString(true, args);;
             let stat = await this.getStat(path);
-
 
             if (!stat.isfile) throw 'is not file';
             let file = await this.fs.readFileSync(path, { encoding: encoding });

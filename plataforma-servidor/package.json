@@ -4,7 +4,7 @@
   "description": "plataforma web",
   "main": "main.js",
   "scripts": {
-    "test": "nodemon main.js"
+    "dev": "nodemon main.js"
   },
   "keywords": [
     "node-plataforma"

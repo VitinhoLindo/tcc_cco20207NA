@@ -2,10 +2,10 @@ const { Router } = require('express');
 const { MainController, CssController, JsController, ImageController } = require('../controller');
 const route = Router();
 
-
 route.get('/', async (request, response) => {
     let controller = new MainController(request, response);
     await controller.on();
+    await controller.end();
 });
 
 route.get('/css/:file', async (request, response) => {
