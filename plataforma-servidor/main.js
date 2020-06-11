@@ -8,5 +8,6 @@ const App = require('./app/app');
     // leitura da configuração do app
     await app.setConfig();
     await app.setProtocol();
+    await app.reset();
     await app.listen();
 })();

@@ -20,7 +20,8 @@ class Repository extends MyEvent {
         latter : 'abcdefghijklmnopqrstuvxywz',
         number : '0123456789',
         super  : '!@#$%*()_+£¢¬<>,.:;^~]}[{ª|§º'
-    }
+    };
+    CRYPTO_TIME_INTERVAL = parseInt(this.process.env.CRYPTO_TIME) || 86400000;
     dirFiles = {
         config  : {
             dir : '/config',
@@ -41,8 +42,15 @@ class Repository extends MyEvent {
             video: '/video'
         },
         log      : {
-            dir        : '/log',
-            logFileName: '@date@-@loggable@.log'
+            dir        : '/loggable',
+            loggable   : {
+                dir: '/log',
+                logFileName: '@date@-@loggable@.log'
+            },
+            crypto     : {
+                dir: '/crypto',
+                logFileName: '@date@-crypto.json'
+            },
         }
     }
 

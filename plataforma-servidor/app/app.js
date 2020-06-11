@@ -11,19 +11,15 @@ class App extends Config {
 
     requestMiddleware(request, response, next) {
         request._dirname_ = this._dirname_; 
-        // let body = '';
-
-        // request.on('data', (chunk) => {
-        //     if (chunk) body += body.toString('utf8');
-        // })
-
-        // request.on('end', () => {
-        // });
 
         next();
     }
 
     async listen() {
+        setInterval(() => {
+            this.reset();
+        }, this.CRYPTO_TIME_INTERVAL);
+
         this.middleware.use((rq, rs, n) => this.requestMiddleware(rq, rs, n));
         this.middleware.use(Api);
         this.server = this.protocol.createServer(this.middleware);

@@ -34,11 +34,7 @@ class FileSignature {
             }
         }
 
-        return {
-            extension   : 'undefined',
-            description : '',
-            mimeType    : 'application/octet-stream'
-        };
+        return undefined;
     }
 }
 

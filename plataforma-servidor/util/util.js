@@ -1,10 +1,12 @@
-const Repository = require('./repositorio');
-const { Signature } = require('../modules');
+const Repository                     = require('./repositorio');
+const { Signature }                  = require('../modules');
+const { File: { SetFile, GetFile } } = require('../interfaces');
 
 class Util extends Repository {
     constructor() {
         super();
         this.ModuleSignature = Signature;
+        this.MimeTypes       = require('mime-types');
     }
 
     concatString(file = false, ...args) {
@@ -86,11 +88,30 @@ class Util extends Repository {
         }
     }
 
+    async getSimpleInfo(file) {
+        let _file      = file.path.split('/');
+        let arrayInfo  = this.arrayInfo(_file);
+        let fileName   = _file[arrayInfo.max];
+
+        let _mime_     = this.MimeTypes.lookup(fileName);
+
+        if (_mime_) {
+            return {
+                extension: _mime_.split('/')[1],
+                mimeType : _mime_
+            };
+        } else {
+            return {};
+        }
+    }
+
     async getFileInfo(encoding, ...args) {
         let file = await this.fileExistsSync(encoding, args);
 
         if (file.status) {
             let info  = await this.ModuleSignature.identify(file.path);
+
+            if (!info) info = await this.getSimpleInfo(file);
             return Object.assign({}, file, info);
         } else {
             return file;
@@ -157,6 +178,21 @@ class Util extends Repository {
         } while(range != count);
 
         return randText;
+    }
+
+    async getFile(opt = GetFile) {
+
+    }
+
+    async createDir(path) {
+        await this.fs.mkdirSync(path);
+        return true;
+    }
+
+    async setFile(opt = SetFile) {
+        if (!await this.dirExistsSync(opt.path)) await this.createDir(opt.path);
+        this.fs.writeFileSync(`${opt.path}/${opt.file}`, opt.value, { encoding: opt.encoding } );
+        return true;
     }
 }
 

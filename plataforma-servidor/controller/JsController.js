@@ -14,9 +14,10 @@ class JsController extends Storage {
 
     async getFile() {
         let file = this.request.params.file;
-        let filexists = await this.fileExistsSync('utf8', this._dirname_, this.dirFiles.public.dir, this.dirFiles.public.js, `/${file}`);
+        let filexists = await this.getFileInfo('binary', this._dirname_, this.dirFiles.public.dir, this.dirFiles.public.js, `/${file}`)
 
         if (filexists.status) {
+            if (filexists.mimeType) this.response.setHeader('Content-Type', filexists.mimeType);
             this.response.status(200);
             this.response.write(filexists.file);
         } else {

@@ -15,10 +15,10 @@ class CssController extends Storage {
     async getFile() {
         this.response.status(404);
         let file = this.request.params.file;
-
-        let filexists = await this.fileExistsSync('utf8', this._dirname_, this.dirFiles.public.dir, this.dirFiles.public.css, `/${file}`);
+        let filexists = await this.getFileInfo('binary', this._dirname_, this.dirFiles.public.dir, this.dirFiles.public.css, `/${file}`);
 
         if (filexists.status) {
+            if (filexists.mimeType) this.response.setHeader('Content-Type', filexists.mimeType);
             this.response.status(200);
             this.response.write(filexists.file);
         }
