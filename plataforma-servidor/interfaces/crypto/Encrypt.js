@@ -15,4 +15,4 @@ class Model extends BaseEncrypt {
     }
 }
 
-module.exports = new Model;
+module.exports = Model;

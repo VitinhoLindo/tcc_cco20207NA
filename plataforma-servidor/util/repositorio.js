@@ -4,8 +4,8 @@ class Repository extends MyEvent {
     _dirname_ = '';
     algorithm = 'aes-192-cbc';
     encoding  = 'sha256';
-    iv        = Buffer.alloc(16, 0); 
     salt      = 'salt';
+    ivLen     = 16;
     saltRange = 24;
     passrange = 100;
     os         = require('os');

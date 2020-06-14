@@ -180,8 +180,25 @@ class Util extends Repository {
         return randText;
     }
 
-    async getFile(opt = GetFile) {
+    getConvertTo(type, value) {
+        switch (type) {
+            case 'json':
+                try {
+                    return JSON.parse(value);
+                } catch (error) { return value; }
+            default:
+                return value;
+        }
+    }
 
+    async getFile(opt = GetFile) {
+        if (!await this.dirExistsSync(opt.path)) await this.createDir(opt.path);
+        try {
+            let file = await this.fs.readFileSync(`${opt.path}/${opt.file}`, { encoding: opt.encoding });
+            return this.getConvertTo(opt.convertType, file);
+        } catch (error) {
+            return null;           
+        }
     }
 
     async createDir(path) {

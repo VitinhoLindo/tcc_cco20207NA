@@ -1,7 +1,7 @@
-const Storage = require('../app/storage');
+const Crypto = require('../util/crypto');
 const { Mongo: { MongoConnect }, Mysql: { MysqlConnection } } = require('../interfaces');
 
-class Config extends Storage { 
+class Config extends Crypto { 
     constructor() {
         super();
 
@@ -18,7 +18,7 @@ class Config extends Storage {
      *   leitura da configuração
      * </summary>
      */
-    async mongo() {
+    mongo() {
         this.mongoConfig.url  = this.process.env.MONGO_URL;
         this.mongoConfig.port = this.process.env.MONGO_PORT;
         this.mongoConfig.user = this.process.env.MONGO_USER;
@@ -39,25 +39,25 @@ class Config extends Storage {
      *   leitura da configuração
      * </summary>
      */
-    async mysql() {
-        this.mysqlConfig.host = this.process.env.MYSQL_HOST;
-        this.mysqlConfig.port = this.process.env.MYSQL_PORT;
-        this.mysqlConfig.user = this.process.env.MYSQL_USER;
-        this.mysqlConfig.pass = this.process.env.MYSQL_PASS;
-        this.mysqlConfig.schema = this.process.env.MYSQL_SCHEMA;
+    mysql() {
+        this.mysqlConfig.host     = this.process.env.MYSQL_HOST;
+        this.mysqlConfig.port     = this.process.env.MYSQL_PORT;
+        this.mysqlConfig.user     = this.process.env.MYSQL_USER;
+        this.mysqlConfig.pass     = this.process.env.MYSQL_PASS;
+        this.mysqlConfig.database = this.process.env.MYSQL_SCHEMA;
 
-        if (!this.mysqlConfig.host)   this.mysqlConfig.host = '127.0.0.1';
-        if (!this.mysqlConfig.port)   this.mysqlConfig.port = '3306';
-        if (!this.mysqlConfig.user)   this.mysqlConfig.user = 'root';
-        if (!this.mysqlConfig.pass)   this.mysqlConfig.pass = '';
-        if (!this.mysqlConfig.schema) this.mysqlConfig.schema = 'mysql';
+        if (!this.mysqlConfig.host)     this.mysqlConfig.host = '127.0.0.1';
+        if (!this.mysqlConfig.port)     this.mysqlConfig.port = '3306';
+        if (!this.mysqlConfig.user)     this.mysqlConfig.user = 'root';
+        if (!this.mysqlConfig.pass)     this.mysqlConfig.pass = '';
+        if (!this.mysqlConfig.database) this.mysqlConfig.database = 'mysql';
     }
 
-    async setConfig() {
+    setConfig() {
         // leitura da configuração do mongodb
-        await this.mongo();
+        this.mongo();
         // leitura da configuração do mysql
-        await this.mysql();
+        this.mysql();
     }
 
     async setProtocol() {

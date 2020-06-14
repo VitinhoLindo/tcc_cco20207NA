@@ -1,2 +1,3 @@
-exports.Encrypt = require('./Encrypt');
-exports.Decrypt = require('./Decrypt');
+exports.Encrypt        = require('./Encrypt');
+exports.Decrypt        = require('./Decrypt');
+exports.EncryptDecrypt = require('./EncryptDecrypt');

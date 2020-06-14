@@ -6,7 +6,7 @@ const App = require('./app/app');
     app._dirname_ = __dirname;
 
     // leitura da configuração do app
-    await app.setConfig();
+    app.setConfig();
     await app.setProtocol();
     await app.reset();
     await app.listen();

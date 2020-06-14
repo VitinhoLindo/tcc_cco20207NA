@@ -1,9 +1,9 @@
 class Model {
-    host   = '';
-    port   = '';
-    user   = '';
-    pass   = '';
-    schema = '';
+    host     = '';
+    port     = '';
+    user     = '';
+    pass     = '';
+    database = '';
 
     constructor() {}
 }

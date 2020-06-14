@@ -1,5 +1,11 @@
 const { Router } = require('express');
-const { MainController, CssController, JsController, ImageController } = require('../controller');
+const {
+    MainController,
+    CssController,
+    JsController,
+    ImageController,
+    LoginController
+} = require('../controller');
 const route = Router();
 
 route.get('/', async (request, response) => {
@@ -21,6 +27,13 @@ route.get('/js/:file', async (request, response) => {
 route.get('/img/:file', async (request, response) => {
     let controller = new ImageController(request, response);
     await controller.on();
+});
+
+route.post('/login', async (request, response) => {
+    let controller = new LoginController(request, response);
+
+    await controller.on();
+    await controller.end();
 });
 
 module.exports = route;

@@ -1,6 +1,6 @@
-const Crypto = require('../util/crypto');
+const Config = require('../config/config');
 
-class Cache extends Crypto {
+class Cache extends Config {
     constructor() {
         super();
     }

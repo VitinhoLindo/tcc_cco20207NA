@@ -9,14 +9,14 @@
           <label>{{ labels.user }}</label>
         </div>
         <div class="login-input">
-          <input type="text">
+          <input type="text" v-model="login">
           <span></span>
         </div>
         <div class="label">
           <label>{{ labels.pass }}</label>
         </div>
         <div class="login-input">
-          <input type="password">
+          <input type="password" v-model="key">
           <span></span>
         </div>
         <div class="remember">
@@ -56,22 +56,31 @@ export default {
         singin: "sign in",
         cancel: 'cancel',
       },
+      login: '',
+      key: '',
       remember: false
     }),
     methods: {
       async login() {
 
       },
-      onclick(type) {
+      async onclick(type) {
         switch (type) {
           case 'cancel':
             this.$emit('listen', { name: 'login-cancel' })
             break;
           case 'login':
-            console.log(this.remember);
+            let response = await this.functions.request(
+              '/login',
+              'post',
+              {},
+              { login: this.login, key: this.key },
+              {}
+            );
+            console.log(response);
             break;
           case 'forgotem':
-            console.log(type);
+            // console.log(type);
             break;
         }
       }

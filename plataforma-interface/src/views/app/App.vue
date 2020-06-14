@@ -28,7 +28,8 @@ export default {
     session: window.sessionStorage,
     storage: window.Storage,
     auth: null,
-    functions: {}
+    functions: {},
+    origin: 'http://localhost:3000'
   }),
   methods: {
     onkeydown(event) {
@@ -75,10 +76,11 @@ export default {
 
       return _defaultHeader;
     },
-    async request(url, params, data, headers) {
+    async request(url, method, params, data, headers) {
       try {
         let response = await Axios({
-          url    : url,
+          url    : this.origin + url,
+          method : method.toUpperCase(),
           params : params,
           data   : data,
           headers: this.getHeader(headers)
@@ -86,11 +88,15 @@ export default {
 
         switch (response.status) {
           case 500: 
-            throw `Failure request '${url}'`
+            // throw `Failure request '${url}'`
+            return null;
           default:
             return response.data;          
         }
-      } catch (error) { return 'Network error'; }
+      } catch (error) { 
+        // return 'Network error'; 
+        return null;
+      }
     },
     async authentication(auth) {
       this.auth = auth;
