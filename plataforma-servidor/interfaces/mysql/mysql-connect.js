@@ -4,6 +4,7 @@ class Model {
     user     = '';
     pass     = '';
     database = '';
+    multipleStatements = true;
 
     constructor() {}
 }

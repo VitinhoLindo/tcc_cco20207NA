@@ -84,6 +84,10 @@ class Crypto extends Util {
         );
     }
 
+    async getHash() {
+        return this.crypto.createHash('sha256');
+    }
+
     async setCrypto(date = new Date(), pass = '') {
         let ObjectDate = this.getDateObject(date); // obtem um objeto de data
         let value = this.keys[ObjectDate.locale];  // verifica se já existe uma chave criada nestá data
@@ -154,6 +158,13 @@ class Crypto extends Util {
         decrypted    += decrypt.final(option.encoding);
 
         return decrypted;
+    }
+
+    async hashable(value) {
+        let hashable = await this.getHash();
+
+        hashable.update(value);
+        return hashable.digest('hex');
     }
 
     async reset() {

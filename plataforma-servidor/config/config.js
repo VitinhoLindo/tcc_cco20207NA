@@ -1,12 +1,11 @@
 const Crypto = require('../util/crypto');
-const { Mongo: { MongoConnect }, Mysql: { MysqlConnection } } = require('../interfaces');
+const { Mongo: { MongoConnect } } = require('../interfaces');
 
 class Config extends Crypto { 
     constructor() {
         super();
 
         this.mongoConfig  = MongoConnect;
-        this.mysqlConfig  = MysqlConnection;
         this.protocolName = 'http'; 
         this.protocol     = null;
     }
@@ -32,32 +31,9 @@ class Config extends Crypto {
         this.mongoConfig.connectionUrl = `${this.mongoConfig.url}:${this.mongoConfig.port}`;
     }
 
-    /** 
-     * @function mysql
-     * 
-     * <summary>
-     *   leitura da configuração
-     * </summary>
-     */
-    mysql() {
-        this.mysqlConfig.host     = this.process.env.MYSQL_HOST;
-        this.mysqlConfig.port     = this.process.env.MYSQL_PORT;
-        this.mysqlConfig.user     = this.process.env.MYSQL_USER;
-        this.mysqlConfig.pass     = this.process.env.MYSQL_PASS;
-        this.mysqlConfig.database = this.process.env.MYSQL_SCHEMA;
-
-        if (!this.mysqlConfig.host)     this.mysqlConfig.host = '127.0.0.1';
-        if (!this.mysqlConfig.port)     this.mysqlConfig.port = '3306';
-        if (!this.mysqlConfig.user)     this.mysqlConfig.user = 'root';
-        if (!this.mysqlConfig.pass)     this.mysqlConfig.pass = '';
-        if (!this.mysqlConfig.database) this.mysqlConfig.database = 'mysql';
-    }
-
     setConfig() {
         // leitura da configuração do mongodb
         this.mongo();
-        // leitura da configuração do mysql
-        this.mysql();
     }
 
     async setProtocol() {

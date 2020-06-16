@@ -8,25 +8,27 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `PessoaFisica`;
 CREATE TABLE IF NOT EXISTS `PessoaFisica` (
     `id` BIGINT(24) NOT NULL AUTO_INCREMENT,
-    `cpf` BIGINT(24) NOT NULL,
-    `rg` BIGINT(20) NOT NULL,
+    `cpf` TEXT NOT NULL,
+    `rg` TEXT NOT NULL,
     `nome` VARCHAR(220) NOT NULL,
     `caracteristica` VARCHAR(120) NOT NULL,
     `sexo` VARCHAR(120) NOT NULL,
     `data_nascimento` DATE,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `cpf` (`cpf`)
-)  ENGINE=INNODB DEFAULT CHARSET=UTF8;
+    `created_at` DATETIME NOT NULL,
+    `updated_at` DATETIME,
+    PRIMARY KEY (`id`)
+)  ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 #
 DROP TABLE IF EXISTS `PessoaJuridica`;
 CREATE TABLE IF NOT EXISTS `PessoaJuridica` (
 	`id` BIGINT(24) NOT NULL AUTO_INCREMENT,
-    `cnpj` BIGINT(20) NOT NULL,
+    `cnpj` TEXT NOT NULL,
 	`razao_social` VARCHAR(220) NOT NULL,
     `fantazia` VARCHAR(220) NOT NULL,
-	PRIMARY KEY (`id`),
-    UNIQUE KEY `cnpj`(`cnpj`)
-) ENGINE=INNODB DEFAULT CHARSET=UTF8;
+    `created_at` DATETIME NOT NULL,
+    `updated_at` DATETIME,
+	PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 #
 DROP TABLE IF EXISTS `Endereco`;
 CREATE TABLE IF NOT EXISTS `Endereco` (
@@ -39,22 +41,21 @@ CREATE TABLE IF NOT EXISTS `Endereco` (
     `endereco` VARCHAR(120) NOT NULL,
     `complemento` VARCHAR(220) NOT NULL,
     PRIMARY KEY(`id`)
-) ENGINE=INNODB DEFAULT CHARSET=UTF8;
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 #
 DROP TABLE IF EXISTS `Contato`;
 CREATE TABLE IF NOT EXISTS `Contato` (
 	`id` BIGINT(24) NOT NULL AUTO_INCREMENT,
-    `email` VARCHAR(220) NOT NULL,
-    `email_complementar` VARCHAR(220) NOT NULL,
-    `telefone_fixo` BIGINT(16),
-    `telefone_fixo_complementar` BIGINT(16),
-    `telefone_movel` BIGINT(20) NOT NULL,
-	`telefone_movel_complementar` BIGINT(20) NOT NULL,
-    PRIMARY KEY(`id`),
-    UNIQUE KEY `email`(`email`),
-    UNIQUE KEY `email_complementar`(`email_complementar`),
-    UNIQUE KEY `telefone_movel`(`telefone_movel`)
-) ENGINE=INNODB DEFAULT CHARSET=UTF8;
+    `email` TEXT NOT NULL,
+    `email_complementar` TEXT,
+    `telefone_fixo` TEXT,
+    `telefone_fixo_complementar` TEXT,
+    `telefone_movel` TEXT NOT NULL,
+	`telefone_movel_complementar` TEXT,
+    `created_at` DATETIME NOT NULL,
+    `updated_at` DATETIME,
+    PRIMARY KEY(`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 #
 DROP TABLE IF EXISTS `Arquivo`;
 CREATE TABLE IF NOT EXISTS `Arquivo` (
@@ -64,6 +65,6 @@ CREATE TABLE IF NOT EXISTS `Arquivo` (
     `size` BIGINT(20) NOT NULL,
     `byte` LONGBLOB NOT NULL,
     PRIMARY KEY(`id`)
-) ENGINE=INNODB DEFAULT CHARSET=UTF8;
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 #
 SET FOREIGN_KEY_CHECKS=1;

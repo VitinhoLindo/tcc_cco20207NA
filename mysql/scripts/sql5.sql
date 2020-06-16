@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `PedidoArmacao`(
     FOREIGN KEY(`armacao`) REFERENCES `Armacao`(`id`),
     FOREIGN KEY(`financeiro`) REFERENCES `Financeiro`(`id`),
     FOREIGN KEY(`estoque`) REFERENCES `Estoque`(`id`)
-) ENGINE=INNODB DEFAULT CHARSET=UTF8;
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 #
 DROP TABLE IF EXISTS `Lote`;
 CREATE TABLE IF NOT EXISTS `Lote`(
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `Lote`(
     PRIMARY KEY(`id`),
     FOREIGN KEY(`pedido`) REFERENCES `PedidoArmacao`(`id`),
     FOREIGN KEY(`saida_financeira`) REFERENCES `SaidaFinanceira`(`id`)
-) ENGINE=INNODB DEFAULT CHARSET=UTF8;
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 #
 DROP TABLE IF EXISTS `PedidoLente`;
 CREATE TABLE IF NOT EXISTS `PedidoLente`(
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `PedidoLente`(
     FOREIGN KEY(`lente`) REFERENCES `Lente`(`id`),
     FOREIGN KEY(`financeiro`) REFERENCES `Financeiro`(`id`),
     FOREIGN KEY(`saida_financeira`) REFERENCES `SaidaFinanceira`(`id`)
-) ENGINE=INNODB DEFAULT CHARSET=UTF8;
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 #
 DROP TABLE IF EXISTS `Compra`;
 CREATE TABLE IF NOT EXISTS `Compra`(
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `Compra`(
 	FOREIGN KEY(`funcionario`) REFERENCES `Funcionario`(`id`),
     FOREIGN KEY(`armacao`) REFERENCES `Armacao`(`id`),
     FOREIGN KEY(`lente`) REFERENCES `Lente`(`id`)
-) ENGINE=INNODB DEFAULT CHARSET=UTF8;
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 #
 DROP TABLE IF EXISTS `EntradaFinanceira`;
 CREATE TABLE IF NOT EXISTS `EntradaFinanceira`(
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `EntradaFinanceira`(
     PRIMARY KEY(`id`),
 	FOREIGN KEY(`financeiro`) REFERENCES `Financeiro`(`id`),
     FOREIGN KEY(`compra`) REFERENCES `Compra`(`id`)
-) ENGINE=INNODB DEFAULT CHARSET=UTF8;
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 #
 DROP TABLE IF EXISTS `OrdemServico`;
 CREATE TABLE IF NOT EXISTS `OrdemServico`(
@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `OrdemServico`(
     FOREIGN KEY(`terceirizada`) REFERENCES `Terceirizada`(`id`),
     FOREIGN KEY(`receita`) REFERENCES `Receita`(`id`),
     FOREIGN KEY(`pedido_lente`) REFERENCES `PedidoLente`(`id`)
-) ENGINE=INNODB DEFAULT CHARSET=UTF8;
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 #
 DROP TABLE IF EXISTS `Entregue`;
 CREATE TABLE IF NOT EXISTS `Entregue`(
@@ -99,6 +99,6 @@ CREATE TABLE IF NOT EXISTS `Entregue`(
     FOREIGN KEY(`ordem_servico`) REFERENCES `OrdemServico`(`id`),
     FOREIGN KEY(`compra`) REFERENCES `Compra`(`id`),
     FOREIGN KEY(`funcionario`) REFERENCES `Funcionario`(`id`)
-) ENGINE=INNODB DEFAULT CHARSET=UTF8;
+) ENGINE=INNODB DEFAULT CHARSET=utf8mb4;
 #
 SET FOREIGN_KEY_CHECKS=1;
