@@ -4,8 +4,7 @@ const { Crypto: { Encrypt, Decrypt, EncryptDecrypt }}   = require('../interfaces
 class Crypto extends Util {
     keys     = {};
     crypto   = require('crypto');
-    iv       = null;
-    
+
     constructor() {
         super();
     }
@@ -56,7 +55,8 @@ class Crypto extends Util {
                 convertType: 'json'
             });
 
-            if (!value) return await this.getKeyDate(new Date());
+            // exceção configuração de criptografia não encontrada.
+            // if (!value) return await this.getKeyDate(new Date());
         }
 
         return {

@@ -1,16 +1,11 @@
-const { request, response } = require('express');
-const { MySql } = require('../modules');
-const Storage = require('../app/storage');
+// const { request, response } = require('express');
+// const Storage   = require('../app/storage');
+const Controller = require('./Controller');
+const Login     = require('../models/Login');
 
-class LoginController extends Storage {
-    constructor(_request = request, _response = response) {
-        super();
-        if (_request && _response) {
-            this.request  = _request;
-            this.response = _response;
-    
-            this._dirname_ = this.request._dirname_;
-        }
+class LoginController extends Controller {
+    constructor( request, response) {
+        super(request, response);
     }
 
     async readParams() {
@@ -19,34 +14,45 @@ class LoginController extends Storage {
             return false;
         }
     }
+
+    async getToken(login) {
+        let dateObject = this.getDateObject(new Date());
+        return await this.encrypt({
+            encoding  : 'utf8',
+            _encoding : 'hex',
+            value     : `${login}-${dateObject.locale}`,
+            date      : dateObject.date
+        });
+    }
     
     async login() {
         if (this.readParams()) {
-            // let encrypted = await this.encrypt({ 
-            //     date: new Date(), 
-            //     value: this.request.body.key,
-            //     encoding: 'utf8',
-            //     _encoding: 'hex'
-            // });
-            // console.log(`insert into \`Acesso\` (\`login\`, \`senha\`, \`created_at\`) values ('${this.request.body.login}', '${encrypted}', '${(new Date()).toLocaleDateString()} ${(new Date()).toLocaleTimeString()}');`);
-            // let result = await this.MySqlModule.queryAsync(`insert into \`Acesso\` (\`login\`, \`senha\`, \`created_at\`) values ('${this.request.body.login}', '${encrypted}', '${(new Date()).toLocaleDateString()} ${(new Date()).toLocaleTimeString()}');`);
-            // console.log(result);
-            // let decrypted = await this.decrypt({
-            //     date: new Date(), 
-            //     value: encrypted,
-            //     encoding: 'utf8',
-            //     _encoding: 'hex'
-            // });
+            this.setHeader('Content-type', 'application/json');
+
+            let [login, senha] = await Promise.all([
+                this.hashable(this.request.body.login),
+                this.hashable(this.request.body.key)
+            ]);
+
+            let _login = await (new Login).where('login', login).get();
+
+            if (!_login.count())
+                return this.formatResponse(404, 'failure in login', { message: '' }, true);                
+            
+            _login = _login.first();
+
+            if (_login.login == login && _login.senha == senha) {
+                let token = await this.getToken(login);
+                return this.formatResponse(200, 'success', { token: token });
+            } else {
+                return this.formatResponse(404, 'failure in login', { message: '' }, true);
+            }
         } else return true;
     }
 
-    async on() {
+    async auth() {
         if (this.request)
             this.login();
-    }
-
-    async end() {
-        this.response.end();
     }
 }
 

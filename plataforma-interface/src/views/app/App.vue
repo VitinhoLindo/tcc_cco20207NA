@@ -3,6 +3,7 @@
     <router-view 
       v-bind:auth="auth"
       v-bind:functions="functions"
+      v-bind:shared="shared"
       v-on:authentication="authentication" 
     />
   </div>
@@ -13,25 +14,37 @@ import Axios from 'axios';
 
 export default {
   name: 'App',
-  mounted() {
+  async mounted() {
     this.functions = {
       sessionSave   : this.sessionSave,
       sessionFind   : this.sessionFind,
       sessionRemove : this.sessionRemove,
-      request       : this.request
+      request       : this.request,
+      authentication: this.authentication
     };
 
     window.onresize   = () => this.$emit('on-resize', this.getOffSetMain());
     window.onkeydown = (event) => this.onkeydown(event);
+    await this.getStorage();
   },
   data: () => ({
     session: window.sessionStorage,
-    storage: window.Storage,
+    storage: window.localStorage,
+    shared : {},
     auth: null,
     functions: {},
-    origin: 'http://localhost:3000'
+    origin: 'http://localhost:3000',
+    storageItens: ['login']
   }),
   methods: {
+    async getStorage() {
+      for (let index in this.storageItens) {
+        let key = this.storageItens[index];
+        let value = await this.storageFind(key);
+
+        if (value) this.shared[key] = value;
+      }
+    },
     onkeydown(event) {
       if (event.keyCode == 27) 
         this.$emit('close-all');
@@ -39,6 +52,23 @@ export default {
     getOffSetMain() {
       let { innerWidth, innerHeight } = window;
       return { innerWidth, innerHeight };
+    },
+    async storageSave(key, value) {
+      try {
+        this.storage.setItem(key, value)
+      } catch (error) { }
+      return true;
+    },
+    async storageClear(key) {
+      try {
+        this.storage.removeItem(key);
+      } catch (error) {}
+      return true;
+    },
+    async storageFind(key) {
+      try {
+        return this.storage.getItem(key);;
+      } catch(error) { return null; }
     },
     async sessionSave(key, value) {
       try {
@@ -99,7 +129,10 @@ export default {
       }
     },
     async authentication(auth) {
-      this.auth = auth;
+      if (auth.login) this.storageSave('login', auth.login);
+      else this.storageClear('login');
+      this.auth = auth.token;
+      return true;
     }
   }
 }

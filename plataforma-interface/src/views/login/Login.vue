@@ -29,8 +29,8 @@
           </div>
         </div>
         <div class="login-buttons">
-          <button v-on:click="onclick('cancel')">{{ labels.cancel }}</button>
-          <button v-on:click="onclick('login')">{{ labels.singin }}</button>
+          <button v-on:click="onclick('cancel')" v-bind:disabled="disabled">{{ labels.cancel }}</button>
+          <button v-on:click="onclick('login')"  v-bind:disabled="disabled">{{ labels.singin }}</button>
         </div>
       </div>
     </div>
@@ -44,6 +44,16 @@ export default {
       functions: {
         type: Object,
         required: true
+      },
+      shared: {
+        type: Object,
+        required: true
+      }
+    },
+    mounted() {
+      if (this.shared.login) {
+        this.remember = true;
+        this.login    = this.shared.login;
       }
     },
     data: () => ({
@@ -58,31 +68,36 @@ export default {
       },
       login: '',
       key: '',
-      remember: false
+      remember: false,
+      disabled : false
     }),
     methods: {
-      async login() {
-
-      },
-      async onclick(type) {
-        switch (type) {
-          case 'cancel':
-            this.$emit('listen', { name: 'login-cancel' })
-            break;
-          case 'login':
-            let response = await this.functions.request(
-              '/login',
-              'post',
-              {},
-              { login: this.login, key: this.key },
-              {}
-            );
-            console.log(response);
-            break;
-          case 'forgotem':
-            // console.log(type);
-            break;
+      async loginSync() {
+        this.disabled = true;
+        let response = await this.functions.request(
+          '/login',
+          'post',
+          {},
+          { login: this.login, key: this.key },
+          {}
+        );
+        
+        let auth = {
+          token: response.result.token
         }
+        this.$emit('listen', { name: 'login-success' });
+        if (this.remember) auth.login = this.login;
+        await this.functions.authentication(auth);
+        this.disabled = false;
+      },
+      onclick(type) {
+        if (type == 'cancel') {
+          this.$emit('listen', { name: 'login-cancel' })
+        } else if (type == 'login') {
+          this.loginSync()
+        } else if (type == 'forgotem') {
+        }
+        return true;
       }
     }
 }
@@ -181,5 +196,8 @@ export default {
   box-shadow: 0px 0px 5px 0px #3498db;
   border: 1px solid #3498db;
   outline: 0;
+}
+.login-buttons button:disabled {
+  color: #aaaaaa;
 }
 </style>

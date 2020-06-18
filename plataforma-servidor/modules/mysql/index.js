@@ -1,9 +1,10 @@
 const { Mysql: { MysqlConnection } }    = require('../../interfaces');
 
 class MySqlModule {
-    mysql = require('mysql');
-    mysqlConfig = new MysqlConnection;
-    query = '';
+    process = require('process');
+    mysql   = require('mysql');
+    mysqlConfig = MysqlConnection;
+    query   = '';
 
     constructor() { this.readConfig(); } // leitura da configuração do mysql
 
@@ -29,7 +30,7 @@ class MySqlModule {
     }
 
     setConnection() {
-        this.connection = this.mysql.createConnection(this.configs);
+        this.connection = this.mysql.createConnection(this.mysqlConfig);
     }
 
     connect() {

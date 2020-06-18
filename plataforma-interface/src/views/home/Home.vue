@@ -1,7 +1,7 @@
 <template>
   <div class="home">
-    <app-menu v-bind:auth="auth" v-bind:functions="functions" v-on:listen="controller" />
-    <app-login v-if="components.login.on" v-bind:functions="functions" v-on:listen="controller"/>
+    <app-menu  v-bind:auth="auth" v-bind:functions="functions" v-on:listen="controller" />
+    <app-login v-if="components.login.on" v-bind:functions="functions" v-bind:shared="shared" v-on:listen="controller"/>
   </div>
 </template>
 
@@ -19,6 +19,10 @@ export default {
     functions: {
       type: Object,
       required: true
+    },
+    shared: {
+      type: Object,
+      required: true
     }
   },
   components: {
@@ -33,10 +37,12 @@ export default {
     }
   }),
   methods: {
-    controller(option) {
+    controller(option, obj) {
       if (option.name == 'login') {
         this.components.login.on = true;
       } else if (option.name == 'login-cancel') {
+        this.components.login.on = false;
+      } else if (option.name == 'login-success') {
         this.components.login.on = false;
       }
     }

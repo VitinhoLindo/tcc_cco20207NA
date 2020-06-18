@@ -1,30 +1,11 @@
 const BaseModel = require('./BaseModel');
 
 class Login extends BaseModel {
-    table = 'Acesso';
-
-    cast = {
-        login      : 'encrypt',
-        senha      : 'hash',
-        created_at : 'date'
-    };
+    table     = 'Acesso';
+    timestamp = true;
     
     constructor() {
         super();
-    }
-
-    select(...args) {
-
-    }
-
-    where(...args) {
-
-    }
-
-    async get() {
-    }
-
-    async first() {
     }
 }
 
