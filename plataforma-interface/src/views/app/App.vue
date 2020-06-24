@@ -108,7 +108,7 @@ export default {
     },
     async request(url, method, params, data, headers) {
       try {
-        let response = await Axios({
+        let { data } = await Axios({
           url    : this.origin + url,
           method : method.toUpperCase(),
           params : params,
@@ -116,15 +116,8 @@ export default {
           headers: this.getHeader(headers)
         });
 
-        switch (response.status) {
-          case 500: 
-            // throw `Failure request '${url}'`
-            return null;
-          default:
-            return response.data;          
-        }
+        return data;
       } catch (error) { 
-        // return 'Network error'; 
         return null;
       }
     },

@@ -26,26 +26,19 @@ class LoginController extends Controller {
     
     async login() {
         if (this.readParams()) {
-            this.setHeader('Content-type', 'application/json');
-
             let [login, senha] = await Promise.all([
                 this.hashable(this.request.body.login),
                 this.hashable(this.request.body.key)
             ]);
 
-            let acesso = await this.acesso.where({ column: 'login', value: login }).get();
+            let acesso = await this.acesso.where({ column: 'login', value: login }).first();
+            if (!acesso) return this.formatResponse(200, 404, 'failure in login', { message: '' }, true);
 
-            if (!acesso.count())
-                return this.formatResponse(200, 404, 'failure in login', { message: '' }, true);                
-            
-            acesso = acesso.first();
 
             if (acesso.login == login && acesso.senha == senha) {
                 let token = await this.getToken(login);
                 return this.formatResponse(200, 200, 'success', { token: token });
-            } else {
-                return this.formatResponse(200, 404, 'failure in login', { message: '' }, true);
-            }
+            } else return this.formatResponse(200, 200, 'incorret data params', { message: 'Login ou Senha Incorreto' });
         } else return this.formatResponse(200, 400, 'data is missing', { message: 'Informe o login ou senha' });
     }
 

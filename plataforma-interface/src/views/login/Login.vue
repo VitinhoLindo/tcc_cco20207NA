@@ -74,20 +74,23 @@ export default {
     methods: {
       async loginSync() {
         this.disabled = true;
-        let response = await this.functions.request(
-          '/login',
-          'post',
-          {},
-          { login: this.login, key: this.key },
-          {}
-        );
-        
-        let auth = {
-          token: response.result.token
-        }
-        this.$emit('listen', { name: 'login-success' });
-        if (this.remember) auth.login = this.login;
-        await this.functions.authentication(auth);
+        try {
+          let response = await this.functions.request(
+            '/login',
+            'post',
+            {},
+            { login: this.login, key: this.key },
+            {}
+          );
+          
+          if (response.error) throw response.error;
+          let auth = {
+            token: response.result.token
+          }
+          this.$emit('listen', { name: 'login-success' });
+          if (this.remember) auth.login = this.login;
+          await this.functions.authentication(auth);
+        } catch (error) { console.log(error); }
         this.disabled = false;
       },
       onclick(type) {
