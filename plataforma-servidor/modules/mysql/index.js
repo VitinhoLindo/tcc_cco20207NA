@@ -1,92 +1,232 @@
-const { Mysql: { MysqlConnection } }    = require('../../interfaces');
+const ORM = require('./ORM');
+const { WhereOption, JoinOptions }  = require('./options');
 
-class MySqlModule {
-    process = require('process');
-    mysql   = require('mysql');
-    mysqlConfig = MysqlConnection;
-    query   = '';
+class MysqlOrm {
+    orm = new ORM;
+    selectFields = [];
+    whereFields  = [];
+    joinFields   = [];
+    JoinOptions  = JoinOptions;
+    WhereOption  = WhereOption;
+    
+    constructor() { }
 
-    constructor() { this.readConfig(); } // leitura da configuração do mysql
-
-    /** 
-     * @function mysql
-     * 
-     * <summary>
-     *   leitura da configuração
-     * </summary>
-     */
-    readConfig() {
-        this.mysqlConfig.host     = this.process.env.MYSQL_HOST;
-        this.mysqlConfig.port     = this.process.env.MYSQL_PORT;
-        this.mysqlConfig.user     = this.process.env.MYSQL_USER;
-        this.mysqlConfig.pass     = this.process.env.MYSQL_PASS;
-        this.mysqlConfig.database = this.process.env.MYSQL_SCHEMA;
-
-        if (!this.mysqlConfig.host)     this.mysqlConfig.host = '127.0.0.1';
-        if (!this.mysqlConfig.port)     this.mysqlConfig.port = '3306';
-        if (!this.mysqlConfig.user)     this.mysqlConfig.user = 'root';
-        if (!this.mysqlConfig.pass)     this.mysqlConfig.pass = '';
-        if (!this.mysqlConfig.database) this.mysqlConfig.database = 'mysql';
+    async executeQuery(query = '') {
+        this.clearCache();
+        if (query) return this.orm.executeQuery(query);
+        else       return [];
     }
 
-    setConnection() {
-        this.connection = this.mysql.createConnection(this.mysqlConfig);
+    addWhere(opt = new this.WhereOption) { this.whereFields.push(opt); }
+    addJoin(opt = new this.JoinOptions) { this.joinFields.push(opt); }
+    addSelect(array = []) { this.selectFields = this.selectFields.concat(array); }
+
+    clearCache() {
+        this.selectFields = [];
+        this.whereFields  = [];
+        this.joinFields   = [];
     }
 
-    connect() {
-        return new Promise((resolve, reject) => {
-            this.connection.connect((err) => {
-                if (err) return reject(err);
-                else return resolve(true);
-            });
-        });
+    fieldString (value) {
+        if (/\./g.test(value)) {
+            let [table, column] = value.split('.');
+            return `\`${table}\`.\`${column}\``;
+        } else return `\`${value}\``;
     }
 
-    disconnect() {
-        return new Promise((resolve, reject) => {
-            this.connection.end((err) => {
-                if (err) return reject(err);
-                else return resolve(true);
-            });
-        });
+    isArray (value) {
+        if (value === undefined) return false;
+        return value.constructor.name == 'Array';
     }
 
-    sendQuery() {
-        return new Promise((resolve, reject) => {
-            this.connection.query(this.query, (err, result) => {
-                if (err) return reject(err);
-                else return resolve(result);
-            });
-        });
+    arrayInfo (value = []) {
+        return {
+            min: 0,
+            max: value.length
+        };
     }
 
-    getMessageError(error) {
-        if (error.constructor.name == 'Error') {
-            var _error = '';
-            Object.keys(error).forEach((key) => {
-                let value = error[key];
-                if (typeof value != 'string' || typeof value != 'number') _error += `${key}: ${value}\n`;
-                else _error += `${key}: ${JSON.stringify(value)}\n`;
-            });
-
-            return _error;
-        } else return error;
+    arrayValue (index = 0, array = []) {
+        return array[index] || null;
     }
 
-    async executeQuery(query) {
-        this.query = query;
-        this.setConnection();
-        await this.connect();
-        var data;
-        var error;
-        try {
-            data = await this.sendQuery();
-        } catch (_error) { data = []; error = this.getMessageError(_error); }
-        await this.disconnect();
+    inArray (value, array = []) {
+        return array.indexOf(value) >= 0;
+    }
 
-        if (error) throw error;
-        return data;
+    unsetObject (field, object = {}) {
+        if (object[field] !== undefined) delete object[field];
+        else throw "field is not exists";
+        return object;
+    }
+
+    unsetArray (value, array = []) {
+        if (inArray(value, array)) {
+            let index = array.indexOf(value);
+            array.splice(index, 1);
+            return array;
+        } else return array;
+    }
+
+    buildSELECTQuery(model) {
+        let selectFields = this.getSelectFields();
+        let joinFields   = this.getSelectJoin();
+        let whereFields  = this.getWhereFields();
+
+        let query = `SELECT ${selectFields} `+
+        ` FROM ${this.fieldString(model.table())}` + 
+        ` ${joinFields} `;
+
+        if (model.softDelete()) {
+            whereFields += ((whereFields) ? ',' : '') + ` ${this.fieldString('deleted_at')} != Null `;
+        }
+        if (whereFields) query += `WHERE ( ${whereFields} ) ;`;
+        return query;
+    }
+
+    buildUPDATEQuery (model) {
+        model = this.buildTimestamp('update', model);
+        let whereArguments = '';
+        let setArguments   = '';
+
+        if (!this.whereFields.length) 
+            this.whereFields.push(new WhereOption({ column: 'id', value: model.id }));
+        model    = this.unsetObject('id', model);
+        let keys = Object.keys(model);
+
+        whereArguments = this.getWhereFields();
+
+        let info  = this.arrayInfo(keys);
+        for (let x = 0, field; field = keys[x]; x++) {
+            setArguments += ` ${this.fieldString(field)} = ${this.getTypeValue(model[field])}`;
+
+            if (info.max - 1 != x) {
+                setArguments += ',';
+            }
+        }
+
+        return `UPDATE ${this.fieldString(model.table())} SET ${setArguments}  WHERE ( ${whereArguments} );`;
+    }
+
+    buildINSERTQuery (model) {
+        model    = this.buildTimestamp('insert', model);
+        let keys = Object.keys(model);
+
+        let fieldArguments = '';
+        let valueArguments = '';
+
+        let info = this.arrayInfo(keys);
+        for (let x = 0, field; field = keys[x]; x++) {
+            fieldArguments += `${this.fieldString(field)}`;
+            valueArguments += `${this.getTypeValue(model[field])}`;
+
+            if (info.max - 1 !== x) {
+                fieldArguments += ',';
+                valueArguments += ',';
+            }
+        }
+
+        return `INSERT INTO ${this.fieldString(model.table())} ` + 
+               `(${fieldArguments}) VALUES (${valueArguments});`;
+    }
+
+    buildTimestamp (type = '', model) {
+        if (model.timestamp()) {
+            if (type.toUpperCase() == 'UPDATE') model.updated_at = new Date;
+            else                                model.created_at = new Date;
+        }
+        return model
+    }
+
+    buildDELETEQuery(model) {
+        if (model.softDelete()) {
+            if (!model.id) throw "failure in delete model";
+            model.deleted_at = new Date();
+            return this.buildUPDATEQuery(model);
+        }
+
+        if (!this.whereFields.length) {
+            if (!model.id) throw "failure in delete model";
+            this.whereFields.push(new WhereOption({ column: 'id', value: model.id }));
+        } 
+
+        let whereFields = this.getWhereFields();
+        return `DELETE FROM ${this.fieldString(model.table())} WHERE ( ${whereFields} );`;
+    }
+
+    getSaveQuery (model) {
+        if (model.id) return this.buildUPDATEQuery(model);
+        else return this.buildINSERTQuery(model);
+    }
+
+    getSelectJoin () {
+        var joinString = '';
+        
+        var info = this.arrayInfo(this.joinFields);
+        if (info.max) {
+            let value;
+            for (let x = 0; value = this.joinFields[x]; x++) {
+                value = new JoinOptions(value);
+                joinString += ` INNER JOIN ${this.fieldString(value.getTargetTable())}` + 
+                              ` ON ${this.fieldString(value.getTargetAndColumn())}` + 
+                              ` ${value.getComparison()}` + 
+                              ` ${this.fieldString(value.getCurrentTableAndColumn())} `;
+            }
+        }
+
+        return joinString;
+    }
+
+    getSelectTable () {
+        return ` FROM ${fieldString(table)}`;
+    }
+
+    getTypeValue (value) {
+        if (value === undefined) return 'Null';
+        switch (value.constructor.name) {
+            case 'Date': return `'${value.toLocaleString()}'`;
+            case 'String': return `'${value}'`;
+            case 'Number': return `${value}`;
+            case 'Array': return `"${JSON.stringify(value)}"`;
+            case 'Object': return `"${JSON.stringify(value)}"`;
+            default: throw "Type no\'t suported";
+        }
+    }
+
+    getSelectFields () {
+        var selectString = '';
+        var info = this.arrayInfo(this.selectFields);
+        if (info.max) {
+            let field;
+            for (let x = 0; field = this.selectFields[x]; x++) {
+                if (info.max - 1 == x) selectString += ` ${this.fieldString(field)}`;
+                else                   selectString += ` ${this.fieldString(field)},`;
+            }
+            return selectString;
+        } else return '*';
+    }
+
+    getWhereQuery(opt = new WhereOption) {
+        return ` ${this.fieldString(opt.getColumn())}` + 
+               ` ${opt.getComparison()}` + 
+               ` ${this.getTypeValue(opt.getValue())}`;
+    }
+    
+    getWhereFields () {
+        var whereString = '';
+        var info        = this.arrayInfo(this.whereFields);
+
+        if (info.max) {
+            let where;
+            for (let x = 0; where = this.whereFields[x]; x++) {
+                where = new WhereOption(where);
+                if (info.max - 1 == x) whereString += `${this.getWhereQuery(where)} `;
+                else                   whereString += `${this.getWhereQuery(where)} AND `;
+            }
+        }
+
+        return whereString;
     }
 }
 
-module.exports = MySqlModule;
+module.exports = MysqlOrm;

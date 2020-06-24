@@ -1,16 +1,15 @@
-// const { request, response } = require('express');
-// const Storage   = require('../app/storage');
 const Controller = require('./Controller');
-const Login     = require('../models/Login');
+const Acesso     = require('../models/Acesso');
 
 class LoginController extends Controller {
+    acesso = new Acesso;
+
     constructor( request, response) {
         super(request, response);
     }
 
     async readParams() {
         if (!this.request.body.login || !this.request.body.key) {
-            this.response.status(400);
             return false;
         }
     }
@@ -34,25 +33,38 @@ class LoginController extends Controller {
                 this.hashable(this.request.body.key)
             ]);
 
-            let _login = await (new Login).where('login', login).get();
+            let acesso = await this.acesso.where({ column: 'login', value: login }).get();
 
-            if (!_login.count())
-                return this.formatResponse(404, 'failure in login', { message: '' }, true);                
+            if (!acesso.count())
+                return this.formatResponse(200, 404, 'failure in login', { message: '' }, true);                
             
-            _login = _login.first();
+            acesso = acesso.first();
 
-            if (_login.login == login && _login.senha == senha) {
+            if (acesso.login == login && acesso.senha == senha) {
                 let token = await this.getToken(login);
-                return this.formatResponse(200, 'success', { token: token });
+                return this.formatResponse(200, 200, 'success', { token: token });
             } else {
-                return this.formatResponse(404, 'failure in login', { message: '' }, true);
+                return this.formatResponse(200, 404, 'failure in login', { message: '' }, true);
             }
-        } else return true;
+        } else return this.formatResponse(200, 400, 'data is missing', { message: 'Informe o login ou senha' });
+    }
+
+    async analizeForgotem() {
+        if (this.readParams()) {
+            this.setHeader('Content-type', 'application/json');
+
+            let login = await this.hashable(this.request.body.login);
+        } else return this.formatResponse(200, 400, 'data is missing', { message: 'Informe o login ou senha' });
     }
 
     async auth() {
         if (this.request)
             this.login();
+    }
+
+    async forgotem() {
+        if (this.request)
+            this.analizeForgotem();
     }
 }
 

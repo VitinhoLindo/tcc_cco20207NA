@@ -1,191 +1,102 @@
 const { Collection } = require('./util');
 const { MySql }      = require('../modules');
 
-class BaseModel {
-    table     = '';
-    timestamp = false;
+var table      = '';
+var timestamp  = false;
+var cast       = {};
+var softDelete = false;
+const mysqlORM = new MySql;
 
+const arrayInfo = function(array = []) {
+    let len = array.length;
+    return {
+        min: 0,
+        max: (len) ? len - 1 : 0
+    };
+}
+
+const arrayValue = function(index, array = []) {
+    return array[index] || null;
+}
+
+class BaseModel {
     constructor() {}
 
-    isArray(value) {
-        if (value == undefined) return false;
-        return value.constructor.name == 'Array';
+    use(object = {}) {
+        table      = object.table      || null;
+        cast       = object.cast       || null;
+        timestamp  = object.timestamp  || false;
+        softDelete = object.softDelete || false;
     }
 
-    inArray(value, array = []) {
-        return array.indexOf(value) >= 0;
+    table() {
+        return table;
     }
 
-    valueInKeysObject(value = '', object = {}) {
-        return this.inArray(value, Object.keys(object));
+    timestamp() {
+        return timestamp;
     }
 
-    getSelectFields() {
-        if (this.selectFields && this.isArray(this.selectFields)) {
-            let selectFields = this.selectFields.slice();
-            delete this.selectFields;
-            return selectFields;
-        } else return '*';
+    softDelete() {
+        return softDelete;
     }
 
-    buildSelect() {
-        let selectFields = this.getSelectFields();
-        if (this.isArray(selectFields)) {
-            for (let index = 0; index < selectFields.length; index++) {
-                let value = selectFields[index];
-
-                if (index == selectFields.length -1) this.query += `${value} `;
-                else this.query += `${value}, `;
-            }
-        } else this.query += `${selectFields} `;
-    }
-
-    buildTable() {
-        this.query += `from \`${this.table}\` `;
-        delete this.table;
-    }
-
-    getWhereFields() {
-        if (this.whereFields && this.isArray(this.whereFields)) {
-            let whereFields = this.whereFields.slice();
-            delete this.whereFields;
-            return whereFields;
-        } else return '';
-    }
-
-    getJoinFields() {
-        if (this.joinFields && this.isArray(this.joinFields)) {
-            let joinFields = this.joinFields.slice();
-            delete this.joinFields;
-            return joinFields;
-        } else return '';
-    }
-
-    buildWhere() {
-        let whereFields = this.getWhereFields();
-        if (this.isArray(whereFields)) {
-            this.query += ` where ( `;
-
-            for (let index = 0; index < whereFields.length; index++) {
-                let _value = whereFields[index];
-
-                if (index == whereFields.length -1) this.query += ` \`${_value.field}\` = '${_value.value}'`;
-                else this.query += ` \`${_value.field}\` = '${_value.value}',`;
-            }
-
-            this.query += ` )`;
-        }
-    }
-
-    buildJoin() {
-        let joinFields = this.getJoinFields();
-        if (this.isArray(joinFields)) {}
-    }
-
-    endQuery() {
-        this.query += ';';
-    }
-
-    setCast(type, key) {
-        if (type == 'save') {
-
-        }
-        if (type == 'get') {
-            
-        }
-    }
-
-    buildCast(type) {
-        return (delete this.cast);
-    }
-
-    buildTimestamp() {
-        if (this.timestamp) {
-            if (!this.id) this.created_at = (new Date()).toLocaleString();
-            else this.updated_at          = (new Date()).toLocaleString();
-        }
-        delete this.timestamp;
-    }
-
-    buildColumns() {
-        var query = `${this.query}( `;
-        delete this.table;
-        delete this.query;
-        let keys = Object.keys(this);
-        for (let index = 0; index < keys.length; index++) {
-            let key = keys[index];
-
-            if (index == keys.length - 1) query += `\`${key}\` `;
-            else query += `\`${key}\`, `;
-        }
-        query += ") ";
-        this.query = query;
-        this.keys  = keys ;
-    }
-
-    buildValues() {
-        this.query += 'VALUES ( ';
-
-        for(let index = 0; index < this.keys.length; index++) {
-            let key = this.keys[index];
-
-            if (index == this.keys.length - 1) this.query += `'${this[key]}' `;
-            else this.query += `'${this[key]}', `;
-        }
-
-        this.query += ');';
-        delete this.keys;
-    }
-
-    hasMany(Model = BaseModel, field) {
-        let _Model = new Model();
-        return _Model.where(field, this.id || null);
-    }
-
-    belongsTo(Model = BaseModel, field) {
-        let _Model = new Model();
-        return _Model.where('id', this[field]);
-    }
-
-    async save() {
-        this.query = `INSERT INTO \`${this.table}\` `;
-
-        this.buildTimestamp();
-        this.buildCast('save');
-        this.buildColumns();
-        this.buildValues();
-
-        let data   = await (new MySql).executeQuery(this.query);
-        delete this.query;
-        this.id    = data.insertId;
+    cast() {
+        return cast;
     }
 
     select(...args) {
-        this.selectFields = args;
+        mysqlORM.addSelect(args);
         return this;
     }
 
-    where(...args) {
-        if (this.isArray(this.whereFields)) this.whereFields.push({ field: args[0], value: args[1] });
-        else this.whereFields = [{ field: args[0], value: args[1] }];
+    where(opt = new mysqlORM.WhereOption) {
+        mysqlORM.addWhere(opt);
         return this;
+    }
+
+    join(opt = new mysqlORM.JoinOptions) {
+        mysqlORM.addJoin(opt);
+        return this;
+    }
+
+    async save() {
+        let query = mysqlORM.getSaveQuery(this);
+
+        let res = await mysqlORM.executeQuery(query);
+        if (res.insertId) this.id = res.insertId;
+        return true;
     }
 
     async get() {
-        this.query = 'select ';
-
-        this.buildCast('get');
-        this.buildSelect();
-        this.buildTable();
-        this.buildWhere();
-        this.buildJoin();
-        this.endQuery();
-
-        let values = await (new MySql).executeQuery(this.query);
-        console.log(values);
-        delete this.query;
-        return new Collection(this, values);
+        let query = mysqlORM.buildSELECTQuery(this);
+        let value = await mysqlORM.executeQuery(query);
+        return new Collection(this, value);
     }
+
+    async delete() {
+        let query = mysqlORM.buildDELETEQuery(this);
+
+        let res = await mysqlORM.executeQuery(query);
+        return true;
+    }
+
+    async first() {
+        let value = await this.get();
+
+        let info  = arrayInfo(value.values);
+        return arrayValue(info.min, value.values);
+    }
+
+    async last () {
+        let value = await this.get();
+
+        let info  = arrayInfo(value.values);
+        return arrayValue(info.max, value.values);
+    }
+
+    async belongsTo() {}
+    async hasMany() {}
 }
 
 module.exports = BaseModel;

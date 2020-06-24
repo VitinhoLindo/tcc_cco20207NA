@@ -18,7 +18,8 @@ class Controller extends Storage {
         this.response.end();
     }
 
-    formatResponse(status = 200, message, result, error = false) {
+    formatResponse(code = 200, status = 200, message, result, error = false) {
+        this.response.status(code);
         this.response.json({
             code    : status,
             message : message,

@@ -1,8 +1,7 @@
 class Collection {
     values = [];
     constructor(model, value) {
-        if (values.length)
-            this.createCollection(model, value);
+        this.createCollection(model, value);
     }
 
     createCollection(model, value = []) {
@@ -23,33 +22,14 @@ class Collection {
         }
     }
 
+    count() { return this.values.length; }
     valueInfo() {
         return {
             min: 0,
             max: (this.values.length) ? this.values.length - 1 : 0
         };
     }
-
-    count() {
-        let info = this.valueInfo();
-        return info.max;        
-    }
-
-    where(column, value) {
-        let info = this.valueInfo();
-        let model;
-        let searched = [];
-        for(; info.min == info.max; info.min++) {
-            let _model = this.values[info.min];
-
-            if (_model[column] == value) {
-                if (!model) model = new _model.constructor();
-                searched.push(_model)
-            };
-        }
-
-        return new Collection(model, searched);
-    }
+    where() {  }
     first() {
         let info = this.valueInfo();
         return this.values[info.min];
