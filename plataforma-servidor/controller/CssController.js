@@ -9,12 +9,12 @@ class CssController extends Controller {
         let file = this.request.params.file;
         let filexists = await this.getFileInfo('binary', this._dirname_, this.dirFiles.public.dir, this.dirFiles.public.css, `/${file}`);
 
-        this.sendFile(filexists);
+        return this.sendFile(filexists);
     }
 
     async on() {
         if (this.request)
-            await this.getFile();
+            return await this.getFile();
     }
 }
 

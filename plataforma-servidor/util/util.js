@@ -110,7 +110,6 @@ class Util extends Mailer {
 
         if (file.status) {
             let info  = await this.ModuleSignature.identify(file.path);
-
             if (!info) info = await this.getSimpleInfo(file);
             return Object.assign({}, file, info);
         } else {

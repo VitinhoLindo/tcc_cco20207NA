@@ -29,7 +29,7 @@ class Controller extends Storage {
         this.response.json({
             code    : status,
             message : message,
-            result  : result,
+            result  : result || null,
             status  : (error) ? 'error' : 'success'
         });
         this.end();

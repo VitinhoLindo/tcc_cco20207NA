@@ -1,35 +1,20 @@
-const { request, response } = require('express');
-const Storage = require('../app/storage');
+const Controller = require('./Controller');
 
-class ImageController extends Storage {
-    constructor(_request = request, _response = response) {
-        super();
-        if (_request && _response) {
-            this.request  = _request;
-            this.response = _response;
-    
-            this._dirname_ = this.request._dirname_;
-        }
+class ImageController extends Controller {
+    constructor(request,response) {
+        super(request,response);
     }
 
     async getFile() {
         let file = this.request.params.file;
         let fileInfo = await this.getFileInfo('binary', this._dirname_ + this.dirFiles.public.dir + this.dirFiles.public.image + `/${file}`);
 
-        if (fileInfo.status) {
-            this.response.status(200);
-            this.response.setHeader('Content-Type', fileInfo.mimeType);
-            this.response.write(fileInfo.file);
-        } else {
-            this.response.status(404);
-        }
+        return this.sendFile(fileInfo);
     }
 
     async on() {
-        if (this.request) {
+        if (this.request)
             await this.getFile();
-            this.response.end();
-        }
     }
 }
 

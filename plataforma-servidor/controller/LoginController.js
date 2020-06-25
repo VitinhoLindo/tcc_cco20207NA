@@ -31,22 +31,28 @@ class LoginController extends Controller {
                 this.hashable(this.request.body.key)
             ]);
 
-            let acesso = await this.acesso.where({ column: 'login', value: login }).first();
-            if (!acesso) return this.formatResponse(200, 404, 'failure in login', { message: '' }, true);
+            let acesso = await this.acesso.where({ column: 'login', value: login }).where({ column: 'senha', value: senha }).first();
+            if (!acesso) return this.formatResponse(200, 404, 'failure in login', { message: 'Login ou Senha Incorreto' }, true);
 
-
-            if (acesso.login == login && acesso.senha == senha) {
-                let token = await this.getToken(login);
-                return this.formatResponse(200, 200, 'success', { token: token });
-            } else return this.formatResponse(200, 200, 'incorret data params', { message: 'Login ou Senha Incorreto' });
+            let token = await this.getToken(login);
+            return this.formatResponse(200, 200, 'success', { token: token });
         } else return this.formatResponse(200, 400, 'data is missing', { message: 'Informe o login ou senha' });
     }
 
     async analizeForgotem() {
         if (this.readParams()) {
-            this.setHeader('Content-type', 'application/json');
-
             let login = await this.hashable(this.request.body.login);
+
+            let acesso = this.acesso.where({column: 'login', value: login}).first();
+
+            if (!acesso) return this.formatResponse(200, 404, '', { message: 'E-mail informado não existe' });
+
+            try {
+                // await this.sendMail({ });
+                return this.formatResponse(200, 200, 'Success', { message: 'E-mail enviado, verifique o seu e-mail, nele deve conter o código para troca de senha.' });
+            } catch (error) {
+                return this.formatResponse(200, 500, 'Internal Server Error', { message: 'Não foi possível enviar e-mail para o e-mail informado' }, true);
+            }
         } else return this.formatResponse(200, 400, 'data is missing', { message: 'Informe o login ou senha' });
     }
 
