@@ -91,6 +91,7 @@ class MysqlOrm {
 
         if (!this.whereFields.length) 
             this.whereFields.push(new WhereOption({ column: 'id', value: model.id }));
+        const id = model.id;
         model    = this.unsetObject('id', model);
         let keys = Object.keys(model);
 
@@ -105,6 +106,7 @@ class MysqlOrm {
             }
         }
 
+        model.id = id;
         return `UPDATE ${this.fieldString(model.table())} SET ${setArguments}  WHERE ( ${whereArguments} );`;
     }
 

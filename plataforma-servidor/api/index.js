@@ -30,7 +30,6 @@ route.get('/img/:file', async (request, response) => {
 
 route.post('/login', async (request, response) => {
     let controller = new LoginController(request, response);
-
     await controller.auth();
 });
 

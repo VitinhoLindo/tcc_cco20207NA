@@ -42,9 +42,7 @@ class LoginController extends Controller {
     async analizeForgotem() {
         if (this.readParams()) {
             let login = await this.hashable(this.request.body.login);
-
             let acesso = this.acesso.where({column: 'login', value: login}).first();
-
             if (!acesso) return this.formatResponse(200, 404, '', { message: 'E-mail informado não existe' });
 
             try {
