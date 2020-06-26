@@ -8,11 +8,6 @@ Vue.use(VueRouter)
     path: '/',
     name: 'Home',
     component: () => import('../views/home/Home.vue')
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import('../views/login/Login')
   }
 ]
 

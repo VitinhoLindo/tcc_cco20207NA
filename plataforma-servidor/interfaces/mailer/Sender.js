@@ -10,8 +10,15 @@ class Sender {
     };
     text = '';
     html = '';
+    _pathFile  = '';
+    fileConent = '';
+    replace   = {
+        regexp: '',
+        value : '',
+        type  : ''
+    } 
 
     constructor() {}
 }
 
-module.exports = new Sender();
+module.exports = Sender;

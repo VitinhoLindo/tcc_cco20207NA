@@ -51,6 +51,9 @@ class Repository extends MyEvent {
                 dir: '/crypto',
                 logFileName: '@date@-crypto.json'
             },
+        },
+        sistemMail: {
+            dir: '/sistemMail'
         }
     }
 

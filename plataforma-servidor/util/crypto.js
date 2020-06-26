@@ -1,7 +1,7 @@
-const Util = require('./util');
+const Mailer = require('./mailer');
 const { Crypto: { Encrypt, Decrypt, EncryptDecrypt }}   = require('../interfaces');
 
-class Crypto extends Util {
+class Crypto extends Mailer {
     keys     = {};
     crypto   = require('crypto');
 

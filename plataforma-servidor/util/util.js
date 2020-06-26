@@ -1,8 +1,8 @@
-const Mailer                         = require('./mailer');
+const Repository                     = require('./repositorio');
 const { Signature }                  = require('../modules');
 const { File: { SetFile, GetFile } } = require('../interfaces');
 
-class Util extends Mailer {
+class Util extends Repository {
     constructor() {
         super();
         this.ModuleSignature = Signature;

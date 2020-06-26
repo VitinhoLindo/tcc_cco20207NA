@@ -33,4 +33,14 @@ route.post('/login', async (request, response) => {
     await controller.auth();
 });
 
+route.post('/forgotem', async (request, response) => {
+    let controller = new LoginController(request, response);
+    await controller.forgotem();
+});
+
+route.post('/forgotem/message', async (request, response) => {
+    let controller = new LoginController(request, response);
+    await controller.getForgotemMessage();
+});
+
 module.exports = route;

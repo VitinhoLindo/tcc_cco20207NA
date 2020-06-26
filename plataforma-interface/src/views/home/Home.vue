@@ -1,13 +1,13 @@
 <template>
   <div class="home">
     <app-menu  v-bind:auth="auth" v-bind:functions="functions" v-on:listen="controller" />
-    <app-login v-if="components.login.on" v-bind:functions="functions" v-bind:shared="shared" v-on:listen="controller"/>
+    <app-acesso v-if="components.login.on" v-bind:functions="functions" v-bind:shared="shared" v-on:listen="controller" />
   </div>
 </template>
 
 <script>
 import Menu from '../menu/Menu';
-import Login from '../login/Login';
+import Acesso from '../../components/acesso/Acesso';
 
 export default {
   name: 'Home',
@@ -27,7 +27,7 @@ export default {
   },
   components: {
     AppMenu: Menu,
-    AppLogin: Login
+    AppAcesso: Acesso
   },
   data: () => ({
     components: {
@@ -36,15 +36,13 @@ export default {
       },
     }
   }),
+  mounted() {
+    this.$parent.$on('');
+  },
   methods: {
-    controller(option, obj) {
-      if (option.name == 'login') {
-        this.components.login.on = true;
-      } else if (option.name == 'login-cancel') {
-        this.components.login.on = false;
-      } else if (option.name == 'login-success') {
-        this.components.login.on = false;
-      }
+    controller(option) {
+      if (option.name == 'login') this.components.login.on = true;
+      else                        this.components.login.on = false;
     }
   }
 }

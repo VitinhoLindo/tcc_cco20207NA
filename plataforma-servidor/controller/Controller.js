@@ -1,4 +1,5 @@
 const { request, response } = require('express');
+const { Api: { FormatReponse } } = require('../interfaces');
 const Storage   = require('../app/storage');
 
 class Controller extends Storage {
@@ -22,15 +23,16 @@ class Controller extends Storage {
         this.response.end();
     }
 
-    formatResponse(code = 200, status = 200, message, result, error = false) {
+    formatResponse(opt = new FormatReponse) {
+        opt = new FormatReponse(opt);
         this.setHeader('Content-Type', 'application/json');
-        this.setStatus(code);
+        this.setStatus(opt.responseCode);
 
         this.response.json({
-            code    : status,
-            message : message,
-            result  : result || null,
-            status  : (error) ? 'error' : 'success'
+            code    : opt.requestCode,
+            message : opt.message,
+            result  : opt.result,
+            status  : opt.status
         });
         this.end();
         return true;

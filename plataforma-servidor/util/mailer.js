@@ -1,7 +1,7 @@
-const Repository                         = require('./repositorio');
+const Util                               = require('./util');
 const { Mailer: { Credential, Sender } } = require('../interfaces');
 
-class Mailer extends Repository {
+class Mailer extends Util {
     nodeMailer = require('nodemailer');
     config     = Credential;
 
@@ -25,14 +25,27 @@ class Mailer extends Repository {
         this.config.SMTP_PASS = this.process.env.SMTP_PASS;
     }
 
-    async sendMail(option = Sender) {
-        await this.transport.sendMail({
+    async sendMail(option = new Sender) {
+        if (option.replace) {
+            if (option._pathFile) {
+                let info = await this.getFileInfo(option.fileConent, option._pathFile);
+                
+                if (option.replace.type == 'html') {
+                    option.html = info.file.replace(new RegExp(option.replace.regexp, 'g'), option.replace.value);
+                }
+            }
+
+        }
+        
+        let _opt = {
             from: option.from,
             to: this.config.SMTP_USER,
             subject: option.subject,
             text: option.text,
             html: option.html
-        })
+        }
+
+        await this.transport.sendMail(_opt);
     }
 }
 

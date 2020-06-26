@@ -33,7 +33,7 @@ export default {
     shared : {},
     auth: null,
     functions: {},
-    origin: 'http://localhost:3000',
+    origin: 'http://10.0.0.109:3000',
     storageItens: ['login']
   }),
   methods: {
@@ -104,20 +104,25 @@ export default {
       if (this.auth)
         _defaultHeader['Autentication'] = `Bearer ${this.auth}`;
 
+      console.log(_defaultHeader)
       return _defaultHeader;
     },
-    async request(url, method, params, data, headers) {
+    async request(url, method, params = {}, _data = {}, headers = {}) {
       try {
-        let { data } = await Axios({
-          url    : this.origin + url,
-          method : method.toUpperCase(),
-          params : params,
-          data   : data,
-          headers: this.getHeader(headers)
+        let { statusText, status, data } = await Axios({
+          url     : `${this.origin}${url}`,
+          method  : method.toUpperCase(),
+          params  : params,
+          data    : _data,
+          headers : this.getHeader(headers)
         });
 
-        return data;
-      } catch (error) { 
+        console.log({ statusText, status, data });
+        if (!data) return { error: true, message: statusText, code: status };
+        if (data.status == 'error') return { error: true, message: (data.result && data.result.message) ? data.result.message : data.message, code: data.code };
+        else return data.result || {};
+      } catch (error) {
+        // console.log(Object.keys(error.response));
         return null;
       }
     },
