@@ -50,12 +50,12 @@ class BaseModel {
         return this;
     }
 
-    where(opt = new mysqlORM.WhereOption) {
+    where(opt = new mysqlORM.whereOption()) {
         mysqlORM.addWhere(opt);
         return this;
     }
 
-    join(opt = new mysqlORM.JoinOptions) {
+    join(opt = new mysqlORM.joinOption()) {
         mysqlORM.addJoin(opt);
         return this;
     }

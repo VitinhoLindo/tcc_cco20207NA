@@ -1,1 +1,2 @@
-exports.Login = require('./Login');
+exports.Login        = require('./Login');
+exports.AlterarSenha = require('./AlterarSenha');

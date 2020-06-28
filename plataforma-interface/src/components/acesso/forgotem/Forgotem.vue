@@ -14,25 +14,34 @@
       <div class="space">
         <span></span>
       </div>
-      <!-- 
-      <div class="label">
-        <label>{{ labels.pass }}</label>
-      </div>
-      <div class="acesso-input">
-        <input type="password" v-model="key">
-      </div>
-      <div class="error">
-        <span class="content">{{ labels.error }}</span>
-      </div> -->
-      <!-- <div class="remember">
-        <div class="content">
-          <input type="checkbox" v-model="remember">
-          <label>{{ labels.remember }}</label>
+      <div v-if="components.code.on">
+        <div class="label">
+          <label>{{ labels.code }}</label>
         </div>
-        <div class="forgotem">
-          <a href="#" v-on:click.prevent="(event) => onclick(event, 'forgotem')">{{ labels.forgotem }}</a>
+        <div class="acesso-input">
+          <input v-model="code">
         </div>
-      </div> -->
+        <div class="error">
+          <span class="content">{{ labels.codeError }}</span>
+        </div>
+      </div>
+      <div v-if="components.newKey.on">
+        <div class="label">
+          <label>{{ labels.newKey }}</label>
+        </div>
+        <div class="acesso-input">
+          <input v-bind:type="typeKey" v-model="newKey">
+        </div>
+        <div class="label">
+          <label>{{ labels.newKeyConfirm }}</label>
+        </div>
+        <div class="acesso-input">
+          <input v-bind:type="typeKey" v-model="newKeyConfirm">
+        </div>
+        <div class="error">
+          <span class="content">{{ labels.newKeyError }}</span>
+        </div>
+      </div>
       <div class="acesso-buttons">
         <button v-on:click="(event) => onclick(event, 'back')" v-bind:disabled="disabled">{{ labels.back }}</button>
         <button v-on:click="(event) => onclick(event, 'send')"  v-bind:disabled="disabled">{{ labels.send }}</button>
@@ -52,6 +61,10 @@ export default {
     shared: {
       type: Object,
       required: true
+    },
+    division: {
+      type: HTMLDivElement,
+      required: true
     }
   },
   mounted() {
@@ -63,15 +76,32 @@ export default {
   },
   data: () => ({
     labels: {
-      user  : 'E-mail',
-      back  : 'Return',
-      send  : 'Send'
+      user           : 'E-mail',
+      back           : 'Return',
+      send           : 'Send',
+      code           : 'Code',
+      error          : '',
+      codeError      : '',
+      newKey         : 'Nova Senha',
+      newKeyConfirm : 'Confirmar Nova Senha',
+      newKeyError    : ''
     },
-    disabled: false,
-    login   : '',
-    space   : 'initial',
-    forgotemMessage: '',
-    code    : ''
+    components: {
+      code: {
+        on: false
+      },
+      newKey: {
+        on: false
+      }
+    },
+    disabled        : false,
+    login           : '',
+    code            : '',
+    forgotemMessage : '',
+    code            : '',
+    newKey          : '',
+    newKeyConfirm  : '',
+    typeKey         : 'password' 
   }),
   methods: {
     async getForgotemText() {
@@ -90,14 +120,76 @@ export default {
         { login: this.login }
       );
 
-      this.forgotemMessage = response.message;
+      this.forgotemMessage       = response.message;
+      await this.functions.sleep(2);
+      if (response.awaitCode) {
+        this.division.style.height = '205px';
+        this.forgotemMessage       = '';
+        this.components.code.on    = true;
+      }
+    },
+    async sendCode() {
+      let response = await this.functions.request(
+        '/forgotem/code',
+        'post',
+        {},
+        { login: this.login, code: this.code }
+      );
+
+      if (response.error) {
+        this.labels.codeError = response.message;
+        return true;
+      }
+
+      if (response.awaitNewKey) {
+        this.components.code.on    = false;
+        this.components.newKey.on  = true;
+        this.division.style.height = '270px';
+        return true;
+      }
+    },
+    async sendNewKey() {
+      if (this.newKey.length <= 5) {
+        this.labels.newKeyError = 'nova senha deve ter mais de 5 caracteres';
+        return true;
+      }
+      if (this.newKeyConfirm.length <= 5) {
+        this.labels.newKeyError = 'confirmar nova senha deve ter mais de 5 caracteres';
+        return true;
+      }
+      if (this.newKey != this.newKeyConfirm) {
+        this.labels.newKeyError = 'verifique se as senhas conferem';
+        return true;
+      }
+      this.labels.newKeyError = '';
+      let response = await this.functions.request(
+        '/forgotem/redefine',
+        'post',
+        {},
+        { login: this.login, code: this.code, newKey: this.newKey, newKeyConfirm: this.newKeyConfirm }
+      );
+
+      if (response.error) {
+        this.labels.newKeyError = response.message;
+        return true;
+      }
+
+      this.$emit('listen', { name: 'key-changed' });
+    },
+    openToCode() {
+      return this.components.code.on;
+    },
+    openToNewKey() {
+      return this.components.newKey.on;
     },
     onclick(event, type) {
       if (type == 'back') {
         this.$emit('listen', { name: 'acesso-login' });
       } else if (type == 'send') {
-        if (this.code) {
-          
+        if (this.openToCode()) {
+          this.sendCode();
+        } else if (this.openToNewKey()) {
+          this.sendNewKey();
         } else {
           this.getCode();
         }

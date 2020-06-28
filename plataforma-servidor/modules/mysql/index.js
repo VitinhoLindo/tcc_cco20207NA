@@ -1,13 +1,13 @@
 const ORM = require('./ORM');
-const { WhereOption, JoinOptions }  = require('./options');
+const { WhereOption, JoinOption }  = require('./options');
 
 class MysqlOrm {
     orm = new ORM;
     selectFields = [];
     whereFields  = [];
     joinFields   = [];
-    JoinOptions  = JoinOptions;
-    WhereOption  = WhereOption;
+    joinOption  = JoinOption;
+    whereOption  = WhereOption;
     
     constructor() { }
 
@@ -17,8 +17,8 @@ class MysqlOrm {
         else       return [];
     }
 
-    addWhere(opt = new this.WhereOption) { this.whereFields.push(opt); }
-    addJoin(opt = new this.JoinOptions) { this.joinFields.push(opt); }
+    addWhere(opt) { this.whereFields.push(opt); }
+    addJoin(opt) { this.joinFields.push(opt); }
     addSelect(array = []) { this.selectFields = this.selectFields.concat(array); }
 
     clearCache() {
@@ -168,7 +168,7 @@ class MysqlOrm {
         if (info.max) {
             let value;
             for (let x = 0; value = this.joinFields[x]; x++) {
-                value = new JoinOptions(value);
+                value = new JoinOption(value);
                 joinString += ` INNER JOIN ${this.fieldString(value.getTargetTable())}` + 
                               ` ON ${this.fieldString(value.getTargetAndColumn())}` + 
                               ` ${value.getComparison()}` + 
@@ -185,6 +185,7 @@ class MysqlOrm {
 
     getTypeValue (value) {
         if (value === undefined) return 'Null';
+        if (value === null)      return 'Null';
         switch (value.constructor.name) {
             case 'Date': return `'${value.toLocaleString()}'`;
             case 'String': return `'${value}'`;

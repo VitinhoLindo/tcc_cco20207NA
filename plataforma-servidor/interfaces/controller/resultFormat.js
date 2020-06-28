@@ -2,6 +2,7 @@ class ResultFormat {
     message   = '';
     token     = '';
     awaitCode = '';
+    awaitNewKey = '';
 
     constructor() {}
 }

@@ -1,8 +1,8 @@
 <template>
-  <div id="acesso" v-bind:class="acessoId">
+  <div id="acesso" class="acesso-div">
     <div class="acesso content">
       <app-login v-if="components.login.on" v-bind:functions="functions" v-bind:shared="shared" v-on:listen="controller" />
-      <app-forgotem v-if="components.forgotem.on" v-bind:functions="functions" v-bind:shared="shared" v-on:listen="controller"/>
+      <app-forgotem v-if="components.forgotem.on" v-bind:functions="functions" v-bind:shared="shared" v-bind:division="division" v-on:listen="controller"/>
     </div>
   </div>
 </template>
@@ -16,6 +16,10 @@ export default {
   components: {
     AppLogin: Login,
     AppForgotem: Forgotem
+  },
+  mounted() {
+    this.division = document.getElementById('acesso');
+    this.division.style.height = '250px';
   },
   props: {
     functions: {
@@ -34,9 +38,9 @@ export default {
       },
       forgotem: {
         on: false
-      }
+      },
     },
-    acessoId: 'acesso-div'
+    division: null
   }),
   methods: {
     showLogin() {
@@ -52,12 +56,15 @@ export default {
         this.$emit('listen', { name: 'acesso-cancel' });
       } else if (option.name == 'acesso-forgotem') {
         this.showForgotem();
-        this.acessoId = 'forgotem-div';
+        this.division.style.height = '140px';
       } else if (option.name == 'acesso-login') {
         this.showLogin();
-        this.acessoId = 'acesso-div';
+        this.division.style.height = '250px';
       } else if (option.name == 'acesso-success') {
         this.$emit('listen', { name: 'acesso-success' });
+      } else if (option.name == 'key-changed') {
+        this.division.style.height = '250px';
+        this.showLogin();
       }
     }
   }
@@ -69,14 +76,6 @@ export default {
   margin-top: 5%;
   margin-left: 5%;
   width: 360px;
-  height: 250px;
-  border: 1px solid #ecf0f1;
-}
-.forgotem-div {
-  margin-top: 5%;
-  margin-left: 5%;
-  width: 360px;
-  height: 140px;
   border: 1px solid #ecf0f1;
 }
 .acesso.content {
@@ -169,7 +168,7 @@ export default {
   color: #aaaaaa;
 }
 .error {
-  height: 15px;
+  height: 18px;
   width: 100%;
 }
 .error .content {

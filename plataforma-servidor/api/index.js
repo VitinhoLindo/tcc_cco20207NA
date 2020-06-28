@@ -43,4 +43,14 @@ route.post('/forgotem/message', async (request, response) => {
     await controller.getForgotemMessage();
 });
 
+route.post('/forgotem/code', async (request, response) => {
+    let controller = new LoginController(request, response);
+    await controller.forgotemCode();
+});
+
+route.post('/forgotem/redefine', async (request, response) => {
+    let controller = new LoginController(request, response);
+    await controller.redefineKey();
+});
+
 module.exports = route;

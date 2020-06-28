@@ -20,7 +20,8 @@ export default {
       sessionFind   : this.sessionFind,
       sessionRemove : this.sessionRemove,
       request       : this.request,
-      authentication: this.authentication
+      authentication: this.authentication,
+      sleep         : this.sleep
     };
 
     window.onresize   = () => this.$emit('on-resize', this.getOffSetMain());
@@ -37,6 +38,15 @@ export default {
     storageItens: ['login']
   }),
   methods: {
+    sleep(time) {
+      time = parseFloat(time) || 1;
+      time *= 1000;
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(true);
+        }, time);
+      });
+    },
     async getStorage() {
       for (let index in this.storageItens) {
         let key = this.storageItens[index];
@@ -104,7 +114,6 @@ export default {
       if (this.auth)
         _defaultHeader['Autentication'] = `Bearer ${this.auth}`;
 
-      console.log(_defaultHeader)
       return _defaultHeader;
     },
     async request(url, method, params = {}, _data = {}, headers = {}) {
@@ -117,12 +126,10 @@ export default {
           headers : this.getHeader(headers)
         });
 
-        console.log({ statusText, status, data });
         if (!data) return { error: true, message: statusText, code: status };
         if (data.status == 'error') return { error: true, message: (data.result && data.result.message) ? data.result.message : data.message, code: data.code };
         else return data.result || {};
       } catch (error) {
-        // console.log(Object.keys(error.response));
         return null;
       }
     },
