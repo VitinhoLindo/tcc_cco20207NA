@@ -1,10 +1,28 @@
 <template>
   <div id="app">
-    <router-view 
+    <app-loading 
+      v-if="loading.on"
+      v-bind:loading="loading.type"
+    />
+
+    <app-acesso 
+      v-if="!auth" 
+      v-bind:functions="functions"
+      v-bind:shared="shared"
+    />
+
+    <router-view
+      id="router"
       v-bind:auth="auth"
       v-bind:functions="functions"
       v-bind:shared="shared"
       v-on:authentication="authentication" 
+    />
+
+    <app-menu 
+      v-bind:functions="functions" 
+      v-bind:shared="shared" 
+      v-bind:auth="auth" 
     />
   </div>
 </template>
@@ -12,21 +30,35 @@
 <script>
 import Axios from 'axios';
 
+import Menu from '../menu/Menu';
+import Acesso from '../../components/acesso/Acesso';
+import LoadingView from '../../components/loader/LoadingView';
+
 export default {
   name: 'App',
+  components: {
+    AppLoading : LoadingView,
+    AppMenu    : Menu,
+    AppAcesso  : Acesso
+  },
   async mounted() {
     this.functions = {
-      sessionSave   : this.sessionSave,
-      sessionFind   : this.sessionFind,
-      sessionRemove : this.sessionRemove,
-      request       : this.request,
-      authentication: this.authentication,
-      sleep         : this.sleep
+      sessionSave      : this.sessionSave,
+      sessionFind      : this.sessionFind,
+      sessionRemove    : this.sessionRemove,
+      request          : this.request,
+      authentication   : this.authentication,
+      sleep            : this.sleep,
+      windowOffSet     : this.getOffSetMain,
+      eventPromise     : this.eventPromise,
+      getDivision      : this.getDivision,
+      getOffSet        : this.getOffSet,
+      emmiter          : this.emmiter,
+      getMousePosition : this.getMousePosition
     };
 
-    window.onresize   = () => this.$emit('on-resize', this.getOffSetMain());
-    window.onkeydown = (event) => this.onkeydown(event);
     await this.getStorage();
+    this.listiner();
   },
   data: () => ({
     session: window.sessionStorage,
@@ -34,51 +66,115 @@ export default {
     shared : {},
     auth: null,
     functions: {},
-    origin: 'http://10.0.0.109:3000',
-    storageItens: ['login']
+    origin: 'http://10.0.0.109:8181',
+    storageItens: ['login'],
+    loading: {
+      on: true,
+      type: ''
+    },
+    mouse: {
+      x: 0,
+      y: 0
+    }
   }),
   methods: {
+    async onmousemove(event) {
+      this.mouse = {
+        x: event.x,
+        y: event.y
+      }
+    },
+    getMousePosition() {
+      return this.mouse;
+    },
+    async emmiter(event, data, callback) {
+      this.$emit(event, data, callback);
+    },
+    async listiner() {
+      window.onresize   = async () => {
+        this.emmiter('on-resize', this.getOffSetMain());
+      };
+      // window.onmousemove = (event) => this.onmousemove(event);
+      window.onkeydown   = (event) => this.onkeydown(event);
+      window.ondrop      = (event) => this.ondrop(event);
+
+      this.$on('loading',         this.loadingController);
+      this.loadingController({ on: true, sleep: 4 });
+    },
+    async getDivision(id) {
+      let doc = document.getElementById(id);
+
+      if (!doc) {
+        await this.sleep(0.1);
+        return await this.getDivision(id);
+      }
+
+      return doc;
+    },
+    getOffSet(division) {
+      let { offsetWidth, offsetHeight } = division;
+      return { offsetWidth, offsetHeight };
+    },
+    getOffSetMain() {
+      let { innerWidth, innerHeight } = window;
+      return { innerWidth, innerHeight };
+    },
+    onkeydown(event) {
+      if (event.keyCode == 27) this.emmiter('close-all');
+    },
+    async loadingController(opt = { on: false, type: '', sleep: 0 }) {
+      this.loading.on   = opt.on;
+      this.loading.type = opt.type;
+ 
+      if (!opt.sleep)  return true;
+
+      await this.sleep(opt.sleep);
+      this.loading.on = false;
+    },
     sleep(time) {
       time = parseFloat(time) || 1;
       time *= 1000;
+
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve(true);
         }, time);
       });
     },
-    async getStorage() {
-      for (let index in this.storageItens) {
-        let key = this.storageItens[index];
-        let value = await this.storageFind(key);
+    eventPromise(opt = { eventName: '', data: {}, awaitResponse: false }) {
+      return new Promise((resolve, reject) => {
+        if (!opt.awaitResponse) {
+          if (opt.data) this.emmiter(opt.eventName, opt.data);
+          else          this.emmiter(opt.eventName);
+          return        resolve(true);
+        }
 
+        if (opt.data) this.emmiter(opt.eventName, opt.data, (err, result) => {
+          if (err)    return reject(err);
+          else        return resolve(result);
+        });
+        else this.emmiter(opt.eventName, (err, result) => {
+          if (err)    return reject(err);
+          else        return resolve(result);
+        });
+      });
+    },
+    async getStorage() {
+      this.storageItens.forEach(async (key) => {
+        let value = await this.storageFind(key);
         if (value) this.shared[key] = value;
-      }
-    },
-    onkeydown(event) {
-      if (event.keyCode == 27) 
-        this.$emit('close-all');
-    },
-    getOffSetMain() {
-      let { innerWidth, innerHeight } = window;
-      return { innerWidth, innerHeight };
+      });
     },
     async storageSave(key, value) {
-      try {
-        this.storage.setItem(key, value)
-      } catch (error) { }
+      this.storage.setItem(key, value);
       return true;
     },
     async storageClear(key) {
-      try {
-        this.storage.removeItem(key);
-      } catch (error) {}
+      this.storage.removeItem(key);
       return true;
     },
     async storageFind(key) {
-      try {
-        return this.storage.getItem(key);;
-      } catch(error) { return null; }
+      return this.storage.getItem(key);;
     },
     async sessionSave(key, value) {
       try {
@@ -116,26 +212,44 @@ export default {
 
       return _defaultHeader;
     },
-    async request(url, method, params = {}, _data = {}, headers = {}) {
+    async request(
+      option = {
+        url: '', 
+        method: '', 
+        params : {}, 
+        body : {}, 
+        headers : {}
+      }
+    ) {
       try {
-        let { statusText, status, data } = await Axios({
-          url     : `${this.origin}${url}`,
-          method  : method.toUpperCase(),
-          params  : params,
-          data    : _data,
-          headers : this.getHeader(headers)
+        let {
+          statusText,
+          status,
+          data
+        } = await Axios({
+          url     : `${this.origin}${option.url.toLowerCase()}`,
+          method  : option.method.toUpperCase(),
+          params  : option.params,
+          data    : option.body,
+          headers : this.getHeader(option.headers)
         });
 
-        if (!data) return { error: true, message: statusText, code: status };
-        if (data.status == 'error') return { error: true, message: (data.result && data.result.message) ? data.result.message : data.message, code: data.code };
-        else return data.result || {};
+        switch (data.status || '') {
+          case 'error':   return { 
+            error: true, 
+            message: (data.result && data.result.message) ? data.result.message : data.message, 
+            code: data.code 
+          };
+          case 'success': return data.result || {};
+          default:        throw 'error'
+        }
       } catch (error) {
         return null;
       }
     },
     async authentication(auth) {
       if (auth.login) this.storageSave('login', auth.login);
-      else this.storageClear('login');
+      else            this.storageClear('login');
       this.auth = auth.token;
       return true;
     }
@@ -144,9 +258,7 @@ export default {
 </script>
 
 <style>
-body {
-  width: 100%;
-  height: 100%;
+html, body {
   padding: 0%;
   margin: 0%;
 }
@@ -154,14 +266,25 @@ body {
 #app {
   padding: 0%;
   margin: 0%;
+  width: 100%;
+  height: 100%;
 }
 
 .options {
+  fill: #ffffff;
   position: fixed;
-  top: 5px;
-  right: 5px;
   width: 30px;
   height: 30px;
+}
+
+.bottom.left {
+  bottom: 5px;
+  left: 5px;
+}
+
+.bottom.right {
+  bottom: 5px;
+  right: 5px;
 }
 
 .options:hover {

@@ -53,7 +53,7 @@ export default {
     mounted() {
       if (this.shared.login) {
         this.remember = true;
-        this.login    = this.shared.login;
+        this.setLogin(this.shared.login);
       }
     },
     data: () => ({
@@ -73,15 +73,22 @@ export default {
       disabled : false
     }),
     methods: {
+      getLogin() {
+        return this.login.toLowerCase();
+      },
+      setLogin(value) {
+        this.login = value.toLowerCase();
+      },
       async loginSync() {
+        this.functions.eventPromise({ eventName: 'loading', data: { on: true } });
         this.disabled = true;
         try {
-          let response = await this.functions.request(
-            '/login',
-            'post',
-            {},
-            { login: this.login, key: this.key },
-          );
+          this.setLogin(this.getLogin());
+          let response = await this.functions.request({
+            url: '/login',
+            method: 'post',
+            body: { login: this.getLogin(), key: this.key }
+          });
           
           if (response.error) {
             this.labels.error = response.message;
@@ -89,12 +96,15 @@ export default {
             let auth = {
               token: response.token
             }
+
+            this.functions.eventPromise({ eventName: 'loading', data: { on: false } });
             this.$emit('listen', { name: 'acesso-success' });
-            if (this.remember) auth.login = this.login;
+            if (this.remember) auth.login = this.getLogin();
             await this.functions.authentication(auth);
           }
         } catch (error) { console.error(error); }
         this.disabled = false;
+        this.functions.eventPromise({ eventName: 'loading', data: { on: false } });
       },
       onclick(event, type) {
         if (type == 'cancel') {

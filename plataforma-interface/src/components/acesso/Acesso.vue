@@ -1,8 +1,25 @@
 <template>
-  <div id="acesso" class="acesso-div">
+  <div id="acesso" 
+       class="acesso-div" 
+       v-if="on" 
+       draggable="true" 
+       v-on:dragend="(event) => dragend(event)" 
+  >
     <div class="acesso content">
-      <app-login v-if="components.login.on" v-bind:functions="functions" v-bind:shared="shared" v-on:listen="controller" />
-      <app-forgotem v-if="components.forgotem.on" v-bind:functions="functions" v-bind:shared="shared" v-bind:division="division" v-on:listen="controller"/>
+      <app-login 
+        v-if="components.login.on" 
+        v-bind:functions="functions" 
+        v-bind:shared="shared" 
+        v-on:listen="controller" 
+      />
+
+      <app-forgotem 
+        v-if="components.forgotem.on" 
+        v-bind:functions="functions" 
+        v-bind:shared="shared" 
+        v-bind:division="division" 
+        v-on:listen="controller"
+      />
     </div>
   </div>
 </template>
@@ -17,9 +34,9 @@ export default {
     AppLogin: Login,
     AppForgotem: Forgotem
   },
-  mounted() {
-    this.division = document.getElementById('acesso');
-    this.division.style.height = '250px';
+  async mounted() {
+    this.renderPage();
+    this.acessoListiner();
   },
   props: {
     functions: {
@@ -31,7 +48,11 @@ export default {
       required: true
     }
   },
+  mounted() {ondrag
+    this.$parent.$on('show-login', this.renderPage);
+  },
   data: () => ({
+    on: false,
     components: {
       login: {
         on: true
@@ -40,9 +61,17 @@ export default {
         on: false
       },
     },
+    interval: null,
     division: null
   }),
   methods: {
+    setPosition(x, y) {
+      this.division.style.top  = `${y}px`;
+      this.division.style.left = `${x}px`;
+    },
+    dragend(event) {
+      this.setPosition(event.clientX, event.clientY);
+    },
     showLogin() {
       this.components.forgotem.on = false;
       this.components.login.on    = true;
@@ -51,19 +80,27 @@ export default {
       this.components.forgotem.on = true;
       this.components.login.on    = false;
     },
-    controller(option) {
+    async renderPage(option = 'login') {
+      this.on = true;
+      this.division = await this.functions.getDivision('acesso');
+
+      this.setOffSet(250);
+    },
+    async setOffSet(height, width = 360) {
+      this.division.style.width = `${width}px`;
+      this.division.style.height = `${height}px`;
+    },
+    async controller(option) {
       if (option.name == 'acesso-cancel') {
-        this.$emit('listen', { name: 'acesso-cancel' });
+        this.on = false;
       } else if (option.name == 'acesso-forgotem') {
+        await this.setOffSet(140);
         this.showForgotem();
-        this.division.style.height = '140px';
       } else if (option.name == 'acesso-login') {
+        await this.setOffSet(250);
         this.showLogin();
-        this.division.style.height = '250px';
-      } else if (option.name == 'acesso-success') {
-        this.$emit('listen', { name: 'acesso-success' });
       } else if (option.name == 'key-changed') {
-        this.division.style.height = '250px';
+        await this.setOffSet(250);
         this.showLogin();
       }
     }
@@ -73,10 +110,12 @@ export default {
 
 <style>
 .acesso-div {
-  margin-top: 5%;
-  margin-left: 5%;
+  position: fixed;
+  top: 5%;
+  left: 4%;
   width: 360px;
   border: 1px solid #ecf0f1;
+  background-color: #ffffff;
 }
 .acesso.content {
   margin: 0% 5%;

@@ -1,13 +1,11 @@
 <template>
-  <div class="home">
-    <app-menu  v-bind:auth="auth" v-bind:functions="functions" v-on:listen="controller" />
-    <app-acesso v-if="components.login.on" v-bind:functions="functions" v-bind:shared="shared" v-on:listen="controller" />
+  <div id="home" >
+    <app-content v-if="show" v-bind:contentStyle="contentStyle" />
   </div>
 </template>
 
 <script>
-import Menu from '../menu/Menu';
-import Acesso from '../../components/acesso/Acesso';
+import Content from '../content/Content';
 
 export default {
   name: 'Home',
@@ -26,24 +24,54 @@ export default {
     }
   },
   components: {
-    AppMenu: Menu,
-    AppAcesso: Acesso
+    AppContent : Content
   },
   data: () => ({
-    components: {
-      login: {
-        on: false
-      },
+    show: false,
+    home: null,
+    menu: null,
+    contentStyle: {
+      width: 0,
+      height: 0
     }
   }),
   mounted() {
-    this.$parent.$on('');
+    this.homeListiner();
+    this.renderContent();
   },
   methods: {
-    controller(option) {
-      if (option.name == 'login') this.components.login.on = true;
-      else                        this.components.login.on = false;
+    async homeListiner() {      
+      this.$parent.$on('on-resize', () => this.renderContent());
+    },
+    async renderContent() {
+      if (!this.home && !this.menu) {
+        let [ home, menu ] = await Promise.all([
+          this.functions.getDivision('router'),
+          this.functions.getDivision('menu')
+        ]);
+
+        this.home = home;
+        this.menu = menu;
+      }
+
+      let { innerWidth, innerHeight }   = this.functions.windowOffSet();
+      let { offsetWidth, offsetHeight } = this.functions.getOffSet(this.menu);
+
+      this.contentStyle.width = innerWidth;
+      this.contentStyle.height = innerHeight - offsetHeight;
+
+      if (!this.show) this.show = true;
     }
   }
 }
 </script>
+
+<style>
+#acesso-plataform {
+  position: fixed;
+  background-color: #ffffff;
+}
+#links {
+  position: fixed;
+}
+</style>

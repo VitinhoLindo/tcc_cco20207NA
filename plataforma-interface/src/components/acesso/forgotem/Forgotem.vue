@@ -105,23 +105,27 @@ export default {
   }),
   methods: {
     async getForgotemText() {
-      let response = await this.functions.request(
-        '/forgotem/message',
-        'post'
-      );
-      
+      let response = await this.functions.request({
+        url: '/forgotem/message',
+        method: 'post'
+      });
+
       this.forgotemMessage = response.message;
     },
+    getLogin() {
+      return this.login.toLowerCase();
+    },
     async getCode() {
-      let response = await this.functions.request(
-        '/forgotem',
-        'post',
-        {},
-        { login: this.login }
-      );
+      this.functions.eventPromise({ eventName: 'loading', data: { on: true } });
+      let response = await this.functions.request({
+        url: '/forgotem',
+        method: 'post',
+        body: { login: this.getLogin() }
+      });
+      this.functions.eventPromise({ eventName: 'loading', data: { on: true, sleep: 1 } });
 
       this.forgotemMessage       = response.message;
-      await this.functions.sleep(2);
+      await this.functions.sleep(3);
       if (response.awaitCode) {
         this.division.style.height = '205px';
         this.forgotemMessage       = '';
@@ -129,12 +133,13 @@ export default {
       }
     },
     async sendCode() {
-      let response = await this.functions.request(
-        '/forgotem/code',
-        'post',
-        {},
-        { login: this.login, code: this.code }
-      );
+      this.functions.eventPromise({ eventName: 'loading', data: { on: true } });
+      let response = await this.functions.request({
+        url: '/forgotem/code',
+        method: 'post',
+        body: { login: this.getLogin(), code: this.code }
+      });
+      this.functions.eventPromise({ eventName: 'loading', data: { on: true, sleep: 1 } });
 
       if (response.error) {
         this.labels.codeError = response.message;
@@ -162,12 +167,18 @@ export default {
         return true;
       }
       this.labels.newKeyError = '';
-      let response = await this.functions.request(
-        '/forgotem/redefine',
-        'post',
-        {},
-        { login: this.login, code: this.code, newKey: this.newKey, newKeyConfirm: this.newKeyConfirm }
-      );
+      this.functions.eventPromise({ eventName: 'loading', data: { on: true } });
+      let response = await this.functions.request({
+        url: '/forgotem/redefine',
+        method: 'post',
+        body: {
+          login: this.getLogin(),
+          code: this.code,
+          newKey: this.newKey,
+          newKeyConfirm: this.newKeyConfirm
+        }
+      });
+      this.functions.eventPromise({ eventName: 'loading', data: { on: true, sleep: 1 } });
 
       if (response.error) {
         this.labels.newKeyError = response.message;
