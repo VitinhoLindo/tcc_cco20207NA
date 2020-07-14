@@ -54,35 +54,27 @@ export default {
       getDivision      : this.getDivision,
       getOffSet        : this.getOffSet,
       emmiter          : this.emmiter,
-      getMousePosition : this.getMousePosition
+      getMousePosition : this.getMousePosition,
+      setPosition      : this.setPosition
     };
 
     await this.getStorage();
     this.listiner();
   },
   data: () => ({
-    session: window.sessionStorage,
-    storage: window.localStorage,
-    shared : {},
-    auth: null,
-    functions: {},
-    origin: 'http://10.0.0.109:8181',
-    storageItens: ['login'],
-    loading: {
-      on: true,
-      type: ''
-    },
-    mouse: {
-      x: 0,
-      y: 0
-    }
+    session      : window.sessionStorage,
+    storage      : window.localStorage,
+    shared       : {},
+    auth         : null,
+    functions    : {},
+    origin       : 'http://10.0.0.105:8181',
+    storageItens : ['login'],
+    loading      : { on: true, type: '' },
+    mouse        : { x: 0, y: 0 }
   }),
   methods: {
     async onmousemove(event) {
-      this.mouse = {
-        x: event.x,
-        y: event.y
-      }
+      this.mouse = { x: event.x, y: event.y };
     },
     getMousePosition() {
       return this.mouse;
@@ -111,12 +103,17 @@ export default {
 
       return doc;
     },
+    setPosition(x, y, division) {
+      console.log(division);
+      division.style.top  = `${y}px`;
+      division.style.left = `${x}px`;
+    },
     getOffSet(division) {
-      let { offsetWidth, offsetHeight } = division;
+      let    { offsetWidth, offsetHeight } = division;
       return { offsetWidth, offsetHeight };
     },
     getOffSetMain() {
-      let { innerWidth, innerHeight } = window;
+      let    { innerWidth, innerHeight } = window;
       return { innerWidth, innerHeight };
     },
     onkeydown(event) {
@@ -129,10 +126,10 @@ export default {
       if (!opt.sleep)  return true;
 
       await this.sleep(opt.sleep);
-      this.loading.on = false;
+      this.loading.on   = false;
     },
     sleep(time) {
-      time = parseFloat(time) || 1;
+      time  = parseFloat(time) || 1;
       time *= 1000;
 
       return new Promise((resolve) => {
@@ -149,19 +146,19 @@ export default {
           return        resolve(true);
         }
 
-        if (opt.data) this.emmiter(opt.eventName, opt.data, (err, result) => {
-          if (err)    return reject(err);
-          else        return resolve(result);
+        if (opt.data)   this.emmiter(opt.eventName, opt.data, (err, result) => {
+          if (err)      return reject(err);
+          else          return resolve(result);
         });
-        else this.emmiter(opt.eventName, (err, result) => {
-          if (err)    return reject(err);
-          else        return resolve(result);
+        else            this.emmiter(opt.eventName, (err, result) => {
+          if (err)      return reject(err);
+          else          return resolve(result);
         });
       });
     },
     async getStorage() {
       this.storageItens.forEach(async (key) => {
-        let value = await this.storageFind(key);
+        let value                   = await this.storageFind(key);
         if (value) this.shared[key] = value;
       });
     },
@@ -180,24 +177,18 @@ export default {
       try {
         this.session.setItem(key, value);
         return true;
-      } catch (error) {
-        throw 'Failure in save session';
-      }
+      } catch (error) { throw 'Failure in save session'; }
     },
     async sessionFind(key) {
       try {
         return this.session.getItem(key);
-      } catch (error) {
-        throw 'Failure in find storage item';
-      }
+      } catch (error) { throw 'Failure in find storage item'; }
     },
     async sessionRemove(key) {
       try {
         this.session.removeItem(key);
         return true;
-      } catch (error) {
-        throw 'Failure in remove iten session';
-      }
+      } catch (error) { throw 'Failure in remove iten session'; }
     },
     getHeader(headers) {
       let _defaultHeader = {
@@ -205,7 +196,7 @@ export default {
       };
 
       for (let key in headers) 
-        _defaultHeader[key] = headers[key];
+        _defaultHeader[key]             = headers[key];
 
       if (this.auth)
         _defaultHeader['Autentication'] = `Bearer ${this.auth}`;
@@ -214,10 +205,10 @@ export default {
     },
     async request(
       option = {
-        url: '', 
-        method: '', 
-        params : {}, 
-        body : {}, 
+        url     : '', 
+        method  : '', 
+        params  : {}, 
+        body    : {}, 
         headers : {}
       }
     ) {
@@ -236,20 +227,19 @@ export default {
 
         switch (data.status || '') {
           case 'error':   return { 
-            error: true, 
-            message: (data.result && data.result.message) ? data.result.message : data.message, 
-            code: data.code 
+            error   : true, 
+            message : (data.result && data.result.message) ? data.result.message : data.message, 
+            code    : data.code 
           };
           case 'success': return data.result || {};
           default:        throw 'error'
         }
-      } catch (error) {
-        return null;
-      }
+      } catch (error) { return null; }
     },
     async authentication(auth) {
       if (auth.login) this.storageSave('login', auth.login);
       else            this.storageClear('login');
+
       this.auth = auth.token;
       return true;
     }
@@ -261,6 +251,30 @@ export default {
 html, body {
   padding: 0%;
   margin: 0%;
+}
+
+*::-webkit-scrollbar              {
+  width: 6px;
+}
+*::-webkit-scrollbar-button       {
+
+}
+*::-webkit-scrollbar-track        {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+  border-radius: 10px;
+}
+*::-webkit-scrollbar-track-piece  {
+
+}
+*::-webkit-scrollbar-thumb        {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.5); 
+}
+*::-webkit-scrollbar-corner       {
+
+}
+*::-webkit-resizer                {
+
 }
 
 #app {

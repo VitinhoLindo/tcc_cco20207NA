@@ -4,8 +4,9 @@ class Config extends Crypto {
     constructor() {
         super();
 
-        this.protocolName = 'http'; 
-        this.protocol     = null;
+        this.protocolName     = 'http'; 
+        this.protocol         = null;
+        this.maxRequestMinute = parseInt(this.process.env.MAXREQUESTMINUTE) || 50;
     }
 
     /**

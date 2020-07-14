@@ -209,6 +209,7 @@ class Util extends Repository {
         if (!await this.dirExistsSync(opt.path)) await this.createDir(opt.path);
         this.fs.writeFileSync(`${opt.path}/${opt.file}`, opt.value, { encoding: opt.encoding } );
         return true;
+        this.time
     }
 }
 

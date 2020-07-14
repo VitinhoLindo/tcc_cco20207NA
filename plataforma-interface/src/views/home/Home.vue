@@ -1,11 +1,19 @@
 <template>
   <div id="home" >
-    <app-content v-if="show" v-bind:contentStyle="contentStyle" />
+    <app-content 
+      v-if="show" 
+      v-bind:contentStyle="contentStyle" 
+    />
+
+    <app-cadastro 
+      v-bind:functions="functions"
+    />
   </div>
 </template>
 
 <script>
-import Content from '../content/Content';
+import Content  from '../content/Content';
+import Cadastro from '../cadastro/Cadastro'; 
 
 export default {
   name: 'Home',
@@ -24,7 +32,8 @@ export default {
     }
   },
   components: {
-    AppContent : Content
+    AppContent  : Content,
+    AppCadastro : Cadastro
   },
   data: () => ({
     show: false,
@@ -42,6 +51,7 @@ export default {
   methods: {
     async homeListiner() {      
       this.$parent.$on('on-resize', () => this.renderContent());
+      this.$parent.$on('menu-option', this.menuOption);
     },
     async renderContent() {
       if (!this.home && !this.menu) {
@@ -61,6 +71,9 @@ export default {
       this.contentStyle.height = innerHeight - offsetHeight;
 
       if (!this.show) this.show = true;
+    },
+    async menuOption(event) {
+      this.$emit(event.name);
     }
   }
 }

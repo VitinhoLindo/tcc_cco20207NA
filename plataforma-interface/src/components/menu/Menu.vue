@@ -91,6 +91,11 @@ export default {
 
       let { offsetWidth, offsetHeight } = this.functions.getOffSet(this.menu);
       this.options.style.bottom = `${offsetHeight}px`;
+    },
+    async onclick (event) {
+      this.close();
+      this.functions.eventPromise({ eventName: 'menu-option', data: { name: event } });
+      return true;
     }
   }
 }

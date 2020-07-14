@@ -65,12 +65,8 @@ export default {
     division: null
   }),
   methods: {
-    setPosition(x, y) {
-      this.division.style.top  = `${y}px`;
-      this.division.style.left = `${x}px`;
-    },
     dragend(event) {
-      this.setPosition(event.clientX, event.clientY);
+      this.functions.setPosition(event.clientX, event.clientY, this.division);
     },
     showLogin() {
       this.components.forgotem.on = false;

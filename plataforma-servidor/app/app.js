@@ -1,28 +1,27 @@
-const Config = require('../config/config');
+const Storage = require('./storage');
 const Api     = require('../api');
 require('dotenv').config();
 
-class App extends Config {
+class App extends Storage {
     server = null;
 
     constructor() {
         super();
     }
 
+    maxRequestInMinute(request, response, next) {
+        response.json({ code: 429, message: 'Too Many Requests', result: null, status: 'success' });
+        return response.end();
+    }
+
     requestMiddleware(request, response, next) {
-        // Website you wish to allow to connect
         response.setHeader('Access-Control-Allow-Origin', '*');
-
-        // Request methods you wish to allow
         response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-        // Request headers you wish to allow
         response.setHeader('Access-Control-Allow-Headers', '*');
-
-        // Set to true if you need the website to include cookies in the requests sent
-        // to the API (e.g. in case you use sessions)
         response.setHeader('Access-Control-Allow-Credentials', false);
 
+        if (this.openToRequest())
+            return this.maxRequestInMinute(request, response, next);
         request._dirname_ = this._dirname_; 
 
         var body = '';
