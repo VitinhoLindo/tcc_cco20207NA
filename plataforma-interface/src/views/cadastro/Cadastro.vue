@@ -1,10 +1,17 @@
 <template>
   <div 
     id="cadastro"
-    draggable="true" 
+    v-bind:draggable="draggable"
     v-on:dragend="(event) => dragend(event)" 
   >
-    <app-cliente v-bind:functions="functions" />
+    <div v-show="false" class='resizer top-left'></div>
+    <div v-show="false" class='resizer top-right'></div>
+    <div v-show="false" class='resizer bottom-left'></div>
+    <div v-show="false" class='resizer bottom-right'></div>
+    <app-cliente 
+      v-bind:functions="functions"
+      v-bind:parentFunction="parentFunction"
+    />
   </div>
 </template>
 
@@ -22,25 +29,71 @@ export default {
   components: {
     AppCliente: Cliente
   },
-  mounted() {
+  async mounted() {
+    this.division = await this.functions.getDivision('cadastro');
 
+    this.parentFunction = {
+      getDivision: this.getDivision,
+      gragableController: this.gragableController
+    };
   },
   data: () => ({
+    division: document.createElement('div'),
+    parentFunction: {},
+    draggable: true
   }),
   methods: {
     async listen() {
-      this.$parent.$on('')
+      // this.$parent.$on('')
+    },
+    gragableController(bool) {
+      this.draggable = bool;
     },
     async dragend(event) {
       this.functions.setPosition(
         event.clientX, 
         event.clientY, 
-        await this.functions.getDivision('cadastro')
+        this.division
       );
+    },
+    getDivision() {
+      return this.division;
     },
     initialOffSet() {
 
-    }
+    },
+    // mousedown(event) {
+    //   this.draggable = false;
+    //   console.log(event);
+    // .resizer{
+    //   width: 10px;
+    //   height: 10px;
+    //   border-radius: 50%;
+    //   background: white;
+    //   border: 3px solid #4286f4;
+    //   position: absolute;
+    // }
+    // .resizer.top-left {
+    //   left: -5px;
+    //   top: -5px;
+    //   cursor: nwse-resize; /*resizer cursor*/
+    // }
+    // .resizer.top-right {
+    //   right: -5px;
+    //   top: -5px;
+    //   cursor: nesw-resize;
+    // }
+    // .resizer.bottom-left {
+    //   left: -5px;
+    //   bottom: -5px;
+    //   cursor: nesw-resize;
+    // }
+    // .resizer.bottom-right {
+    //   right: -5px;
+    //   bottom: -5px;
+    //   cursor: nwse-resize;
+    // }
+    // }
   }
 }
 </script>
@@ -51,8 +104,7 @@ export default {
   left: 4%;
   position: fixed;
   z-index: 4;
-  width: 300px;
-  height: 300px;
   background-color: #ffffff;
+  padding: 1px;
 }
 </style>

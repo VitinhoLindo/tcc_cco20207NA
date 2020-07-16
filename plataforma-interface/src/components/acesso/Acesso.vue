@@ -79,24 +79,19 @@ export default {
     async renderPage(option = 'login') {
       this.on = true;
       this.division = await this.functions.getDivision('acesso');
-
-      this.setOffSet(250);
-    },
-    async setOffSet(height, width = 360) {
-      this.division.style.width = `${width}px`;
-      this.division.style.height = `${height}px`;
+      this.functions.setOffSet(this.division, 250);
     },
     async controller(option) {
       if (option.name == 'acesso-cancel') {
         this.on = false;
       } else if (option.name == 'acesso-forgotem') {
-        await this.setOffSet(140);
+        this.functions.setOffSet(this.division, 140);
         this.showForgotem();
       } else if (option.name == 'acesso-login') {
-        await this.setOffSet(250);
+        this.functions.setOffSet(this.division, 250);
         this.showLogin();
       } else if (option.name == 'key-changed') {
-        await this.setOffSet(250);
+        this.functions.setOffSet(this.division, 250);
         this.showLogin();
       }
     }

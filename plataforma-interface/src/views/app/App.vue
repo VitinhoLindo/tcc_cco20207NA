@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" v-on:contextmenu="contextMenu">
     <app-loading 
       v-if="loading.on"
       v-bind:loading="loading.type"
@@ -55,7 +55,9 @@ export default {
       getOffSet        : this.getOffSet,
       emmiter          : this.emmiter,
       getMousePosition : this.getMousePosition,
-      setPosition      : this.setPosition
+      setPosition      : this.setPosition,
+      maximize         : this.maximize,
+      setOffSet        : this.setOffSet
     };
 
     await this.getStorage();
@@ -67,12 +69,15 @@ export default {
     shared       : {},
     auth         : null,
     functions    : {},
-    origin       : 'http://10.0.0.105:8181',
+    origin       : 'http://10.0.0.108:8181',
     storageItens : ['login'],
     loading      : { on: true, type: '' },
     mouse        : { x: 0, y: 0 }
   }),
   methods: {
+    contextMenu(event) {
+      event.preventDefault();
+    },
     async onmousemove(event) {
       this.mouse = { x: event.x, y: event.y };
     },
@@ -83,12 +88,9 @@ export default {
       this.$emit(event, data, callback);
     },
     async listiner() {
-      window.onresize   = async () => {
-        this.emmiter('on-resize', this.getOffSetMain());
-      };
-      // window.onmousemove = (event) => this.onmousemove(event);
-      window.onkeydown   = (event) => this.onkeydown(event);
-      window.ondrop      = (event) => this.ondrop(event);
+      window.onresize    = async () => this.emmiter('on-resize', this.getOffSetMain());
+      window.onkeydown   = (event)  => this.onkeydown(event);
+      window.ondrop      = (event)  => this.ondrop(event);
 
       this.$on('loading',         this.loadingController);
       this.loadingController({ on: true, sleep: 4 });
@@ -103,8 +105,38 @@ export default {
 
       return doc;
     },
+    async maximize(div = document.createElement('div'), parent = null, offset = null) {
+      let menu = await this.getDivision('menu');
+
+      var { innerWidth, innerHeight }   = this.getOffSetMain();
+      var { offsetWidth, offsetHeight } = this.getOffSet(menu);
+
+      if (offset) {
+        this.setOffSet(
+          div,
+          offset.height,
+          offset.width
+        );
+
+        let y = innerHeight   / 2;
+        let x = innerWidth    / 2;
+        y    -= offset.height / 2;
+        x    -= offset.width  / 2;
+        if (parent) this.setPosition(x, y, parent);
+      } else {
+        if (parent) this.setPosition(0, 0, parent);
+        this.setOffSet(
+          div,
+          innerHeight - offsetHeight,
+          innerWidth
+        );
+      }
+    },
+    setOffSet(division = document.createElement('div') ,height, width = 360) {
+      division.style.width = `${width}px`;
+      division.style.height = `${height}px`;
+    },
     setPosition(x, y, division) {
-      console.log(division);
       division.style.top  = `${y}px`;
       division.style.left = `${x}px`;
     },
@@ -253,27 +285,27 @@ html, body {
   margin: 0%;
 }
 
-*::-webkit-scrollbar              {
+*::-webkit-scrollbar {
   width: 6px;
 }
-*::-webkit-scrollbar-button       {
+*::-webkit-scrollbar-button {
 
 }
-*::-webkit-scrollbar-track        {
+*::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
   border-radius: 10px;
 }
-*::-webkit-scrollbar-track-piece  {
+*::-webkit-scrollbar-track-piece {
 
 }
-*::-webkit-scrollbar-thumb        {
+*::-webkit-scrollbar-thumb {
   border-radius: 10px;
   -webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.5); 
 }
-*::-webkit-scrollbar-corner       {
+*::-webkit-scrollbar-corner {
 
 }
-*::-webkit-resizer                {
+*::-webkit-resizer {
 
 }
 
@@ -468,5 +500,22 @@ html, body {
 .item-center {
   align-items: center;
   justify-content: center;
+}
+.option-page {
+  width: 100%;
+  height: 20px;
+  background-color: #050755;
+  text-align: right;
+}
+.option-page .img {
+  width: 18px;
+  height: 19px;
+  cursor: pointer;
+}
+.option-page .img:hover {
+  opacity: 0.5;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #ffffff;
 }
 </style>
