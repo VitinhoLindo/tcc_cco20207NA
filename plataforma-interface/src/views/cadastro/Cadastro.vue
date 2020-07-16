@@ -9,6 +9,7 @@
     <div v-show="false" class='resizer bottom-left'></div>
     <div v-show="false" class='resizer bottom-right'></div>
     <app-cliente 
+      v-if="component.client.on"
       v-bind:functions="functions"
       v-bind:parentFunction="parentFunction"
     />
@@ -34,13 +35,19 @@ export default {
 
     this.parentFunction = {
       getDivision: this.getDivision,
-      gragableController: this.gragableController
+      gragableController: this.gragableController,
+      closeComponent: this.closeComponent
     };
   },
   data: () => ({
     division: document.createElement('div'),
     parentFunction: {},
-    draggable: true
+    draggable: true,
+    component : {
+      client : {
+        on: true
+      }
+    }
   }),
   methods: {
     async listen() {
@@ -58,6 +65,11 @@ export default {
     },
     getDivision() {
       return this.division;
+    },
+    closeComponent(componentName) {
+      if (componentName == 'CadastroCliente') {
+        this.component.client.on = false;
+      }
     },
     initialOffSet() {
 

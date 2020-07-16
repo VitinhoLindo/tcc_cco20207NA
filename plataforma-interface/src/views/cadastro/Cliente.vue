@@ -49,7 +49,7 @@ export default {
         }
       }
       else if (eventListiner == 'close') {
-        this.$emit('close');
+        this.parentFunction.closeComponent('CadastroCliente');
       }
     },
     getDefaultOffSet() {
