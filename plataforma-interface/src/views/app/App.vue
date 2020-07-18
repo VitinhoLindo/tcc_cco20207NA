@@ -92,6 +92,7 @@ export default {
       window.onkeydown   = (event)  => this.onkeydown(event);
       window.ondrop      = (event)  => this.ondrop(event);
 
+      this.$on('cursor-loading', this.cursorLoading);
       this.$on('loading',         this.loadingController);
       this.loadingController({ on: true, sleep: 4 });
     },
@@ -159,6 +160,13 @@ export default {
 
       await this.sleep(opt.sleep);
       this.loading.on   = false;
+    },
+    async cursorLoading(opt = { on: false }) {
+      if (opt.on) {
+        document.querySelector('html').style.cursor = 'wait';
+      } else {
+        document.querySelector('html').style.cursor = 'default';
+      }
     },
     sleep(time) {
       time  = parseFloat(time) || 1;
@@ -314,6 +322,7 @@ html, body {
   margin: 0%;
   width: 100%;
   height: 100%;
+  /* cursor:; */
 }
 
 .options {

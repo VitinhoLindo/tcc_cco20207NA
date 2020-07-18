@@ -6,8 +6,11 @@
     />
 
     <app-cadastro 
+      v-if="component.cadaster.on"
       v-bind:functions="functions"
+      v-on:listiner="componentController"
     />
+
   </div>
 </template>
 
@@ -42,6 +45,9 @@ export default {
     contentStyle: {
       width: 0,
       height: 0
+    },
+    component: {
+      cadaster: { on: false }
     }
   }),
   mounted() {
@@ -73,7 +79,18 @@ export default {
       if (!this.show) this.show = true;
     },
     async menuOption(event) {
-      this.$emit(event.name);
+      if (event.propertie == 'cadaster') {
+        this.component.cadaster.on = true;
+        await this.functions.sleep(0.5);
+        this.$emit(event.name);
+      } else {
+
+      }
+    },
+    async componentController(propertie) {
+      if (propertie == 'cadaster') {
+        this.component.cadaster.on = false;
+      }
     }
   }
 }

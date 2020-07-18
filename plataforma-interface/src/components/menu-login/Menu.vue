@@ -64,7 +64,7 @@ export default {
     async onclick(label) {
       this.rendMenu();
       if (label == 'login')
-        this.functions.eventPromise({ eventName: 'loading', data: { on: true, sleep: 1 } });
+        this.functions.eventPromise({ eventName: 'cursor-loading', data: { on: true } });
       if (label) this.functions.eventPromise({ eventName: `show-${label}` });
       return true;
     }

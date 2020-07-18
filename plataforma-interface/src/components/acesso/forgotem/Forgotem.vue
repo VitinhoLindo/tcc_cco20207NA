@@ -116,13 +116,12 @@ export default {
       return this.login.toLowerCase();
     },
     async getCode() {
-      this.functions.eventPromise({ eventName: 'loading', data: { on: true } });
+      this.functions.eventPromise({ eventName: 'cursor-loading', data: { on: true } });
       let response = await this.functions.request({
         url: '/forgotem',
         method: 'post',
         body: { login: this.getLogin() }
       });
-      this.functions.eventPromise({ eventName: 'loading', data: { on: true, sleep: 1 } });
 
       this.forgotemMessage       = response.message;
       await this.functions.sleep(3);
@@ -131,15 +130,15 @@ export default {
         this.forgotemMessage       = '';
         this.components.code.on    = true;
       }
+      this.functions.eventPromise({ eventName: 'cursor-loading', data: { on: false } });
     },
     async sendCode() {
-      this.functions.eventPromise({ eventName: 'loading', data: { on: true } });
+      this.functions.eventPromise({ eventName: 'cursor-loading', data: { on: true } });
       let response = await this.functions.request({
         url: '/forgotem/code',
         method: 'post',
         body: { login: this.getLogin(), code: this.code }
       });
-      this.functions.eventPromise({ eventName: 'loading', data: { on: true, sleep: 1 } });
 
       if (response.error) {
         this.labels.codeError = response.message;
@@ -152,6 +151,7 @@ export default {
         this.division.style.height = '270px';
         return true;
       }
+      this.functions.eventPromise({ eventName: 'cursor-loading', data: { on: false } });
     },
     async sendNewKey() {
       if (this.newKey.length <= 5) {
@@ -167,7 +167,7 @@ export default {
         return true;
       }
       this.labels.newKeyError = '';
-      this.functions.eventPromise({ eventName: 'loading', data: { on: true } });
+      this.functions.eventPromise({ eventName: 'cursor-loading', data: { on: true } });
       let response = await this.functions.request({
         url: '/forgotem/redefine',
         method: 'post',
@@ -178,7 +178,6 @@ export default {
           newKeyConfirm: this.newKeyConfirm
         }
       });
-      this.functions.eventPromise({ eventName: 'loading', data: { on: true, sleep: 1 } });
 
       if (response.error) {
         this.labels.newKeyError = response.message;
@@ -186,6 +185,7 @@ export default {
       }
 
       this.$emit('listen', { name: 'key-changed' });
+      this.functions.eventPromise({ eventName: 'cursor-loading', data: { on: false } });
     },
     openToCode() {
       return this.components.code.on;

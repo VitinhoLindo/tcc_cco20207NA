@@ -1,7 +1,7 @@
 <template>
   <div v-if="on" id="menu-buttons" class="menu-buttons">
     <div class="btn" v-for="(button, index) in buttons" v-bind:key="index" v-show="button.on">
-      <button class="pointer" v-on:click="onclick(button.event)">{{ button.label }}</button>
+      <button class="pointer" v-on:click="onclick(button.event, button.propertie)">{{ button.label }}</button>
     </div>
   </div>
 </template>
@@ -24,39 +24,45 @@ export default {
       {
         on: false,
         label: 'Cadastro Cliente',
-        event: 'register-client'
+        event: 'register-client',
+        propertie: 'cadaster'
       },
       {
         on: false,
         label: 'Cadastro Funcionario',
-        event: 'register-employer'
+        event: 'register-employer',
+        propertie: ''
       },
       {
         on: false,
         label: 'Cadastro Produto',
-        event: 'register-produt'
+        event: 'register-produt',
+        propertie: ''
       },
       {
         on: false,
         label: 'Entrada Estoque',
-        event: 'enter-stock'
+        event: 'enter-stock',
+        propertie: ''
       },
       {
         on: false,
         label: 'Entrada Estoque',
-        event: 'enter-stock'
+        event: 'enter-stock',
+        propertie: ''
       },
       {
         on: false,
         label: 'Entrada Estoque',
-        event: 'enter-stock'
+        event: 'enter-stock',
+        propertie: ''
       },
       {
         on: false,
         label: 'Entrada Estoque',
-        event: 'enter-stock'
+        event: 'enter-stock',
+        propertie: ''
       }
-      
     ]
   }),
   methods: {
@@ -92,9 +98,10 @@ export default {
       let { offsetWidth, offsetHeight } = this.functions.getOffSet(this.menu);
       this.options.style.bottom = `${offsetHeight}px`;
     },
-    async onclick (event) {
+    async onclick (event, propertie) {
       this.close();
-      this.functions.eventPromise({ eventName: 'menu-option', data: { name: event } });
+      this.functions.eventPromise({ eventName: 'cursor-loading', data: { on: true } });
+      this.functions.eventPromise({ eventName: 'menu-option',    data: { name: event, propertie: propertie } });
       return true;
     }
   }

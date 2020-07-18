@@ -80,6 +80,7 @@ export default {
       this.on = true;
       this.division = await this.functions.getDivision('acesso');
       this.functions.setOffSet(this.division, 250);
+      this.functions.eventPromise({ eventName: 'cursor-loading', data: { on: false } });
     },
     async controller(option) {
       if (option.name == 'acesso-cancel') {

@@ -4,10 +4,11 @@
     v-bind:draggable="draggable"
     v-on:dragend="(event) => dragend(event)" 
   >
-    <div v-show="false" class='resizer top-left'></div>
-    <div v-show="false" class='resizer top-right'></div>
-    <div v-show="false" class='resizer bottom-left'></div>
-    <div v-show="false" class='resizer bottom-right'></div>
+    <div v-if="false" class='resizer top-left'></div>
+    <div v-if="false" class='resizer top-right'></div>
+    <div v-if="false" class='resizer bottom-left'></div>
+    <div v-if="false" class='resizer bottom-right'></div>
+
     <app-cliente 
       v-if="component.client.on"
       v-bind:functions="functions"
@@ -31,6 +32,7 @@ export default {
     AppCliente: Cliente
   },
   async mounted() {
+    this.listen();
     this.division = await this.functions.getDivision('cadastro');
 
     this.parentFunction = {
@@ -44,14 +46,13 @@ export default {
     parentFunction: {},
     draggable: true,
     component : {
-      client : {
-        on: true
-      }
-    }
+      client : { on: false }
+    },
+    propertie: 'cadaster'
   }),
   methods: {
     async listen() {
-      // this.$parent.$on('')
+      this.$parent.$on('register-client', () => this.componentController('client'));
     },
     gragableController(bool) {
       this.draggable = bool;
@@ -69,7 +70,12 @@ export default {
     closeComponent(componentName) {
       if (componentName == 'CadastroCliente') {
         this.component.client.on = false;
+        this.$emit('listiner', this.propertie)
       }
+    },
+    componentController(component) {
+      this.component[component].on = true;
+      this.functions.eventPromise({ eventName: 'cursor-loading', data: { on: false } });
     },
     initialOffSet() {
 

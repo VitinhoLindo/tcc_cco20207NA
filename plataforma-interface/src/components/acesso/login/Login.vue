@@ -80,7 +80,7 @@ export default {
         this.login = value.toLowerCase();
       },
       async loginSync() {
-        this.functions.eventPromise({ eventName: 'loading', data: { on: true } });
+        this.functions.eventPromise({ eventName: 'cursor-loading', data: { on: true } });
         this.disabled = true;
         try {
           this.setLogin(this.getLogin());
@@ -97,14 +97,14 @@ export default {
               token: response.token
             }
 
-            this.functions.eventPromise({ eventName: 'loading', data: { on: false } });
+            this.functions.eventPromise({ eventName: 'cursor-loading', data: { on: false } });
             this.$emit('listen', { name: 'acesso-success' });
             if (this.remember) auth.login = this.getLogin();
             await this.functions.authentication(auth);
           }
         } catch (error) { console.error(error); }
         this.disabled = false;
-        this.functions.eventPromise({ eventName: 'loading', data: { on: false } });
+        this.functions.eventPromise({ eventName: 'cursor-loading', data: { on: false } });
       },
       onclick(event, type) {
         if (type == 'cancel') {
