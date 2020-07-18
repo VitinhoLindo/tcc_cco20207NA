@@ -1,6 +1,8 @@
 const { request, response } = require('express');
 const { Api: { FormatReponse } } = require('../interfaces');
+const { Readable } = require('stream');
 const Storage   = require('../app/storage');
+const { WriteStream } = require('fs');
 
 class Controller extends Storage {
     constructor(_request = request, _response = response) {
@@ -41,13 +43,31 @@ class Controller extends Storage {
     sendFile(fileInfo) {
         if (fileInfo.status) {
             if (fileInfo.mimeType) this.setHeader('Content-Type', fileInfo.mimeType);
+            this.setHeader('Content-Length', fileInfo.size);
+            this.setHeader('Accept-Ranges', 'bytes');
+            this.setHeader('Last-Modified', fileInfo.modifiedTime);
+
             this.setStatus(200);
-            this.response.write(fileInfo.file);
+            this.response.write(fileInfo.file, 'binary');
+            this.end();
+            // let writeStream = new WriteStream();
+            // writeStream.
+            // let stream = new WriteStream();
+            // stream.push(fileInfo.file, 'binary');
+            // stream.pipe(this.response.);
+            // this.response.sendFile(fileInfo.path, (err) => {
+            //     if (err) {
+            //         this.setStatus(500);
+            //         this.end();
+            //     } else {
+            //         this.setStatus(200);
+            //         this.end();
+            //     }
+            // });
         } else {
             this.setStatus(404);
+            this.end();
         }
-        this.end();
-        return true;
     }
 }
 

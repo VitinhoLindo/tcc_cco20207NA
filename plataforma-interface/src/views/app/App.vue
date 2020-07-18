@@ -69,7 +69,7 @@ export default {
     shared       : {},
     auth         : null,
     functions    : {},
-    origin       : 'http://10.0.0.108:8181',
+    // origin       : 'http://10.0.0.108:8181',
     storageItens : ['login'],
     loading      : { on: true, type: '' },
     mouse        : { x: 0, y: 0 }
@@ -258,7 +258,7 @@ export default {
           status,
           data
         } = await Axios({
-          url     : `${this.origin}${option.url.toLowerCase()}`,
+          url     : `${option.url.toLowerCase()}`,
           method  : option.method.toUpperCase(),
           params  : option.params,
           data    : option.body,

@@ -1,9 +1,9 @@
 <template>
   <div id="cadatro-cliente" v-bind:style="getDefaultOffSet()">
     <div class="option-page">
-      <img v-show="false" class="img" src="../../assets/window.png"   v-on:click="(event) => onclick('minimize', event)">
-      <img                class="img" src="../../assets/software.png" v-on:click="(event) => onclick('maximize', event)">
-      <img                class="img" src="../../assets/close.png"    v-on:click="(event) => onclick('close', event)">
+      <img v-show="false" class="img" src="/img/window.png"          v-on:click="(event) => onclick('minimize', event)">
+      <img                class="img" src="/img/software.png"        v-on:click="(event) => onclick('maximize', event)">
+      <img                class="img" src="/img/close.png"           v-on:click="(event) => onclick('close', event)">
     </div>
   </div>
 </template>

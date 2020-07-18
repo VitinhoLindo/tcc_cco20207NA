@@ -1,7 +1,7 @@
 <template>
   <div id="content-page-component">
     <img 
-      src="../../assets/mountain-lake-nature-forest-landscape-scenery-4K-157.jpg" 
+      src="/img/mountain-lake-nature-forest-landscape-scenery-4K-157.jpg" 
       v-bind:style="getStyle()"
     >
   </div>
