@@ -9,6 +9,16 @@ class Config extends Crypto {
         this.maxRequestMinute = parseInt(this.process.env.MAXREQUESTMINUTE) || 50;
     }
 
+    setFileContents() {
+        switch (this.process.platform) {
+            case 'linux':
+                // this.dirFiles = this.linuxDirFiles;
+                break;
+            default:
+                break;
+        }
+    }
+
     /**
      * @function mongo
      * 
@@ -33,6 +43,17 @@ class Config extends Crypto {
     // }
 
     /**
+     * retorna informação de host e porta do serviço.
+     * @return {Object}
+     */
+    getServerOption() {
+        return {
+            host: this.host,
+            port: this.port
+        }
+    }
+
+    /**
      * verifica se existe um diretorio de ssl
      * 
      * novo update deve verificar se existe o arquivo de
@@ -41,9 +62,9 @@ class Config extends Crypto {
     async setProtocol() {
         if (
             await this.dirExistsSync(
-            this._dirname_, 
-            this.dirFiles.config.dir,
-            this.dirFiles.config.ssl.dir
+                this._dirname_, 
+                this.dirFiles.config.dir,
+                this.dirFiles.config.ssl.dir
             )
         ) {
             // use https;

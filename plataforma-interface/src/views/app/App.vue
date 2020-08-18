@@ -126,12 +126,16 @@ export default {
         if (parent) this.setPosition(x, y, parent);
       } else {
         if (parent) this.setPosition(0, 0, parent);
+
         this.setOffSet(
           div,
           innerHeight - offsetHeight,
           innerWidth
         );
       }
+    },
+    is_numeric(value) {
+      return /\d*$/g.test(value);
     },
     setOffSet(division = document.createElement('div') ,height, width = 360) {
       division.style.width = `${width}px`;

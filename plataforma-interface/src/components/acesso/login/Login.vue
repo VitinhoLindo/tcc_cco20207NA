@@ -90,6 +90,7 @@ export default {
             body: { login: this.getLogin(), key: this.key }
           });
           
+          console.log(response);
           if (response.error) {
             this.labels.error = response.message;
           } else {

@@ -15,6 +15,7 @@ const App = require('./app/app');
      * adiciona a secret e o iv da cryptografia a ser utilizada no dia
      * e inicia o ouvinte de requisições.
      */
+    app.setFileContents();
     await app.setProtocol();
     await app.reset();
     await app.listen();

@@ -75,16 +75,31 @@ class MySqlModule {
     }
 
     async executeQuery(query) {
-        this.query = query;
-        this.setConnection();
-        await this.connect();
         var data;
-        var error;
+        var error = '';
+        var count = 0;
+
+        try {
+            this.setConnection();
+            await this.connect();
+        } catch (_error) { data = []; _error.moduleError = 'failure in open connection'; error = this.getMessageError(_error); }
+
+        this.query = query;
         try {
             data = await this.sendQuery();
-        } catch (_error) { data = []; error = this.getMessageError(_error); }
+        } catch (_error) { data = []; _error.moduleError = 'failure send query'; error = this.getMessageError(_error); }
         this.query = '';
-        await this.disconnect();
+
+        do {
+            try {
+                await this.disconnect();
+                break;
+
+            } catch (_error) { data = []; _error.moduleError = 'failure in close connection'; error = this.getMessageError(_error); }
+
+            if (count == 10) break;
+            count++;
+        } while (true);
 
         if (error) throw error;
         return data;

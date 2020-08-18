@@ -7,7 +7,7 @@ class Cache extends Config {
             requests: 0,
             timeStart: null,
             timeEnd  : null
-        }
+        };
         this.requestMinuteAsync();
     }
 
@@ -27,10 +27,7 @@ class Cache extends Config {
     }
 
     openToRequest() {
-        if (this.requestMinute.requests <= this.maxRequestMinute)
-            return false;
-        else
-            return true;
+        return !(this.requestMinute.requests <= this.maxRequestMinute);
     }
 }
 

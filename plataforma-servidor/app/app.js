@@ -53,8 +53,8 @@ class App extends Storage {
         this.middleware.use((rq, rs, n) => this.requestMiddleware(rq, rs, n));
         this.middleware.use(Api);
         this.server = this.protocol.createServer(this.middleware);
-        this.server.listen({ port: 8181 }, () => {
-            console.log('server on');
+        this.server.listen(this.getServerOption(), () => {
+            console.log(`server on in ${this.protocolName}://${this.host}:${this.port}`);
         });
 
     }

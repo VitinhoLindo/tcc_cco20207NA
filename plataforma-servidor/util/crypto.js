@@ -5,9 +5,7 @@ class Crypto extends Mailer {
     keys     = {};
     crypto   = require('crypto');
 
-    constructor() {
-        super();
-    }
+    constructor() { super(); }
 
     getIv() {
         return Buffer.from(this.crypto.randomBytes(this.ivLen));
@@ -67,12 +65,12 @@ class Crypto extends Mailer {
     }
 
     async getEncrypt(opt = EncryptDecrypt) {
-        let KeyDate = await this.getKeyDate(opt.date);
-        return await this.crypto.createCipheriv(
-            this.algorithm,
-            KeyDate.key,
-            KeyDate.iv
-        );
+      let KeyDate = await this.getKeyDate(opt.date);
+      return await this.crypto.createCipheriv(
+        this.algorithm,
+        KeyDate.key,
+        KeyDate.iv
+      );
     }
 
     async getDecrypt(opt = EncryptDecrypt) {

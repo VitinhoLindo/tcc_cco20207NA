@@ -13,8 +13,12 @@ class MysqlOrm {
 
     async executeQuery(query = '') {
         this.clearCache();
-        if (query) return this.orm.executeQuery(query);
-        else       return [];
+        try {
+            if (query) return this.orm.executeQuery(query);
+            else       return [];
+        } catch (error) {
+            return [];
+        }
     }
 
     addWhere(opt) { this.whereFields.push(opt); }
