@@ -1,12 +1,12 @@
 class Model {
-    host     = '';
-    port     = '';
-    user     = '';
-    pass     = '';
+    host = '';
+    port = '';
+    user = '';
+    pass = '';
     database = '';
     multipleStatements = true;
 
-    constructor() {}
+    constructor() { }
 }
 
 module.exports = new Model;

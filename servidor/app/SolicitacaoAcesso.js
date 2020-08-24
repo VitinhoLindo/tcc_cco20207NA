@@ -1,13 +1,12 @@
 const Mysql = require('../resource/lib/Mysql')
 
-class Acesso extends Mysql {
+class SolicitacaoAcesso extends Mysql {
   constructor() {
     super();
     this.use({
-      table: 'Acesso',
-      timestamp: true
+      table: 'SolicitacaoAcesso'
     });
   }
 }
 
-module.exports = Acesso;
+module.exports = SolicitacaoAcesso;

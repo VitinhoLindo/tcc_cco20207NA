@@ -10,8 +10,8 @@ class Sender {
     };
     text = '';
     html = '';
-    _pathFile  = '';
-    fileConent = '';
+    pathFile  = '';
+    fileContent = '';
     replace   = {
         regexp: '',
         value : '',

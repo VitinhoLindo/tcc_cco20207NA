@@ -1,110 +1,61 @@
 <template>
-  <div id="home" >
-    <app-content 
-      v-if="show" 
-      v-bind:contentStyle="contentStyle" 
-    />
+  <div class="home">
+    <img v-if="image.src" class="background" v-bind:style="image.style" v-bind:src="image.src">
 
-    <app-cadastro 
-      v-if="component.cadaster.on"
-      v-bind:functions="functions"
-      v-on:listiner="componentController"
-    />
+    <app-login />
 
+    <app-menu />
   </div>
 </template>
 
 <script>
-import Content  from '../content/Content';
-import Cadastro from '../cadastro/Cadastro'; 
+import Menu from '../../components/menu/Menu';
+import Login from '../../components/login/Login';
 
 export default {
   name: 'Home',
-  props: {
-    auth: {
-      type: String,
-      required: false
-    },
-    functions: {
-      type: Object,
-      required: true
-    },
-    shared: {
-      type: Object,
-      required: true
-    }
-  },
   components: {
-    AppContent  : Content,
-    AppCadastro : Cadastro
+    AppMenu: Menu,
+    AppLogin: Login
   },
-  data: () => ({
-    show: false,
-    home: null,
-    menu: null,
-    contentStyle: {
-      width: 0,
-      height: 0
-    },
-    component: {
-      cadaster: { on: false }
-    }
-  }),
   mounted() {
-    this.homeListiner();
-    this.renderContent();
+    this.render();
+  },
+  data() {
+    return {
+      image: {
+        style: {},
+        src: '',
+      }
+    }
   },
   methods: {
-    async homeListiner() {      
-      this.$parent.$on('on-resize', (data) => {
-        this.$emit('on-resize', data);
-        this.renderContent()
-      });
-      this.$parent.$on('menu-option', this.menuOption);
-    },
-    async renderContent() {
-      if (!this.home && !this.menu) {
-        let [ home, menu ] = await Promise.all([
-          this.functions.getDivision('router'),
-          this.functions.getDivision('menu')
-        ]);
-
-        this.home = home;
-        this.menu = menu;
+    render() {
+      let { innerWidth, innerHeight } = global.app.offSetMain();
+      this.image.style = {
+        width: `${innerWidth}px`,
+        height: `${innerHeight - 40}px`
       }
-
-      let { innerWidth, innerHeight }   = this.functions.windowOffSet();
-      let { offsetWidth, offsetHeight } = this.functions.getOffSet(this.menu);
-
-      this.contentStyle.width = innerWidth;
-      this.contentStyle.height = innerHeight - offsetHeight;
-
-      if (!this.show) this.show = true;
-    },
-    async menuOption(event) {
-      if (event.propertie == 'cadaster') {
-        this.component.cadaster.on = true;
-        await this.functions.sleep(0.5);
-        this.$emit(event.name);
-      } else {
-
+      try {
+        this.image.src = global.config.home.image.src;
+      } catch (error) {
+        this.image.src = '';
       }
+      global.app.push(this.homeResize);
     },
-    async componentController(propertie) {
-      if (propertie == 'cadaster') {
-        this.component.cadaster.on = false;
+    homeResize(event, data) {
+      this.image.style = {
+        width: `${data.innerWidth}px`,
+        height: `${data.innerHeight - 40}px`
       }
     }
   }
 }
 </script>
 
-<style>
-#acesso-plataform {
+<style lang="scss">
+.background {
   position: fixed;
-  background-color: #ffffff;
-}
-#links {
-  position: fixed;
+  z-index: 1;
 }
 </style>

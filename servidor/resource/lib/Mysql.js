@@ -2,11 +2,18 @@ const Collection = require('./Collection');
 const { MYSQL } = require('../orm');
 const { Mysql: { TableOption } } = require('../interface');
 
-var table = '';
-var timestamp = false;
-var cast = {};
-var softDelete = false;
+
+var tables = {};
+
 const mysqlORM = new MYSQL;
+
+const setTableOptions = (name, values) => {
+  tables[name] = values;
+}
+
+const getTableOptions = (name) => {
+  return tables[name];
+}
 
 const arrayInfo = function (array = []) {
   let len = array.length;
@@ -24,35 +31,36 @@ class BaseModel {
   constructor() { }
 
   use(object = new TableOption) {
-    table = object.table || null;
-    cast = object.cast || null;
-    timestamp = object.timestamp || false;
-    softDelete = object.softDelete || false;
+    setTableOptions(this.constructor.name, {
+      table : object.table || null,
+      cast : object.cast || null,
+      timestamp : object.timestamp || false,
+      softDelete : object.softDelete || false
+    });
   }
 
   _getConfig() {
-    return {
-      table: table,
-      cast: cast,
-      timestamp: timestamp,
-      softDelete: softDelete
-    };
+    return getTableOptions(this.constructor.name);
   }
 
   table() {
-    return table;
+    let internal = getTableOptions(this.constructor.name);
+    return internal.table;
   }
 
   timestamp() {
-    return timestamp;
+    let internal = getTableOptions(this.constructor.name);
+    return internal.timestamp;
   }
 
   softDelete() {
-    return softDelete;
+    let internal = getTableOptions(this.constructor.name);
+    return internal.softDelete;
   }
 
   cast() {
-    return cast;
+    let internal = getTableOptions(this.constructor.name);
+    return internal.cast;
   }
 
   select(...args) {
@@ -70,12 +78,19 @@ class BaseModel {
     return this;
   }
 
+  async create(value = {}) {
+    for (let key in value) {
+      this[key] = value[key];
+    }
+    return await this.save();
+  }
+
   async save() {
     let query = mysqlORM.getSaveQuery(this);
 
     let res = await mysqlORM.executeQuery(query);
     if (res.insertId) this.id = res.insertId;
-    return true;
+    return this;
   }
 
   async get() {

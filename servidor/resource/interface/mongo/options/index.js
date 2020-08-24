@@ -1,0 +1,1 @@
+exports.CollectionOption = require('./CollectionOption');

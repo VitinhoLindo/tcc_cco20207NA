@@ -1,11 +1,5 @@
 const express = require('express');
 const Validator = require('./Validator');
-var App;
-try {
-    App = require('../../http')();
-} catch (error) {
-    App = null;
-}
 
 class ResponseModel {
     requestStatus = 0;
@@ -27,7 +21,7 @@ class BaseController {
     request = express.request;
     response = express.response;
     Validator = Validator;
-    app = App;
+    app = require('../../http')();;
 
     constructor(_request, _response) {
         this.request = _request;

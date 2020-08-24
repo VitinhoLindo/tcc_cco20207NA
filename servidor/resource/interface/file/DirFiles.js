@@ -37,6 +37,9 @@ class DirFiles {
         file : 'db-@date@.json'
       }
     },
+    mailer: {
+      dir: '',
+    },
     log: {
       dir  : '',
       file : 'node-@date@.log'
@@ -75,6 +78,124 @@ class DirFiles {
     return new DirFiles(_name_, _dirname_);
   }
 
+  getRootPath() {
+    return `${this._dirname_}${this.dir}`;
+  }
+
+  getConfigPath() {
+    let root = this.getRootPath();
+    return `${root}${this.config.dir}`;
+  }
+
+  getConfigSslPath() {
+    let root = this.getConfigPath();
+    return `${root}${this.config.ssl.dir}`;
+  }
+
+  getConfigSslKeyFile() {
+    let root = this.getConfigSslPath();
+    return `${root}${this.config.ssl.files.key}`;
+  }
+
+  getConfigSslCertFile() {
+    let root = this.getConfigSslPath();
+    return `${root}${this.config.ssl.files.cert}`;
+  }
+
+  getPublicPath() {
+    let root = this.getRootPath();
+    return `${root}${this.public.dir}`;
+  }
+
+  getPublicHtmlPath() {
+    let root = this.getPublicPath();
+    return `${root}${this.public.html}`;
+  }
+
+  getPublicJsPath() {
+    let root = this.getPublicPath();
+    return `${root}${this.public.js}`;
+  }
+
+  getPublicCssPath() {
+    let root = this.getPublicPath();
+    return `${root}${this.public.css}`;
+  }
+
+  getPublicIcoPath() {
+    let root = this.getPublicPath();
+    return `${root}${this.public.ico}`;
+  }
+
+  getPublicDocPath() {
+    let root = this.getPublicPath();
+    return `${root}${this.public.doc}`;
+  }
+
+  getPublicImagePath() {
+    let root = this.getPublicPath();
+    return `${root}${this.public.image}`;
+  }
+
+  getPublicVideoPath() {
+    let root = this.getPublicPath();
+    return `${root}${this.public.video}`;
+  }
+
+  getResoursePath() {
+    let root = this.getRootPath();
+    return `${root}${this.resourse.dir}`;
+  }
+
+  getResourseDbPath() {
+    let root = this.getResoursePath();
+    return `${root}${this.resourse.database.dir}`;
+  }
+
+  getResourseDbCryptPath() {
+    let root = this.getResourseDbPath();
+    return `${root}${this.resourse.database.crypto.dir}`;
+  }
+
+  getResourseDbCryptFile(value = new Date()) {
+    let root = this.getResourseDbCryptPath();
+    
+    if (value.constructor.name !== 'Date') 
+      value = new Date();
+    
+    return `${root}${this.resourse.database.crypto.file.replace(
+      /\@date\@/g,
+      value.getTime()
+    )}`;
+  }
+
+  getResourceDbJsonPath() {
+    let root = this.getResourseDbPath();
+    return  `${root}${this.resourse.database.json.dir}`;
+  }
+
+  getResourceDbJsonFile(value = new Date()) {
+    let root = this.getResourceDbJsonPath();
+
+    if (value.constructor.name !== 'Date')
+      value = new Date();
+
+    return `${root}${this.resourse.database.json.file.replace(
+      /\@date\@/g,
+      value.getTime()
+    )}`;
+  }
+
+  getResourceMailerPath() {
+    let root = this.getResoursePath();
+    return `${root}${this.resourse.mailer.dir}`;
+  }
+
+  getResourceMailerFile(value = '') {
+    let root = this.getResourceMailerPath();
+    return `${root}${value}`;
+  }
+
   winDir() {
     this.dir                          = '\\';
     this.config.dir                   = 'config\\';
@@ -92,6 +213,7 @@ class DirFiles {
     this.resourse.database.crypto.dir = 'crypto\\';
     this.resourse.database.json.dir   = 'json\\';
     this.resourse.log.dir             = 'log\\';
+    this.resourse.mailer.dir          = 'mail\\';
   }
 
   linuxDir() {
@@ -111,6 +233,7 @@ class DirFiles {
     this.resourse.database.crypto.dir = 'crypto/';
     this.resourse.database.json.dir   = 'json/';
     this.resourse.log.dir             = 'log/';
+    this.resourse.mailer.dir          = 'mail/';
   }
 
   getFuncName() {

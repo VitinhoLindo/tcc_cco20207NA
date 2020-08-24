@@ -1,14 +1,15 @@
 class Model {
-    url           = '';
-    port          = '';
-    user          = '';
-    pass          = '';
-    connectionUrl = '';
-    database      = '';
-    collection    = '';
-
-    constructor() {
+    url = '';
+    port = '';
+    auth = {
+        user: '',
+        pass: ''
     }
+    connectionUrl = '';
+    useNewUrlParser = true;
+    useUnifiedTopology = true;
+
+    constructor() { }
 }
 
 module.exports = new Model;

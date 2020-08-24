@@ -9,6 +9,8 @@ class Modules extends Event {
   express = require('express')();
   crypto = require('crypto');
   Validator = require('../http/Validator');
+  nodeMailer = require('nodemailer');
+  mimeTypes = require('mime-types');
 
   constructor() { super(); }
 }

@@ -31,12 +31,12 @@ class Random extends Loggable {
     }
 
     while(arg.max > decimalHouse)
-      decimalHouse *= 10;
+      decimalHouse += 10;
 
     let randValue = 0;
     do {
       randValue = Math.floor(Math.random() * decimalHouse);
-    } while(randValue < min || randValue > max);
+    } while (randValue < arg.min || randValue > arg.max);
 
     return randValue;
   }
