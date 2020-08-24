@@ -1,1 +1,0 @@
-exports.FormatReponse = require('./formatResponse');

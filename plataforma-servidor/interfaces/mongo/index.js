@@ -1,1 +1,0 @@
-exports.MongoConnect = require('./mongo-connect')
