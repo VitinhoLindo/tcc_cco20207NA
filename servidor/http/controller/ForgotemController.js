@@ -16,6 +16,77 @@ class ForgotemController extends BaseController {
     this.resEnd();
   }
 
+  async getAlterKeyUsingAccess(acesso = new Acesso) {
+    return await this.alterarSenha.where({ column: 'acesso', value: acesso.id }).where({ column: 'usaged_at', comparison: 'Is', value: null }).get();
+  }
+
+  correctCode(alterarSenha = new AlterarSenha, code) {
+    if (alterarSenha.code == code) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  async getAccess(login = '') {
+    return await this.login.where({ column: 'login', value: login })
+                           .get();
+  }
+
+  async getSolicitationChangeKeyCode(login = new Login) {
+    return await this.alterarSenha.where({ column: 'acesso', value: login.id })
+                                  .where({ column: 'usaged_at', comparison: 'Is', value: null })
+                                  .get();
+  }
+
+  async incorrectLogin() {
+    this.defaultResponseJSON({
+      result: {
+        login: 'Login incorreto'
+      }
+    });
+    this.resEnd();
+  }
+
+  async dontExistChangeKeySolicitation() {
+    this.defaultResponseJSON({
+      result: {
+        error: {
+          login: 'Não existe pedido de alteração de senha para este login'
+        }
+      }
+    });
+    this.resEnd();
+  }
+
+  async incorrectCode() {
+    this.defaultResponseJSON({
+      result: {
+        error: {
+          code: 'Código incorreto'
+        }
+      }
+    });
+    this.resEnd();
+  }
+
+  async setChangeKeyUsaged(alterarSenha = new AlterarSenha) {
+    alterarSenha.usaged_at = new Date();
+    await alterarSenha.save();
+  }
+
+  async setNewKey(acesso = new Login, key = '') {
+    acesso.senha = await this.app.hashable(key);
+    await acesso.save();
+  }
+
+  async getNewSolicitationChangeKeyCode(login = new Login) {
+    return await this.alterarSenha.create({
+      code: this.app.getRandom({ min: 999999, max: 9999999 }),
+      acesso: login.id
+    });    
+  }
+
   async forgotem() {
     let validator = this.Validator.make(this.request.body, {
       login: 'required|email|min:5'
@@ -34,7 +105,7 @@ class ForgotemController extends BaseController {
     }
 
     let _login = await this.app.hashable(this.request.body.login);
-    let acesso = await this.login.where({ column: 'login', value: _login }).get();
+    let acesso = await this.getAccess(_login);
 
     if (!acesso.count()) {
       this.defaultResponseJSON({
@@ -46,19 +117,12 @@ class ForgotemController extends BaseController {
       });
       this.resEnd();
       return;
-    }
+    } else acesso = acesso.first();
+    let alter = await this.getSolicitationChangeKeyCode(acesso);
 
-    acesso = acesso.first();
-    let alter = await this.alterarSenha.where({ column: 'usaged_at', comparison: 'Is', value: null }).get();
-
-    if (alter.count()) {
-      alter = alter.first();
-    } else {
-      alter = await this.alterarSenha.create({
-        code: this.app.getRandom({ min: 999999, max: 9999999 }),
-        acesso: acesso.id
-      });
-    }
+    if (!alter.count()) {
+      alter = this.getNewSolicitationChangeKeyCode(acesso);
+    } else alter = alter.first();
 
     try {
       await this.app.sendMail({
@@ -80,7 +144,6 @@ class ForgotemController extends BaseController {
           message: 'e-mail enviado contendo o código para troca da senha'
         }
       });
-      this.resEnd();
     } catch (error) {
       this.defaultResponseJSON({
         result: {
@@ -89,8 +152,8 @@ class ForgotemController extends BaseController {
           }
         }
       });
-      this.resEnd();
     }
+    this.resEnd();
   }
 
   async forgotemCode() {
@@ -117,42 +180,23 @@ class ForgotemController extends BaseController {
     }
 
     let login = await this.app.hashable(this.request.body.login),
-    acesso,
+    acesso = await this.getAccess(login),
     alterarSenha;
 
-    acesso = await this.getAccessUsingLogin(login);
+    acesso = await this.getAccess(login);
     if (!acesso.count()) {
-      this.defaultResponseJSON({
-        result: {
-          login: 'Login incorreto'
-        }
-      });
-      this.resEnd();
+      this.incorrectLogin();
       return;
     } else acesso = acesso.first();
     
-    alterarSenha = await this.getAlterKeyUsingAccess(acesso);
+    alterarSenha = await this.getSolicitationChangeKeyCode(acesso);
     if (!alterarSenha.count()) {
-      this.defaultResponseJSON({
-        result: {
-          error: {
-            login: 'Não existe pedido de alteração de senha para este login'
-          }
-        }
-      });
-      this.resEnd();
+      this.dontExistChangeKeySolicitation();
       return;
     } else alterarSenha = alterarSenha.first();
 
     if (!this.correctCode(alterarSenha, this.request.body.code)) {
-      this.defaultResponseJSON({
-        result: {
-          error: {
-            code: 'Código incorreto'
-          }
-        }
-      });
-      this.resEnd();
+      this.incorrectCode();
       return;
     } else {
       this.defaultResponseJSON({
@@ -162,22 +206,6 @@ class ForgotemController extends BaseController {
       });
       this.resEnd();
       return;
-    }
-  }
-
-  async getAccessUsingLogin(login = '') {
-    return await this.login.where({ column: 'login', value: login }).get();
-  }
-
-  async getAlterKeyUsingAccess(acesso = new Acesso) {
-    return await this.alterarSenha.where({ column: 'acesso', value: acesso.id }).where({ column: 'usaged_at', comparison: 'Is', value: null }).get();
-  }
-
-  correctCode(alterarSenha = new AlterarSenha, code) {
-    if (alterarSenha.code == code) {
-      return true;
-    } else {
-      return false;
     }
   }
 
@@ -217,43 +245,22 @@ class ForgotemController extends BaseController {
     }
 
     let login = await this.app.hashable(this.request.body.login),
-    acesso;
-
-    acesso = await this.getAccessUsingLogin(login);
+    acesso = await this.getAccess(login);
 
     if (!acesso.count()) {
-      this.defaultResponseJSON({
-        result: {
-          login: 'Login incorreto'
-        }
-      });
-      this.resEnd();
+      this.incorrectLogin();
       return;
     } else acesso = acesso.first();
 
-    let alterarSenha = await this.getAlterKeyUsingAccess(acesso);
-
+    
+    let alterarSenha = await this.getSolicitationChangeKeyCode(acesso);
     if (!alterarSenha.count()) {
-      this.defaultResponseJSON({
-        result: {
-          error: {
-            login: 'Não existe pedido de alteração de senha para este login'
-          }
-        }
-      });
-      this.resEnd();
+      this.dontExistChangeKeySolicitation();
       return;
     } else alterarSenha = alterarSenha.first();
 
     if (!this.correctCode(alterarSenha, this.request.body.code)) {
-      this.defaultResponseJSON({
-        result: {
-          error: {
-            code: 'Código incorreto'
-          }
-        }
-      });
-      this.resEnd();
+      this.incorrectCode();
       return;
     }
 
@@ -269,11 +276,11 @@ class ForgotemController extends BaseController {
       return;
     }
 
-    alterarSenha.usaged_at = new Date();
-    await alterarSenha.save();
+    await Promise.all([
+      this.setChangeKeyUsaged(alterarSenha),
+      this.setNewKey(acesso, this.request.body.key)
+    ]);
 
-    acesso.senha = await this.app.hashable(this.request.body.key);
-    await acesso.save();
     this.defaultResponseJSON({
       result: {
         message: 'senha alterada com sucesso'

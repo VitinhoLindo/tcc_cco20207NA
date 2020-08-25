@@ -15,6 +15,77 @@ class LoginController extends BaseController {
     this.resEnd();
   }
 
+  async getAccess(login = '') {
+    return await this.login.where({ column: 'login', value: login })
+                           .get();
+  }
+
+  correctKey(login = new Login, key) {
+    return login.senha == key
+  }
+
+  correctCode(solicitacaoAcesso =  new SolicitacaoAcesso, code) {
+    return solicitacaoAcesso.code == code;
+  }
+
+  async getSolicitationLogin(login = new Login) {
+    return await this.solicitacaoAcesso.where({ column: 'acesso', value: login.id })
+                                       .where({ column: 'usaged_at', comparison: 'Is', value: null })
+                                       .get();
+  }
+
+  async setUsagedAtSolicitationAccess(solicitacaoAcesso = new SolicitacaoAcesso) {
+    solicitacaoAcesso.usaged_at = new Date();
+    await solicitacaoAcesso.save();
+  }
+
+  /** @param update */
+  async getAuth(login = new Login, solicitacaoAcesso = new SolicitacaoAcesso) {
+    return '12345678';
+  }
+
+  async createNewSolicitationLogin(login = new Login) {
+    return await this.solicitacaoAcesso.create({
+      code: this.app.getRandom({ min: 999999, max: 9999999 }),
+      acesso: login.id
+    });
+  }
+
+  async dontFoundAccess() {
+    this.defaultResponseJSON({
+      result: {
+        error: {
+          login: 'Não existe conta com este e-mail'
+        }
+      }
+    });
+    this.resEnd();
+  }
+
+  async incorrectKey() {
+    this.defaultResponseJSON({
+      result: {
+        error: {
+          key: 'login ou senha incorreto'
+        }
+      }
+    });
+    this.resEnd();
+  }
+
+  async incorrectCode() {
+    this.defaultResponseJSON({
+      result: {
+        error: {
+          code: 'código inválido'
+        }
+      }
+    });
+    this.resEnd();
+  }
+
+
+
   async singIn() {
     let validator = this.Validator.make(this.request.body, {
       login: 'required|email|min:5',
@@ -43,28 +114,18 @@ class LoginController extends BaseController {
       this.app.hashable(this.request.body.key)
     ]);
 
-    let _login = await this.login.where({ column: 'login', value: login }).get();
+    let _login = await this.getAccess(login);
 
     if (!_login.count()) {
-      this.defaultResponseJSON({
-        result: {
-          error: {
-            login: 'Não existe conta com este e-mail'
-          }
-        }
-      });
-      this.resEnd();
+      this.dontFoundAccess();
       return;
     } else _login = _login.first();
 
-    if (_login.senha == key) {
-      let solicitacaoAcesso = await this.solicitacaoAcesso.where({ column: 'acesso', value: _login.id }).where({ column: 'usaged_at', comparison: 'Is', value: null }).get();
+    if (this.correctKey(_login, key)) {
+      let solicitacaoAcesso = await this.getSolicitationLogin(_login);
 
       if (!solicitacaoAcesso.count()) {
-        solicitacaoAcesso = await this.solicitacaoAcesso.create({
-          code: this.app.getRandom({ min: 999999, max: 9999999 }),
-          acesso: _login.id
-        });
+        solicitacaoAcesso = await this.createNewSolicitationLogin(_login);
       } else solicitacaoAcesso = solicitacaoAcesso.first();
 
       try {
@@ -96,16 +157,7 @@ class LoginController extends BaseController {
           }
         });
       }
-    } else {
-      this.defaultResponseJSON({
-        result: {
-          error: {
-            key: 'login ou senha incorreto'
-          }
-        }
-      });
-    }
-    this.resEnd();
+    } else this.incorrectKey();
   }
 
   async singInCode() {
@@ -142,7 +194,7 @@ class LoginController extends BaseController {
       this.app.hashable(this.request.body.key)
     ]);
 
-    let _login = await this.login.where({ column: 'login', value: login }).get();
+    let _login = await this.getAccess(login);
 
     if (!_login.count()) {
       this.defaultResponseJSON({
@@ -156,52 +208,24 @@ class LoginController extends BaseController {
       return;
     } else _login = _login.first();
 
-    if (_login.senha == key) {
-      let solicitacaoAcesso = await this.solicitacaoAcesso.where({ column: 'acesso', value: _login.id }).where({ column: 'usaged_at', comparison: 'Is', value: null }).get();
+    if (this.correctKey(_login, key)) {
+      let solicitacaoAcesso = await this.getSolicitationLogin(_login);
 
       if (!solicitacaoAcesso.count()) {
-        this.defaultResponseJSON({
-          result: {
-            error: {
-              code: 'código inválido'
-            }
-          }
-        });
-        this.resEnd();
-        return;
+        return this.incorrectCode();
       } else solicitacaoAcesso = solicitacaoAcesso.first();
 
-      if (solicitacaoAcesso.code == this.request.body.code) {
-        solicitacaoAcesso.usaged_at = new Date();
-        await solicitacaoAcesso.save();
+      if (this.correctCode(solicitacaoAcesso, this.request.body.code)) {
+        await this.setUsagedAtSolicitationAccess(solicitacaoAcesso);
         this.defaultResponseJSON({
           result: {
-            auth: '123456' // criar um token para envio
-          }
-        });
-        this.resEnd();
-        return;        
-      } else {
-        this.defaultResponseJSON({
-          result: {
-            error: {
-              code: 'código inválido'
-            }
+            auth: await this.getAuth(_login, solicitacaoAcesso) // criar um token para envio
           }
         });
         this.resEnd();
         return;
-      }
-    } else {
-      this.defaultResponseJSON({
-        result: {
-          error: {
-            key: 'login ou senha incorreto'
-          }
-        }
-      });
-    }
-    this.resEnd();
+      } else return this.incorrectCode();
+    } else this.incorrectKey();
   }
 }
 
