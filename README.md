@@ -67,16 +67,23 @@
   </div>
 
   <div style="margin: 10px 0px">
-    <h4>Passos</h4>
+    <h4>Passos do servidor</h4>
     <ol>
       <li>Entrar do diretorio do servidor e rodar o comando 
         <pre>~/tcc_cco20207NA/servidor$ npm install</pre>
       </li>
       <li>Entar no diretorio da interface e rodar o comando
-        <pre>~/tcc_cco20207NA/servidor/app/interface/$ npm install</pre>
+        <pre>~/tcc_cco20207NA/servidor/app/interface$ npm install</pre>
       </li>
+    </ol>
+    <p>Se você tiver o Mysql-Workbench e desejar realizar por lá fique a vontade.</br>Este exemplo foi realizado no linux.</p>
+  </div>
+
+  <div>
+    <h4>Passos do mysql</h4>
+    <ol>
       <li>Executar os scripts da pasta
-        <pre>~/tcc_cco20207NA/mysql/scripts$ ls -l
+        <pre>~/tcc_cco20207NA/database/mysql-scripts$ ls -l
 </br>-rw-rw-r-- 1 $GROUP $USER  697 ago 24 22:23 access.sql
 -rw-rw-r-- 1 $GROUP $USER 2145 jul 23 00:59 sql1.sql
 -rw-rw-r-- 1 $GROUP $USER 2215 jul 23 00:59 sql2.sql
@@ -85,7 +92,7 @@
 -rw-rw-r-- 1 $GROUP $USER 3853 jul 23 00:59 sql5.sql
 -rw-rw-r-- 1 $GROUP $USER  400 ago 24 15:14 sql6.sql
 -rw-rw-r-- 1 $GROUP $USER  398 ago 24 15:18 sql7.sql
-</br>~/tcc_cco20207NA/mysql/scripts$ mysql -u root -p
+</br>~/tcc_cco20207NA/database/mysql-scripts$ mysql -u root -p
 Enter password: 
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 9
@@ -103,18 +110,27 @@ mysql>create database optica;
 Query OK, 1 row affected (0.01 sec)
 </br>mysql>exit
 Bye
-</br>~/tcc_cco20207NA/mysql/scripts$ mysql -u root -p optica < sql1.sql
-~/tcc_cco20207NA/mysql/scripts$ mysql -u root -p optica < sql2.sql
-~/tcc_cco20207NA/mysql/scripts$ mysql -u root -p optica < sql3.sql
-~/tcc_cco20207NA/mysql/scripts$ mysql -u root -p optica < sql4.sql
-~/tcc_cco20207NA/mysql/scripts$ mysql -u root -p optica < sql5.sql
-~/tcc_cco20207NA/mysql/scripts$ mysql -u root -p optica < sql6.sql
-~/tcc_cco20207NA/mysql/scripts$ mysql -u root -p optica < sql7.sql
-~/tcc_cco20207NA/mysql/scripts$ mysql -u root -p optica < access.sql
+</br>~/tcc_cco20207NA/database/mysql-scripts$ mysql -u root -p optica < sql1.sql
+~/tcc_cco20207NA/database/mysql-scripts$ mysql -u root -p optica < sql2.sql
+~/tcc_cco20207NA/database/mysql-scripts$ mysql -u root -p optica < sql3.sql
+~/tcc_cco20207NA/database/mysql-scripts$ mysql -u root -p optica < sql4.sql
+~/tcc_cco20207NA/database/mysql-scripts$ mysql -u root -p optica < sql5.sql
+~/tcc_cco20207NA/database/mysql-scripts$ mysql -u root -p optica < sql6.sql
+~/tcc_cco20207NA/database/mysql-scripts$ mysql -u root -p optica < sql7.sql
+~/tcc_cco20207NA/database/mysql-scripts$ mysql -u root -p optica < access.sql
         </pre>
       </li>
     </ol>
-    <p>Se você tiver o Mysql-Workbench e desejar realizar por lá fique a vontade.</br>Este exemplo foi realizado no linux.</p>
+  </div>
+
+  <div style="margin: 10px 0px">
+    <h4>Passos do Mongodb</h4>
+    <ol>
+      <li>Importar o backup da pasta<pre>~/tcc_cco20207NA/database/mongodb$ ls -l
+</br>-rw-rw-r-- 1 $GROUP $USER 2526544 ago 25 20:16 personConfig.json
+~/tcc_cco20207NA/database/mongodb$ mongoimport --db=config --collection=person --file=personConfig.json
+  </pre></li>
+    </ol>
   </div>
 </div>
 
