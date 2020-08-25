@@ -86,23 +86,6 @@ export default {
     }
   },
   methods: {
-    // change(event) {
-    //   let file = event.srcElement.files[0];
-    //   let fileReader = new FileReader();
-
-    //   fileReader.onloadend = (result) => {
-    //     // console.log(result.target.result);
-    //     // window.localStorage.setItem('config', JSON.stringify({ 
-    //     //   home: {
-    //     //     image: {
-    //     //       src: result.target.result
-    //     //     }
-    //     //   }
-    //     // }));
-    //   }
-
-    //   fileReader.readAsDataURL(file);
-    // },
     render() {
       this.windowId();
     },
@@ -146,8 +129,9 @@ export default {
           this.internal.controller.forgotem.shared = shared;
       } else if (opt == 'code') {
         this.showCode();
-        if (shared)
+        if (shared) {
           this.internal.controller.code.shared = shared;
+        }
       }
       return;
     },
@@ -164,6 +148,13 @@ export default {
         this.show('access', event.values);
       } else if (event.trigger == 'sing-in') {
         this.show('code', event.values);
+      } else if (event.trigger == 'failure-login') {
+        this.show('access', event.values);
+      } else if (event.trigger == 'authenticable') {
+        global.app.emit('get-window-division', { id: this.internal.id }, (res) => {
+          res.func(null, 'close');
+          global.app.authentication(event.values.auth)
+        });
       }
     }
   },

@@ -79,10 +79,14 @@ class BaseModel {
   }
 
   async create(value = {}) {
+    let newObject = new this.constructor;
+    newObject.use(this._getConfig());
+
     for (let key in value) {
-      this[key] = value[key];
+      newObject[key] = value[key];
     }
-    return await this.save();
+
+    return await newObject.save();
   }
 
   async save() {

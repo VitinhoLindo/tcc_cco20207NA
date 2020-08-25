@@ -81,6 +81,7 @@ export default {
 
 <style lang="scss">
 .menu {
+  opacity: 0.8;
   box-shadow: 0px 0px 2px 0px #ffffff;
   position: fixed;
   bottom: 0px;
@@ -120,6 +121,7 @@ export default {
       }
     }
     .app:hover {
+      opacity: 1;
       -webkit-border-radius: 5px;
       background-color: #405468;
       box-shadow: 0px 0px 2px 0px #202b36;

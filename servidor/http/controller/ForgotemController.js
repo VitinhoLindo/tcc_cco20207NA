@@ -61,19 +61,19 @@ class ForgotemController extends BaseController {
     }
 
     try {
-      // await this.app.sendMail({
-      //   from: this.request.body.login,
-      //   subject: 'Alterar senha',
-      //   text: '',
-      //   html: '',
-      //   fileContent: 'utf-8',
-      //   replace: {
-      //     type: 'html',
-      //     regexp: '@code@',
-      //     value: alter.code
-      //   },
-      //   pathFile: this.app.dirFiles.getResourceMailerFile('emailCode.html')
-      // });
+      await this.app.sendMail({
+        from: this.request.body.login,
+        subject: 'Alterar senha',
+        text: '',
+        html: '',
+        fileContent: 'utf-8',
+        replace: {
+          type: 'html',
+          regexp: '@code@',
+          value: alter.code
+        },
+        pathFile: this.app.dirFiles.getResourceMailerFile('forgotemCode.html')
+      });
 
       this.defaultResponseJSON({
         result: {
@@ -115,7 +115,6 @@ class ForgotemController extends BaseController {
       this.resEnd();
       return;
     }
-
 
     let login = await this.app.hashable(this.request.body.login),
     acesso,

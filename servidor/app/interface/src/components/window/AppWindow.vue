@@ -25,6 +25,18 @@ export default {
     }
   },
   mounted() {
+    global.app.on('get-window-division', (data, callback) => {
+      console.log(data);
+      console.log(this.variables.component);
+      console.log(data.id == this.variables.component);
+
+      if (data.id == this.variables.component) {
+        callback({
+          func: this.windowEvent,
+          division: this.component.division
+        });
+      }
+    });
     this.render();
     global.app.push(this.resize);
   },
@@ -82,7 +94,7 @@ export default {
       this.elements.maximize.on = true;
       this.elements.center.on = false;
     },
-    windowEvent(event, trigger) {
+    async windowEvent(event, trigger) {
       switch (trigger) {
         case 'minimize':
           this.$emit('listiner', { trigger: trigger, show: false, id: this.variables.component });

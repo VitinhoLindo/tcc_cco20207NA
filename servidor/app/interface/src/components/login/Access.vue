@@ -8,10 +8,11 @@
         <div>
           <input class="input-text" type="email" v-model="input.login.value">
         </div>
-        <div>
+        <div class="error" v-if="input.login.error">
           {{ input.login.error }}
         </div>
       </div>
+
       <div class="field">
         <div>
           {{ labels.senha }}
@@ -19,10 +20,11 @@
         <div>
           <input class="input-text" type="password" v-model="input.key.value">
         </div>
-        <div>
+        <div class="error" v-if="input.key.error">
           {{ input.key.error }}
         </div>
       </div>
+
       <div class="field">
         <div class="field flex">
           <div>
@@ -91,7 +93,12 @@ export default {
         }
         return;
       }
-      this.input.login.value = global.shared.login || '';
+      if (global.shared) {
+        for(let key in this.input) {
+          if (!global.shared[key]) continue;
+          this.input[key].value = global.shared[key];          
+        }
+      }
     },
     readValues() {
       let object = {};
@@ -112,14 +119,16 @@ export default {
       shared.remember = true;
       global.app.saveStorage('shared', JSON.stringify(shared));
     },
-    async singIn() {
-      var values = {};
-
+    clearError() {
       for (let key in this.input) {
-        values[key] = this.input[key].value;
+        this.input[key].error = '';
       }
+    },
+    async singIn() {
+      var values = this.readValues();
       delete values.remember;
 
+      this.clearError();
       let res = await global.app.request({
         url: '/login',
         method: 'post',
@@ -138,7 +147,7 @@ export default {
 
       if (res.result.success) {
         if (this.input.remember.value) this.remember();
-        this.$emit('listen', { trigger: 'sing-in', value: values });
+        this.$emit('listen', { trigger: 'sing-in', values: values });
       }
     }
   }

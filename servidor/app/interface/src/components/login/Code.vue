@@ -43,7 +43,7 @@ export default {
         code: 'Code',
         message: '',
         buttons: {
-          sendCode: 'send',
+          sendCode: 'sing-in',
           sendCodeOn: false
         }
       },
@@ -77,8 +77,6 @@ export default {
         } else {
           if (res.result.message) {
             this.labels.message = res.result.message;
-
-            // 7325077
             this.shared.forgotemCode = true;
             this.shared.code = this.input.code.value;
             this.$emit('listen', { trigger: 'forgotem-code-validated', values: this.shared });
@@ -87,6 +85,31 @@ export default {
         return;
       }
       if (type == 'login') {
+        res = await global.app.request({
+          url: '/login/code',
+          method: 'post',
+          body: {
+            login: this.shared.login,
+            key: this.shared.key,
+            code: this.input.code.value
+          }
+        })
+
+        if (res.result.error) {
+          for (let key in res.result.error) {
+            if (key !== 'code') {
+              this.$emit('listen', { trigger: 'failure-login' });
+              return;
+            }
+            this.input[key].error = res.result.error[key];
+          }
+          return;
+        }
+
+        if (res.result.auth) {
+          this.$emit('listen', { trigger: 'authenticable', values: { auth: res.result.auth }});
+          return;
+        }
         return;
       }
       return;

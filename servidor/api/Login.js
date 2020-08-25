@@ -10,4 +10,8 @@ route.post('/', (request, response) => {
   (new LoginController(request, response)).singIn();
 });
 
+route.post('/code', (request, response) => {
+  (new LoginController(request, response)).singInCode();
+});
+
 module.exports = route;

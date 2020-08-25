@@ -46,6 +46,23 @@ export default {
       };
       var functions = [];
       var windows = [];
+      var listiners = {};
+
+      const on = (listiner, func) => {
+        if (typeof listiner != 'string') return;
+        if (typeof func != 'function') return; 
+        if (!listiners[listiner]) listiners[listiner] = [];
+
+        listiners[listiner].push(func);
+      }
+
+      const emit = (listiner, ...args) => {
+        if (listiners[listiner]) {
+          listiners[listiner].forEach((func) => {
+            func.apply(null, args);
+          });
+        }
+      }
 
       const push = (func) => {
         if (!func) return;
@@ -327,6 +344,16 @@ export default {
         }
       }
 
+      const authentication = async (auth) => {
+        console.log(auth);
+        let shared = getStorage('shared', 'json');
+
+        if (!shared) shared = {};
+        shared.auth = auth;
+        saveStorage('shared', JSON.stringify(shared));
+        global.shared = shared;
+      };
+
       return {
         push,
         remove,
@@ -346,7 +373,10 @@ export default {
         getApps,
         saveStorage,
         getStorage,
-        deleteStorage
+        deleteStorage,
+        on,
+        emit,
+        authentication
       };
     },
     async onresize(event) {

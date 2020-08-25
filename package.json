@@ -15,10 +15,5 @@
   "bugs": {
     "url": "https://github.com/pirumole/tcc_cco20207NA/issues"
   },
-  "homepage": "https://github.com/pirumole/tcc_cco20207NA#readme",
-  "dependencies": {
-    "express": "^4.17.1",
-    "mongodb": "^3.6.0",
-    "mysql": "^2.18.1"
-  }
+  "homepage": "https://github.com/pirumole/tcc_cco20207NA#readme"
 }

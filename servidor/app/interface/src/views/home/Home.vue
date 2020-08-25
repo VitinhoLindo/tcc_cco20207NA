@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <img v-if="image.src" class="background" v-bind:style="image.style" v-bind:src="image.src">
+    <img v-if="image.src" class="background" v-bind:src="image.src">
 
     <app-login />
 
@@ -24,24 +24,17 @@ export default {
   data() {
     return {
       image: {
-        style: {},
         src: '',
       }
     }
   },
   methods: {
     render() {
-      let { innerWidth, innerHeight } = global.app.offSetMain();
-      this.image.style = {
-        width: `${innerWidth}px`,
-        height: `${innerHeight - 40}px`
-      }
       try {
         this.image.src = global.config.home.image.src;
       } catch (error) {
         this.image.src = '';
       }
-      global.app.push(this.homeResize);
     },
     homeResize(event, data) {
       this.image.style = {
@@ -55,6 +48,8 @@ export default {
 
 <style lang="scss">
 .background {
+  width: 100%;
+  height: 100%;
   position: fixed;
   z-index: 1;
 }
