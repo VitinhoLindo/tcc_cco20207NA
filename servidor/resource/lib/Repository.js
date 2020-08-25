@@ -13,6 +13,10 @@ class Repository extends Modules {
     );
   }
 
+  getMaxRequest() {
+    return parseInt(this.process.env.MAXREQUESTMINUTE) || 50
+  }
+
   getDirPath(name = '') { }
   getDirFilePath(name = '') { }
 }

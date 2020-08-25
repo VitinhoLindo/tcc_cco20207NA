@@ -26,10 +26,6 @@ export default {
   },
   mounted() {
     global.app.on('get-window-division', (data, callback) => {
-      console.log(data);
-      console.log(this.variables.component);
-      console.log(data.id == this.variables.component);
-
       if (data.id == this.variables.component) {
         callback({
           func: this.windowEvent,

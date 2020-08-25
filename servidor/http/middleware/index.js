@@ -8,7 +8,7 @@ module.exports = (server = express(), app = Http()) => {
 
   var requests = {
     countable: 0,
-    max: 20
+    max: app.getMaxRequest()
   };
 
   const openToRequest = () => {
