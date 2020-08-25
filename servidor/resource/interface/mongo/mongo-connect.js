@@ -3,11 +3,12 @@ class Model {
     port = '';
     auth = {
         user: '',
-        pass: ''
+        password: ''
     }
     connectionUrl = '';
     useNewUrlParser = true;
     useUnifiedTopology = true;
+    authMechanism = 'DEFAULT';
 
     constructor() { }
 }

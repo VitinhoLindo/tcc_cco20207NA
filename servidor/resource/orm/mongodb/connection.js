@@ -1,6 +1,5 @@
 const { MongoClient } = require('mongodb');
 const { Mongo: { MongoConnect } } = require('../../interface');
-const { pass } = require('../../interface/mongo/mongo-connect');
 
 class Mongo {
   mongoConfig = MongoConnect;
@@ -8,50 +7,67 @@ class Mongo {
 
   constructor() {
     this.readConfig();
-    this.setBaseUrl();
-    this.setClient();
   }
 
   readConfig() {
     this.mongoConfig.url = this.process.env.MONGO_URL;
     this.mongoConfig.port = this.process.env.MONGO_PORT;
     this.mongoConfig.auth.user = this.process.env.MONGO_USER;
-    this.mongoConfig.auth.pass = this.process.env.MONGO_PASS;
+    this.mongoConfig.auth.password = this.process.env.MONGO_PASS;
 
     if (!this.mongoConfig.url) this.mongoConfig.url = '127.0.0.1';
     if (!this.mongoConfig.port) this.mongoConfig.url = '27017';
     if (!this.mongoConfig.auth.user) delete this.mongoConfig.auth;
   }
 
-  setBaseUrl() {
-    this.mongoConfig.connectionUrl = `mongodb://${this.mongoConfig.url}:${this.mongoConfig.port}`;
+  getConfig() {
+    let base = `mongodb://${this.mongoConfig.url}:${this.mongoConfig.port}/`;
+    
+    return {
+      url: (this.mongoConfig.auth.user && this.mongoConfig.auth.password) ? `${base}${this.mongoConfig.auth.user}:${this.mongoConfig.auth.password}`: base,
+      options: {
+        useNewUrlParser: this.mongoConfig.useNewUrlParser,
+        useUnifiedTopology: this.mongoConfig.useUnifiedTopology
+      }
+    }
   }
 
-  setClient() {
-    this.client = new MongoClient(this.mongoConfig.connectionUrl, this.mongoConfig);
+  getClient() {
+    let config  = this.getConfig();
+    return new MongoClient(config.url, config.options);
   }
 
-  async connection() {
-    await this.client.connect();
+  async connection(Model) {
+    let client = this.getClient();
+    client = await client.connect();
+
+    let dbAndCol = this.dbAndCol(Model, { client: client });
+    return dbAndCol;
   }
 
-  db(dbName = '') {
-    this._db = this.client.db(dbName);
-    return this;
-  }
+  dbAndCol(Model, opt = { client: new MongoClient('') }) {
+    let config = Model._getConfig() || { database: '', collection: '' };
 
-  collection(colName = '') {
-    this._collection = this._db.collection(colName);
-    return this;
+    let db = opt.client.db(config.database);
+    let collection = db.collection(config.collection);
+
+    return {
+      client: opt.client,
+      db: db,
+      collection: collection
+    };
   }
 
   connectDbAndCollection(dbName = '', collName = '') {
     this.collection = this.client.db(dbName).collection(collName);
   }
 
-  async disconnect() {
-    await this.client.logout();
-    await this.client.close();
+  disconnect(opt = { client: new MongoClient('') }) {
+    return new Promise(async (resolve) => {
+      await opt.client.logout();
+      await opt.client.close(true);
+      resolve(true);
+    });
   }
 }
 

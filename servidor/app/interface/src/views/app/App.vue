@@ -9,10 +9,9 @@ import Axios from 'axios';
 
 export default {
   name: '',
-  mounted() {
+  async mounted() {
     global.app = this.app();
     global.shared = this.readShared();
-    global.config = this.readConfig();
     this.listen();
   },
   data: () => {
@@ -29,9 +28,6 @@ export default {
     };
   },
   methods: {
-    readConfig() {
-      return global.app.getStorage('config', 'json');
-    },
     readShared() {
       return global.app.getStorage('shared', 'json') || {};
     },

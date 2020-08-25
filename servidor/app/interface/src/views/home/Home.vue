@@ -29,9 +29,14 @@ export default {
     }
   },
   methods: {
-    render() {
+    async render() {
       try {
-        this.image.src = global.config.home.image.src;
+        let res = await global.app.request({
+          url: '/config/person',
+          method: 'post'
+        });
+
+        this.image.src = res.result.home.image.src;
       } catch (error) {
         this.image.src = '';
       }
