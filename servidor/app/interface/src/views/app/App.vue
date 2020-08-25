@@ -305,7 +305,11 @@ export default {
       const getApps = () => {
         let apps = [];
 
-        windows.forEach((app) => { apps.push(app.options); });
+        windows.forEach((app) => {
+          let _app = Object.assign({}, app.options);
+          _app.division = app.division;
+          apps.push(_app);
+        });
 
         return apps;
       };

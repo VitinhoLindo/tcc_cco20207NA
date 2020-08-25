@@ -2,8 +2,8 @@
   <div class="menu">
     <div class="apps">
       <div v-for="(config, index) in apps" v-bind:key="index">
-        <div class="app">
-          <img class="img" v-bind:src="config.src" alt="" srcset="">
+        <div class="app" v-on:click="(event) => appClick(event, config)">
+          <img class="img" v-bind:src="config.src">
         </div>
       </div>
     </div>
@@ -67,6 +67,10 @@ export default {
       this.elements.btn.division = btn;
       this.elements.space.division = space;
       this.elements.options.division = options;
+    },
+    appClick(event = MouseEvent, config) {
+      console.log(event);
+      console.log(config);
     },
     onresize(event, data) { },
     getTime() {

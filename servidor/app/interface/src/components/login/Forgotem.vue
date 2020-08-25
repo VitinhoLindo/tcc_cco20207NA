@@ -152,7 +152,6 @@ export default {
 
       for (let key in this.input) {
         values[key] = this.input[key].value;
-        // 10189727Jv!
       }
 
       values.code = this.shared.code;
