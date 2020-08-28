@@ -70,7 +70,7 @@ export default {
     async render() {
       if (!this.component.division)
         this.component.division = await global.app.getDiv(this.variables.component);
-      global.app.pushWindow(this.component.division, this.variables.app);
+      global.app.pushWindow(this.component.division, Object.assign({}, this.variables.app, { id: this.variables.component }));
     },
     resize(event, data = { innerWidth: 0, innerHeight: 0 }) {
       if (this.elements.center.on) {

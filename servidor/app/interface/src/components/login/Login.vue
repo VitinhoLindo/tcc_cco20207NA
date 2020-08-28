@@ -87,7 +87,12 @@ export default {
   },
   methods: {
     render() {
+      global.app.on('show-app', this.showApp);
       this.windowId();
+    },
+    showApp(opt = { id: '' }) {
+      if (opt.id != this.internal.id) return;
+      this.internal.show = true;
     },
     listiner(event) {
       if (event.id != this.internal.id) return;

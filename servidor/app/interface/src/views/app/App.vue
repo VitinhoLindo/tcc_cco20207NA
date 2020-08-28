@@ -17,7 +17,7 @@ export default {
   data: () => {
     return {
       internal: {
-        origin: 'http://localhost:3000'
+        origin: 'http://10.0.0.108:3000'
       },
       information: {
         menu: {
@@ -202,6 +202,16 @@ export default {
         windows.push({ division: arg, options });
       };
 
+      const getApps = () => {
+        let apps = [];
+
+        windows.forEach((app) => {
+          apps.push(app.options);
+        });
+
+        return apps;
+      };
+
       const removeWindow = (arg = document.createElement('div'), options = {}) => {
         var index = -1;
         windows.forEach((_arg, _index) => {
@@ -302,18 +312,6 @@ export default {
         }
       };
 
-      const getApps = () => {
-        let apps = [];
-
-        windows.forEach((app) => {
-          let _app = Object.assign({}, app.options);
-          _app.division = app.division;
-          apps.push(_app);
-        });
-
-        return apps;
-      };
-
       const saveStorage = (key, value) => {
         try {
           window.localStorage.setItem(key, value);
@@ -345,7 +343,6 @@ export default {
       }
 
       const authentication = async (auth) => {
-        console.log(auth);
         let shared = getStorage('shared', 'json');
 
         if (!shared) shared = {};

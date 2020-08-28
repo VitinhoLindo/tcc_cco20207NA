@@ -1,5 +1,14 @@
 <template>
   <div class="menu">
+
+    <calendar 
+      v-if="controllers.calendar.on"
+      v-bind:variables="{
+        configs: controllers.calendar.configs,
+        time: time
+      }"
+    />
+
     <div class="apps">
       <div v-for="(config, index) in apps" v-bind:key="index">
         <div class="app" v-on:click="(event) => appClick(event, config)">
@@ -7,74 +16,69 @@
         </div>
       </div>
     </div>
+
     <div class="options">
-      <div class="time">{{ time }}</div>
+      <div class="time" v-on:click="onCalendar">{{ time.toLocaleTimeString() }}</div>
       <div class="system-option">
         <svg focusable="false" viewBox="0 0 24 24">
           <path d="M6,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM6,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM6,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM16,6c0,1.1 0.9,2 2,2s2,-0.9 2,-2 -0.9,-2 -2,-2 -2,0.9 -2,2zM12,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM18,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM18,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2z"></path>
         </svg>
       </div>
     </div>
+
   </div>
 </template>
 
 <script>
-import HomeBtn from './home/Btn';
-import HomeSpace from './home/Space';
-import HomeOptions from './home/Options';
-import LoginBtn from './login/Btn';
-import LoginSpace from './login/Space';
-import LoginOptions from './login/Options';
+import Calendar from '../calendar/Calendar';
 
 export default {
   name: 'Menu',
+  components: {
+    Calendar
+  },
   mounted() {
     this.randle();
     global.app.push(this.onresize);
   },
   data() {
     return {
-      time: '',
+      time: new Date(),
       apps: [],
-      elements: {
-        btn: {
-          division: null
-        },
-        space: {
-          division: null
-        },
-        options: {
-          division: null
+      controllers: {
+        calendar: {
+          on: false,
+          configs: {},
+          element: document.createElement('div')
         }
       }
     };
   },
   methods: {
     async randle() {
-      this.time = this.getTime();
       setInterval(() => {
-        this.time = this.getTime();
+        this.time = new Date();
       }, 1000);
       setInterval(() => {
         this.apps = this.getApps();
       }, 500);
-      let [btn, space, options] = await Promise.all([
-        global.app.getDiv('menu-btn'),
-        global.app.getDiv('menu-space'),
-        global.app.getDiv('menu-options')
-      ]);
-
-      this.elements.btn.division = btn;
-      this.elements.space.division = space;
-      this.elements.options.division = options;
+    },
+    onCalendar(event = MouseEvent) {
+      if (this.controllers.calendar.on)
+        this.controllers.calendar.on = false;
+      else {
+        this.controllers.calendar.configs = event.srcElement.getClientRects()[0];
+        this.controllers.calendar.element = event.srcElement;
+        this.controllers.calendar.on = true;
+      }
     },
     appClick(event = MouseEvent, config) {
-      console.log(event);
-      console.log(config);
+      global.app.emit('show-app', { id: config.id });
     },
-    onresize(event, data) { },
-    getTime() {
-      return (new Date()).toLocaleTimeString();
+    onresize(event, data) {
+      if (this.controllers.calendar.on) {
+        this.controllers.calendar.configs = this.controllers.calendar.element.getClientRects()[0];
+      }
     },
     getApps() {
       return global.app.getApps();;
@@ -85,7 +89,6 @@ export default {
 
 <style lang="scss">
 .menu {
-  opacity: 0.8;
   box-shadow: 0px 0px 2px 0px #ffffff;
   position: fixed;
   bottom: 0px;
@@ -93,7 +96,7 @@ export default {
   width: 100%;
   padding: 2px;
   height: 36px;
-  background-color: #2c3e50;
+  background-color: rgba($color: #2c3e50, $alpha: 0.8);
   display: flex;
   flex-direction: row;
   align-items: flex-end;
@@ -125,9 +128,8 @@ export default {
       }
     }
     .app:hover {
-      opacity: 1;
       -webkit-border-radius: 5px;
-      background-color: #405468;
+      background-color: rgba($color: #405468, $alpha: 1);
       box-shadow: 0px 0px 2px 0px #202b36;
     }
   }
@@ -138,7 +140,6 @@ export default {
     margin: 2px 4px 0px 4px;
     width: 120px;
     height: 100%;
-    background-color: #2c3e50;
     right: 0px;
     display: flex;
     flex-direction: row;
@@ -157,7 +158,7 @@ export default {
 
     .time:hover {
       -webkit-border-radius: 5px;
-      background-color: #405468;
+      background-color: rgba($color: #405468, $alpha: 0.8);
       box-shadow: 0px 0px 2px 0px #202b36;
     }
 
@@ -172,7 +173,7 @@ export default {
 
     .system-option:hover {
       -webkit-border-radius: 5px;
-      background-color: #405468;
+      background-color: rgba($color: #405468, $alpha: 0.8);
       box-shadow: 0px 0px 2px 0px #202b36;
     }
   }
