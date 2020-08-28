@@ -377,6 +377,8 @@ export default {
       };
     },
     async onresize(event) {
+      global.app.emit('resize-automaticable', event, global.app.offSetMain());
+
       let start = global.app.offSetMain();
       await global.app.sleep(0.4);
       let end = global.app.offSetMain();

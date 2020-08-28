@@ -30,6 +30,10 @@ export default {
     variables: {
       type: Object,
       required: true
+    },
+    configs: {
+      type: DOMRect,
+      required: true
     }
   },
   data() {
@@ -56,27 +60,33 @@ export default {
       }
     };
   },
+  // watch: {
+  //   // configs: function (last, next) {
+  //   //   console.log(last, next);
+  //   // }
+  // },
   mounted() {
     this.randle();
   },
   methods: {
-    getDay(object) {
-      return object.dia;
-    },
-    setConfig() {
-      if (this.variables.configs == this.config) return;
-      this.config = this.variables.configs;
-      let { bottom, height, left, right, top, width, x, y } = this.variables.configs;
-
-      this.internal.style.left = `${x - (this.internal.configs.width - this.internal.configs.spacingX)}px`;
-      this.internal.style.top  = `${y - (this.internal.configs.height - this.internal.configs.spacingY)}px`;
-      this.internal.stylezable.margin = `0px ${this.internal.configs.width - (this.internal.configs.spacingX * 0.7)}px`;
-    },
     async randle() {
       this.setConfig();
       this.setCalendar(new Date());
       this.internal.on = true;
     },
+    getDay(object) {
+      return object.dia;
+    },
+    setConfig() {
+      if (this.configs == this.config) return;
+      this.config = this.configs;
+      let { bottom, height, left, right, top, width, x, y } = this.configs;
+
+      this.internal.style.left = `${x - (this.internal.configs.width - this.internal.configs.spacingX)}px`;
+      this.internal.style.top  = `${y - (this.internal.configs.height - this.internal.configs.spacingY)}px`;
+      this.internal.stylezable.margin = `0px ${this.internal.configs.width - (this.internal.configs.spacingX * 0.7)}px`;
+    },
+
     backMonth() {
       this.labels.monthNumber--;
 

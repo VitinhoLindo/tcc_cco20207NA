@@ -4,9 +4,9 @@
     <calendar 
       v-if="controllers.calendar.on"
       v-bind:variables="{
-        configs: controllers.calendar.configs,
         time: time
       }"
+      v-bind:configs="controllers.calendar.configs"
     />
 
     <div class="apps">
@@ -19,7 +19,7 @@
 
     <div class="options">
       <div class="time" v-on:click="onCalendar">{{ time.toLocaleTimeString() }}</div>
-      <div class="system-option">
+      <div class="system-option" v-on:click="showApps">
         <svg focusable="false" viewBox="0 0 24 24">
           <path d="M6,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM6,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM6,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM16,6c0,1.1 0.9,2 2,2s2,-0.9 2,-2 -0.9,-2 -2,-2 -2,0.9 -2,2zM12,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM18,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM18,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2z"></path>
         </svg>
@@ -39,7 +39,6 @@ export default {
   },
   mounted() {
     this.randle();
-    global.app.push(this.onresize);
   },
   data() {
     return {
@@ -56,6 +55,7 @@ export default {
   },
   methods: {
     async randle() {
+      global.app.on('resize-automaticable', this.onresize);
       setInterval(() => {
         this.time = new Date();
       }, 1000);
@@ -72,12 +72,15 @@ export default {
         this.controllers.calendar.on = true;
       }
     },
+    showApps(event) {
+      console.log(event);
+    },
     appClick(event = MouseEvent, config) {
       global.app.emit('show-app', { id: config.id });
     },
     onresize(event, data) {
       if (this.controllers.calendar.on) {
-        this.controllers.calendar.configs = this.controllers.calendar.element.getClientRects()[0];
+        this.controllers.calendar.on = false;
       }
     },
     getApps() {
