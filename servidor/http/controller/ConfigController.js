@@ -6,13 +6,6 @@ class ConfigController extends BaseController {
   constructor(request, response) { super(request, response); }
 
   async get() {
-    // await this.globalConfig.save({
-    //   home: {
-    //     image: {
-    //       src: this.request.body.src
-    //     }
-    //   }
-    // });
     let data = await this.globalConfig.where({ column: 'identify', value: 'default' }).get();
     data = data.first();
     delete data._id;

@@ -5,5 +5,6 @@ route.use('/', require('../api/index'));
 route.use('/login', require('../api/Login'));
 route.use('/forgotem', require('../api/Forgotem'));
 route.use('/config', require('../api/Config'));
+route.use('/app', require('../api/App'));
 
 module.exports = route;

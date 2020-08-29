@@ -51,13 +51,13 @@ const lenValue = (rule, value, opt) => {
   if (!isString(rule)) return false;
   if (!dataExists(value)) return false;
 
-  if (typeof value != 'string') {
-    if (!isNumber(value)) return false;
-    else value = value.toString();
+  if (value.constructor.name == 'Number') {
+    value = value.toString();
   }
+
   let _len = value.length;
   if (_len == undefined) return false;
-
+  
   let exec = /\d+/g.exec(rule);
   if (!exec) return false;
   exec = parseInt(exec);

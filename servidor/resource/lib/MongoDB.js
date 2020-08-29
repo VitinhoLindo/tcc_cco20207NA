@@ -30,8 +30,9 @@ class BaseModel {
     return getCollection(this.constructor.name);
   }
 
-  whereIn() {
-
+  whereIn(opt = mongoORM.whereOptions) {
+    mongoORM.addWhereIn(opt);
+    return this;
   }
 
   where(opt = mongoORM.whereOptions) {

@@ -1,6 +1,16 @@
 const { MongoClient } = require('mongodb');
 const { Mongo: { MongoConnect } } = require('../../interface');
 
+// let server = process.env.MONGO_URL,
+//   port = process.env.MONGO_PORT,
+//   user = process.env.MONGO_USER,
+//   password = process.env.MONGO_PASS;
+
+// options.useNewUrlParser = true;
+// options.useUnifiedTopology = true;
+// options.keepAlive = true;
+// options.autoReconnect = true;
+
 class Mongo {
   mongoConfig = MongoConnect;
   process = require('process');
@@ -21,53 +31,54 @@ class Mongo {
   }
 
   getConfig() {
-    let base = `mongodb://${this.mongoConfig.url}:${this.mongoConfig.port}/`;
+    let base = `mongodb://${this.mongoConfig.auth.user}:${this.mongoConfig.auth.password}@${this.mongoConfig.url}:${this.mongoConfig.port}/`;
     
     return {
-      url: (this.mongoConfig.auth.user && this.mongoConfig.auth.password) ? `${base}${this.mongoConfig.auth.user}:${this.mongoConfig.auth.password}`: base,
+      url: base,
       options: {
         useNewUrlParser: this.mongoConfig.useNewUrlParser,
-        useUnifiedTopology: this.mongoConfig.useUnifiedTopology
+        useUnifiedTopology: true
       }
     }
   }
 
-  getClient() {
-    let config  = this.getConfig();
-    return new MongoClient(config.url, config.options);
+  async find(arg = {
+    dbName: '',
+    collectionName: '',
+    query: {},
+    select: {},
+    project: {}
+  }) {
+    const config = this.getConfig();
+    const client = await (new MongoClient(config.url, config.options)).connect();
+    const collection = client.db(arg.dbName).collection(arg.collectionName);
+    var doc = [];
+
+    if (arg.project) {
+      doc = collection.find(arg.query, arg.select || {}).project(arg.project).toArray();
+    } else {
+      doc = collection.find(arg.query, arg.select || {}).toArray();
+    }
+
+    await client.close();
+    return doc;
   }
 
-  async connection(Model) {
-    let client = this.getClient();
-    client = await client.connect();
+  async insert(arg = {
+    dbName: '',
+    collectionName: '',
+    doc: {}
+  }) {
+    const config = this.getConfig();
+    const client = await (new MongoClient(config.url, config.options)).connect();
+    const collection = client.db(arg.dbName).collection(arg.collectionName);
+    var result;
 
-    let dbAndCol = this.dbAndCol(Model, { client: client });
-    return dbAndCol;
-  }
+    if (arg.doc)
+      result = await collection.insert(arg.doc)
 
-  dbAndCol(Model, opt = { client: new MongoClient('') }) {
-    let config = Model._getConfig() || { database: '', collection: '' };
-
-    let db = opt.client.db(config.database);
-    let collection = db.collection(config.collection);
-
-    return {
-      client: opt.client,
-      db: db,
-      collection: collection
-    };
-  }
-
-  connectDbAndCollection(dbName = '', collName = '') {
-    this.collection = this.client.db(dbName).collection(collName);
-  }
-
-  disconnect(opt = { client: new MongoClient('') }) {
-    return new Promise(async (resolve) => {
-      await opt.client.logout();
-      await opt.client.close(true);
-      resolve(true);
-    });
+    await client.close();
+    return result;
   }
 }
 

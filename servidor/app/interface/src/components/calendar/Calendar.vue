@@ -60,11 +60,6 @@ export default {
       }
     };
   },
-  // watch: {
-  //   // configs: function (last, next) {
-  //   //   console.log(last, next);
-  //   // }
-  // },
   mounted() {
     this.randle();
   },

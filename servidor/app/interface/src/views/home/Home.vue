@@ -2,7 +2,7 @@
   <div class="home">
     <img v-if="image.src" class="background" v-bind:src="image.src">
 
-    <app-login />
+    <app-login v-if="controller.login.on" />
 
     <app-menu />
   </div>
@@ -23,8 +23,11 @@ export default {
   },
   data() {
     return {
-      image: {
-        src: '',
+      image: { src: '' },
+      controller: {
+        login: {
+          on: false
+        }
       }
     }
   },

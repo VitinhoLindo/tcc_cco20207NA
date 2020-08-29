@@ -5,13 +5,28 @@ class MongoOrm {
   orm = new Connection();
   whereOptions = new WhereOption();
   whereFields = [];
+  whereInFields = [];
 
   constructor() { }
 
+  addWhereIn(opt = this.whereOptions) { this.whereInFields.push(opt); }
   addWhere(opt = this.whereOptions) { this.whereFields.push(opt); }
 
   clearCache() {
     this.whereFields = [];
+    this.whereInFields = [];
+  }
+
+  buildSelectIn() {
+    let object = {};
+
+    this.whereInFields.forEach((opt) => {
+      object[opt.column] = {
+        $in: opt.value
+      }
+    });
+
+    return object;
   }
 
   buildSelectQuery() {
@@ -24,35 +39,54 @@ class MongoOrm {
     return object;
   }
 
-  find(Model) {
-    return new Promise(async (resolve, reject) => {
-      let query = this.buildSelectQuery();
-      this.clearCache();
+  queryBuilder() {
+    let object = {};
 
-      let client = await this.orm.connection(Model);
+    if (this.whereInFields.length) {
+      object = Object.assign({}, object, this.buildSelectIn());
+    }
+    if (this.whereFields.length) {
+      object = Object.assign({}, object, this.buildSelectQuery());
+    }
 
-      client.collection.find(query).toArray(async (err, result) => {
-        await this.orm.disconnect(client);
+    return object;
+  }
 
-        if (err) reject(err);
-        else resolve(result);
-      });
+  async find(Model) {
+    let query = this.queryBuilder();
+    this.clearCache();
+
+    let config = Model._getConfig()
+    return await this.orm.find({ 
+      dbName: config.database, 
+      collectionName: config.collection,
+      query: query
     });
   }
 
-  insert(data, Model) {
-    return new Promise(async (resolve, reject) => {
-      this.clearCache();
+  async insert(data, Model) {
+    this.clearCache();
+    let config = Model._getConfig();
 
-      let client = await this.orm.connection(Model);
-      
-      client.collection.insertOne(data, async (err, result) => {
-        this.orm.disconnect(client);
+    if (data.constructor.name = 'Array') {
+      let results = [];
 
-        if (err) reject(err);
-        else resolve(result.ops);
-      });
-    });
+      for(let x of data) {
+        if (!x) continue;
+
+        let result = await this.orm.insert({
+          dbName: config.database,
+          collectionName: config.collection,
+          doc: data
+        })
+
+        results.push(result.ops);
+      }
+
+      return results;
+    } else {
+      return result.ops;
+    }
   }
 }
 

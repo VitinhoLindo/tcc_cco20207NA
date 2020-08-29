@@ -13,6 +13,7 @@ export default {
     global.app = this.app();
     global.shared = this.readShared();
     this.listen();
+    await this.getAppImages();
   },
   data: () => {
     return {
@@ -24,6 +25,9 @@ export default {
           width: 4,
           height: 44.5
         }
+      },
+      apps: {
+        login: null
       }
     };
   },
@@ -31,8 +35,38 @@ export default {
     readShared() {
       return global.app.getStorage('shared', 'json') || {};
     },
+    async getAppImages() {
+      let res = await global.app.request({
+        url: '/app',
+        method: 'post',
+        body: { appNames: Object.keys(this.apps) }
+      });
+
+      this.apps = res.result;
+    },
     async listen() {
+      window.onkeydown = (event) => this.onkeydown(event);
       window.onresize = (event) => this.onresize(event);
+    },
+    async onkeydown (event) {
+      switch(event.keyCode) {
+        case 27:
+          console.log("aqui");
+          global.app.emit('escape-press', event, { bool: false });
+          break;
+      }
+    },
+    async onresize(event) {
+      global.app.emit('resize-automaticable', event, global.app.offSetMain());
+
+      let start = global.app.offSetMain();
+      await global.app.sleep(0.4);
+      let end = global.app.offSetMain();
+
+      if (start.innerWidth != end.innerWidth || start.innerHeight != end.innerHeight)
+        return; 
+
+      global.app.call(event, global.app.offSetMain());
     },
     app() {
       const characters = {
@@ -375,18 +409,6 @@ export default {
         emit,
         authentication
       };
-    },
-    async onresize(event) {
-      global.app.emit('resize-automaticable', event, global.app.offSetMain());
-
-      let start = global.app.offSetMain();
-      await global.app.sleep(0.4);
-      let end = global.app.offSetMain();
-
-      if (start.innerWidth != end.innerWidth || start.innerHeight != end.innerHeight)
-        return; 
-
-      global.app.call(event, global.app.offSetMain());
     }
   }
 }

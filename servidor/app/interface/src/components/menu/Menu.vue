@@ -1,6 +1,8 @@
 <template>
   <div class="menu">
 
+    <apps v-if="controllers.apps.on" />
+
     <calendar 
       v-if="controllers.calendar.on"
       v-bind:variables="{
@@ -19,7 +21,7 @@
 
     <div class="options">
       <div class="time" v-on:click="onCalendar">{{ time.toLocaleTimeString() }}</div>
-      <div class="system-option" v-on:click="showApps">
+      <div class="system-option" v-on:click="(event) => showApps(event, { bool: true })">
         <svg focusable="false" viewBox="0 0 24 24">
           <path d="M6,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM6,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM6,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM16,6c0,1.1 0.9,2 2,2s2,-0.9 2,-2 -0.9,-2 -2,-2 -2,0.9 -2,2zM12,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM18,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM18,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2z"></path>
         </svg>
@@ -31,11 +33,13 @@
 
 <script>
 import Calendar from '../calendar/Calendar';
+import Apps from '../apps/Apps';
 
 export default {
   name: 'Menu',
   components: {
-    Calendar
+    Calendar,
+    Apps
   },
   mounted() {
     this.randle();
@@ -49,6 +53,9 @@ export default {
           on: false,
           configs: {},
           element: document.createElement('div')
+        },
+        apps: {
+          on: false
         }
       }
     };
@@ -56,12 +63,11 @@ export default {
   methods: {
     async randle() {
       global.app.on('resize-automaticable', this.onresize);
-      setInterval(() => {
-        this.time = new Date();
-      }, 1000);
-      setInterval(() => {
-        this.apps = this.getApps();
-      }, 500);
+      global.app.on('close-apps-show', this.showApps);
+      global.app.on('escape-press', this.showApps);
+
+      setInterval(() => { this.time = new Date(); }, 1000);
+      setInterval(() => { this.apps = this.getApps(); }, 500);
     },
     onCalendar(event = MouseEvent) {
       if (this.controllers.calendar.on)
@@ -72,8 +78,8 @@ export default {
         this.controllers.calendar.on = true;
       }
     },
-    showApps(event) {
-      console.log(event);
+    showApps(event, arg = { bool: false }) {
+      this.controllers.apps.on = arg.bool;
     },
     appClick(event = MouseEvent, config) {
       global.app.emit('show-app', { id: config.id });
