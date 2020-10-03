@@ -121,7 +121,7 @@ export default {
     },
     async sendCode() {
       this.labels.buttons.sendCodeOn = true;
-      var res = await global.app.request({
+      var res = await global.listener.request({
         url: '/forgotem',
         method: 'post',
         body: { login: this.input.login.value }
@@ -156,7 +156,7 @@ export default {
 
       values.code = this.shared.code;
 
-      let res = await global.app.request({
+      let res = await global.listener.request({
         url: '/forgotem/alter',
         method: 'post',
         body: values

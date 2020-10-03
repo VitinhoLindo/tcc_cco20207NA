@@ -10,33 +10,37 @@ import Axios from 'axios';
 export default {
   name: '',
   async mounted() {
-    global.app = this.app();
-    global.shared = this.readShared();
-    this.listen();
-    await this.getAppImages();
+    // global.listener = this.listener();
+    // global.shared = this.readShared();
+    // this.listen();
+    // await this.getAppImages();
   },
   data: () => {
     return {
-      internal: {
-        origin: 'http://10.0.0.108:3000'
-      },
-      information: {
-        menu: {
-          width: 4,
-          height: 44.5
-        }
-      },
-      apps: {
-        login: null
-      }
+
     };
+    // return {
+    //   internal: {
+    //     origin: 'http://10.0.0.109:3000'
+    //   },
+    //   information: {
+    //     menu: {
+    //       width: 4,
+    //       height: 44.5
+    //     }
+    //   },
+    //   apps: {
+    //     login: null,
+    //     'cadastro-login': null
+    //   }
+    // };
   },
   methods: {
     readShared() {
-      return global.app.getStorage('shared', 'json') || {};
+      return global.listener.getStorage('shared', 'json') || {};
     },
     async getAppImages() {
-      let res = await global.app.request({
+      let res = await global.listener.request({
         url: '/app',
         method: 'post',
         body: { appNames: Object.keys(this.apps) }
@@ -51,24 +55,23 @@ export default {
     async onkeydown (event) {
       switch(event.keyCode) {
         case 27:
-          console.log("aqui");
-          global.app.emit('escape-press', event, { bool: false });
+          global.listener.emit('escape-press', event, { bool: false });
           break;
       }
     },
     async onresize(event) {
-      global.app.emit('resize-automaticable', event, global.app.offSetMain());
+      global.listener.emit('resize-automaticable', event, global.listener.offSetMain());
 
-      let start = global.app.offSetMain();
-      await global.app.sleep(0.4);
-      let end = global.app.offSetMain();
+      let start = global.listener.offSetMain();
+      await global.listener.sleep(0.4);
+      let end = global.listener.offSetMain();
 
       if (start.innerWidth != end.innerWidth || start.innerHeight != end.innerHeight)
         return; 
 
-      global.app.call(event, global.app.offSetMain());
+      global.listener.call(event, global.listener.offSetMain());
     },
-    app() {
+    listener() {
       const characters = {
         latter : 'abcdefghijklmnopqrstuvxywz',
         number : '0123456789',
@@ -291,59 +294,73 @@ export default {
       }
 
       const center = (arg = document.createElement('div'), style = {}, resizable = false) => {
-        if (style['min-width'] && style['min-height']) {
-          let { innerWidth, innerHeight } = offSetMain();
+        var {   width        ,    height    } = arg.getClientRects()[0],
+            { innerWidth     ,  innerHeight } = offSetMain(),
+              percentX = 0.7, percentY = 0.8,
+              windowH = 24;
 
-          let [screenCenterWidth, screenCenterHeight] = [
-            innerWidth / 2, (innerHeight / 2) - this.information.menu.height
-          ];
-          let [width, height] = [
-            parseInt(style['min-width']),
-            parseInt(style['min-height'])
-          ];
-
-          if (!resizable) {
-            arg.style.width = `${width}px`;
-            arg.style.height = `${height}px`;
-          }
-
-          let [positionX,positionY] = [
-            Math.floor(screenCenterWidth - width / 2),
-            Math.floor(screenCenterHeight - height / 2)
-          ];
-
-          arg.style.top = `${positionY}px`;
-          arg.style.left = `${positionX}px`;
+        if (!style['min-width'] || !style['min-height']) {
+          width  = innerWidth  * percentX;
+          height = innerHeight * percentY;
+        } else {
+          width  = parseInt(style['min-width']);
+          height = parseInt(style['min-height']);
         }
-      };
+
+        if (!resizable) {
+          arg.style.width = `${width}px`;
+          arg.style.height = `${height}px`;
+        }
+
+        emit('resize-window', { 
+          id: arg.id,
+          offset: {
+            width,
+            height
+          }
+        });
+
+        var centerX = Math.floor((innerWidth / 2) - (width / 2)),
+            centerY = Math.floor(((innerHeight / 2) - this.information.menu.height) - (height / 2));
+
+        arg.style.top = `${centerY}px`;
+        arg.style.left = `${centerX}px`;
+      }
 
       const maximize = (arg = document.createElement('div'), style = {}, resizable = false) => {
         let { innerWidth, innerHeight } = offSetMain();
+        let width, height;
 
         if (style['max-width'] && style['max-height']) {
-          let [width, height] = [
-            parseInt(style['max-width']),
-            parseInt(style['max-height'])
-          ];
+          width  = parseInt(style['max-width']); 
+          height = parseInt(style['max-height']);
 
           if (width > innerWidth) {
-            style['max-width'] = `${innerWidth - this.information.menu.width}px`;
+            width  = innerWidth - this.information.menu.width;
           }
           if (height > innerHeight) {
-            style['max-height'] = `${innerHeight - this.information.menu.height}px`;
+            height = innerHeight - this.information.menu.height;
           }
-
-          arg.style.width = style['max-width'];
-          arg.style.height = style['max-height'];
         } else {
-          arg.style.width = `${innerWidth - this.information.menu.width}px`;
-          arg.style.height = `${innerHeight - this.information.menu.height}px`;
+          width  = innerWidth - this.information.menu.width;
+          height = innerHeight - this.information.menu.height;
         }
+
+        arg.style.width  = `${width}px`;
+        arg.style.height = `${height}px`;
 
         if (!resizable) {
           arg.style.top = '0px';
           arg.style.left = '0px';
         }
+
+        emit('resize-window', { 
+          id: arg.id,
+          offset: {
+            width,
+            height
+          }
+        });
       };
 
       const saveStorage = (key, value) => {
@@ -379,10 +396,32 @@ export default {
       const authentication = async (auth) => {
         let shared = getStorage('shared', 'json');
 
-        if (!shared) shared = {};
         shared.auth = auth;
         saveStorage('shared', JSON.stringify(shared));
         global.shared = shared;
+      };
+
+      const getApplications = (key) => {
+        let count = 0;
+        if (!key) {
+          if (!global.shared) {
+            return {
+              login: this.apps['login']
+            };
+          }
+
+          delete this.apps.login;
+          return this.apps;
+        }
+
+
+        while(!this.apps[key]) { 
+          if (count == 20) break;
+          count++;
+        }
+
+
+        return this.apps[key];
       };
 
       return {
@@ -407,7 +446,8 @@ export default {
         deleteStorage,
         on,
         emit,
-        authentication
+        authentication,
+        getApplications
       };
     }
   }
@@ -422,8 +462,82 @@ html body {
 .app-box {
   -webkit-border-radius: 3px;
   border: 2px solid #2c3e50;
+  background-color: #ffffff;
   z-index: 4;
   position: fixed;
+      
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  .field {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 300px;
+    margin: 0px 5px;
+    div {
+      margin: 5px 2px;
+      .input-text {
+        text-align: center;
+        padding: 1px 4px;
+        width: 220px;
+        font-size: 14px;
+        height: 22px;
+        cursor: text;
+        -webkit-border-radius: 4px;
+        border: 1px solid #3498db;
+      }
+      .input-text:hover {
+        box-shadow: 0 0 2px 0 #3498db;
+        border: 1px solid #3498db;
+        outline: 0;
+      }
+    }
+    .error {
+      min-height: 5px;
+      max-width: 200px;
+      font-size: 12px;
+      color: red;
+      margin: auto;
+    }
+    .message {
+      min-height: 5px;
+      max-width: 200px;
+      padding: 0px;
+      text-align: center;
+      font-size: 12px;
+      margin: auto;
+    }
+  }
+  .link {
+    cursor: pointer;
+    color: #3498db;
+  }
+  .link:hover {
+    opacity: 0.6;
+  }
+  .btn-flex {
+    button {
+      -webkit-border-radius: 4px;
+      border: 1px solid #aaaaaa;
+      cursor: pointer;
+      margin: 10px 0px;
+      width: 100px;
+      height: 35px;
+      font-size: 12px;
+      background-color: #eeeeee;
+    }
+    button:hover {
+      background-color: #ffffff;
+      box-shadow: 0px 0px 6px 0px #aaaaaa;
+    }
+  }
+  .column {
+    border: 1px solid #000000;
+    width: 150px;
+    height: 150px;
+  }
 }
 
 .flex {

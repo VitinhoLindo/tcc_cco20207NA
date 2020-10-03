@@ -112,12 +112,12 @@ export default {
       this.$emit('listen', { trigger: 'forgotem-password', values: this.readValues() });
     },
     remember() {
-      let shared = global.app.getStorage('shared', 'json');
+      let shared = global.listener.getStorage('shared', 'json');
 
       if (!shared) shared = {};
       shared.login = this.input.login.value;
       shared.remember = true;
-      global.app.saveStorage('shared', JSON.stringify(shared));
+      global.listener.saveStorage('shared', JSON.stringify(shared));
     },
     clearError() {
       for (let key in this.input) {
@@ -129,7 +129,7 @@ export default {
       delete values.remember;
 
       this.clearError();
-      let res = await global.app.request({
+      let res = await global.listener.request({
         url: '/login',
         method: 'post',
         body: values

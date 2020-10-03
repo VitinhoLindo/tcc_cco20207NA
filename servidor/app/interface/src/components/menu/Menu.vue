@@ -3,13 +3,14 @@
 
     <apps v-if="controllers.apps.on" />
 
-    <calendar 
-      v-if="controllers.calendar.on"
-      v-bind:variables="{
-        time: time
-      }"
-      v-bind:configs="controllers.calendar.configs"
-    />
+    <!-- <calendar 
+        v-if="controllers.calendar.on"
+        v-bind:variables="{
+          time: time
+        }"
+        v-bind:configs="controllers.calendar.configs"
+    /> -->
+    <calendar v-bind:variables="{ time: time }" />
 
     <div class="apps">
       <div v-for="(config, index) in apps" v-bind:key="index">
@@ -32,13 +33,13 @@
 </template>
 
 <script>
-import Calendar from '../calendar/Calendar';
+// import Calendar from '../calendar/Calendar';
 import Apps from '../apps/Apps';
 
 export default {
   name: 'Menu',
   components: {
-    Calendar,
+    // Calendar,
     Apps
   },
   mounted() {
@@ -62,9 +63,9 @@ export default {
   },
   methods: {
     async randle() {
-      global.app.on('resize-automaticable', this.onresize);
-      global.app.on('close-apps-show', this.showApps);
-      global.app.on('escape-press', this.showApps);
+      global.listener.on('resize-automaticable', this.onresize);
+      global.listener.on('close-apps-show', this.showApps);
+      global.listener.on('escape-press', this.showApps);
 
       setInterval(() => { this.time = new Date(); }, 1000);
       setInterval(() => { this.apps = this.getApps(); }, 500);
@@ -82,7 +83,7 @@ export default {
       this.controllers.apps.on = arg.bool;
     },
     appClick(event = MouseEvent, config) {
-      global.app.emit('show-app', { id: config.id });
+      global.listener.emit('show-app', { id: config.id });
     },
     onresize(event, data) {
       if (this.controllers.calendar.on) {
@@ -90,7 +91,7 @@ export default {
       }
     },
     getApps() {
-      return global.app.getApps();;
+      return global.listener.getApps();;
     }
   }
 }

@@ -25,7 +25,7 @@ export default {
     }
   },
   mounted() {
-    global.app.on('get-window-division', (data, callback) => {
+    global.listener.on('get-window-division', (data, callback) => {
       if (data.id == this.variables.component) {
         callback({
           func: this.windowEvent,
@@ -34,7 +34,7 @@ export default {
       }
     });
     this.render();
-    global.app.push(this.resize);
+    global.listener.push(this.resize);
   },
   data() {
     return {
@@ -69,18 +69,18 @@ export default {
   methods: {
     async render() {
       if (!this.component.division)
-        this.component.division = await global.app.getDiv(this.variables.component);
-      global.app.pushWindow(this.component.division, Object.assign({}, this.variables.app, { id: this.variables.component }));
+        this.component.division = await global.listener.getDiv(this.variables.component);
+      global.listener.pushWindow(this.component.division, Object.assign({}, this.variables.app, { id: this.variables.component }));
     },
     resize(event, data = { innerWidth: 0, innerHeight: 0 }) {
       if (this.elements.center.on) {
-        global.app.maximize(this.component.division, this.variables.style, true);
+        global.listener.maximize(this.component.division, this.variables.style, true);
       } else if (this.elements.maximize.on) {
-        global.app.center(this.component.division, this.variables.style, true);
+        global.listener.center(this.component.division, this.variables.style, true);
       }
     },
     clickWindow(event) {
-      global.app.maxPositionZ(this.component.division);
+      global.listener.maxPositionZ(this.component.division);
     },
     maximize() {
       this.elements.center.on = true;
@@ -97,24 +97,26 @@ export default {
           break;
         case 'maximize':
           this.maximize();
-          global.app.maximize(this.component.division, this.variables.style);
+          global.listener.maximize(this.component.division, this.variables.style);
+          this.$emit('listiner', { trigger: trigger, id: this.variables.component });
           break;
         case 'center':
           this.center();
-          global.app.center(this.component.division, this.variables.style);
+          global.listener.center(this.component.division, this.variables.style);
           break;
         case 'close':
-          global.app.remove(this.resize);
-          global.app.removeWindow(this.component.division, this.variables.app);
-          this.$emit('listiner', { trigger: trigger, on: false, id: this.variables.component });
+          global.listener.remove(this.resize);
+          global.listener.removeWindow(this.component.division, this.variables.app);
+          global.listener.emit('close-window', { bool: false, name: this.variables.name });
           break;
       }
     },
     async dragend(event) {
       if (!this.component.division)
-        this.component.division = await global.app.getDiv(this.variables.component);
+        this.component.division = await global.listener.getDiv(this.variables.component);
 
-      global.app.dragend({
+      this.center();
+      global.listener.dragend({
         x: event.x,
         y: event.y,
         srcElement: this.component.division

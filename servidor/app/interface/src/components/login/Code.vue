@@ -59,7 +59,7 @@ export default {
     async validateCode(type) {
       var res;
       if (type == 'forgotem') {
-        res = await global.app.request({
+        res = await global.listener.request({
           url: '/forgotem/code',
           method: 'post',
           body: {
@@ -85,7 +85,7 @@ export default {
         return;
       }
       if (type == 'login') {
-        res = await global.app.request({
+        res = await global.listener.request({
           url: '/login/code',
           method: 'post',
           body: {

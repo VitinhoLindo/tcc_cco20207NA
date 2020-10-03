@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="!autenticable && internal.on"
+    v-if="!autenticable"
     v-show="internal.show"
     v-bind:id="internal.id"
     class="app-box"
@@ -54,8 +54,8 @@ export default {
   data() {
     return {
       internal: {
+        name: 'login',
         id: '',
-        on: true,
         show: true,
         style: {
           'min-width': '350px',
@@ -83,7 +83,8 @@ export default {
   },
   methods: {
     render() {
-      global.app.on('show-app', this.showApp);
+      global.listener.on('show-app', this.showApp);
+      this.app = global.listener.getApplications('login');
       this.windowId();
     },
     showApp(opt = { id: '' }) {
@@ -97,12 +98,12 @@ export default {
           this.internal.show = event.show;
           break;
         case 'close':
-          this.internal.on = event.on;
+          global.listener.emit('app-click', { name: 'login', bool: false });
           break;
       }
     },
     windowId() {
-      this.internal.id = 'login-' + global.app.randomString({ len: 40 });;
+      this.internal.id = `${this.internal.name}-${global.listener.randomString({ len: 40 })}`;
     },
     showForgotem() {
       this.internal.controller.access.on = false;
@@ -152,9 +153,9 @@ export default {
       } else if (event.trigger == 'failure-login') {
         this.show('access', event.values);
       } else if (event.trigger == 'authenticable') {
-        global.app.emit('get-window-division', { id: this.internal.id }, (res) => {
+        global.listener.emit('get-window-division', { id: this.internal.id }, (res) => {
           res.func(null, 'close');
-          global.app.authentication(event.values.auth)
+          global.listener.authentication(event.values.auth)
         });
       }
     }
@@ -176,85 +177,6 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-
-    .field {
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      width: 300px;
-      margin: 0px 5px;
-
-      div {
-        margin: 5px 2px;
-
-        .input-text {
-          text-align: center;
-          padding: 1px 4px;
-          width: 220px;
-          font-size: 14px;
-          height: 22px;
-          cursor: text;
-          -webkit-border-radius: 4px;
-          border: 1px solid #3498db;
-        }
-
-        .input-text:hover {
-          box-shadow: 0 0 2px 0 #3498db;
-          border: 1px solid #3498db;
-          outline: 0;
-        }
-      }
-
-      .error {
-        min-height: 5px;
-        max-width: 200px;
-        font-size: 12px;
-        color: red;
-        margin: auto;
-      }
-
-      .message {
-        min-height: 5px;
-        max-width: 200px;
-        padding: 0px;
-        text-align: center;
-        font-size: 12px;
-        margin: auto;
-      }
-    }
-
-
-    .link {
-      cursor: pointer;
-      color: #3498db;
-    }
-    .link:hover {
-      opacity: 0.6;
-    }
-
-    .btn-flex {
-      button {
-        -webkit-border-radius: 4px;
-        border: 1px solid #aaaaaa;
-        cursor: pointer;
-        margin: 10px 0px;
-        width: 100px;
-        height: 35px;
-        font-size: 12px;
-        background-color: #eeeeee;
-      }
-
-      button:hover {
-        background-color: #ffffff;
-        box-shadow: 0px 0px 6px 0px #aaaaaa;
-      }
-    }
-
-    .column {
-      border: 1px solid #000000;
-      width: 150px;
-      height: 150px;
-    }
   }
 }
 </style>

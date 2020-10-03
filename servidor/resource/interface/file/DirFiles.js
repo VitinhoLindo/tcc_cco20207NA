@@ -22,7 +22,8 @@ class DirFiles {
     ico   : '',
     doc   : '',
     image : '',
-    video : '' 
+    video : '',
+    lang  : ''
   };
   resourse = {
     dir: '',
@@ -142,6 +143,12 @@ class DirFiles {
     return `${root}${this.public.video}`;
   }
 
+  getPublicLangPath(file) {
+    let root = this.getPublicPath();
+    let path = `${root}${this.public.lang}`;
+    return file ? `${path}${file}` : path;
+  }
+
   getResoursePath() {
     let root = this.getRootPath();
     return `${root}${this.resourse.dir}`;
@@ -204,6 +211,7 @@ class DirFiles {
     this.public.html                  = 'html\\';
     this.public.js                    = 'js\\';
     this.public.css                   = 'css\\';
+    this.public.lang                  = 'lang\\';
     this.public.ico                   = 'ico\\';
     this.public.doc                   = 'doc\\';
     this.public.image                 = 'image\\';
@@ -224,6 +232,7 @@ class DirFiles {
     this.public.html                  = 'html/';
     this.public.js                    = 'js/';
     this.public.css                   = 'css/';
+    this.public.lang                  = 'lang/';
     this.public.ico                   = 'ico/';
     this.public.doc                   = 'doc/';
     this.public.image                 = 'image/';

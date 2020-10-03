@@ -237,6 +237,7 @@ export default {
           return this.getObjectDays(calendar);
         }
       }
+
       return new Calendar();
     },
     async setCalendar(date = new Date()) {
