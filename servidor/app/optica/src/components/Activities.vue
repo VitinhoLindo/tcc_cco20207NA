@@ -1,7 +1,10 @@
 <template>
   <div class="super-bar">
-    <div class="activitie">{{ language.labels['activities-label'] }}</div>
-    <div class="calendar-date">
+    <div class="activitie"><span>{{ language.labels['activities-label'] }}</span></div>
+    <div class="options">
+      <date />
+    </div>
+    <div class="super-menu">
 
     </div>
   </div>

@@ -15,6 +15,7 @@ class App extends Cache {
     this.storage      = Storage;
     this.calendar     = Calendar;
     this.applications = Application;
+    this.timeInterval = 1000;
   }
 
   defaultHeader(headers = {}) { 

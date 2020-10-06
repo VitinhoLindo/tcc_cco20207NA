@@ -1,6 +1,6 @@
 <template>
   <div class="backgroud" v-if="src">
-    <img :src="src">
+    <img :src="src" @click="bodyClick">
   </div>
 </template>
 
@@ -9,6 +9,11 @@ export default {
   name: 'Background',
   props: {
     src: String
+  },
+  methods: {
+    bodyClick() {
+      this.$app.emit('body-click');
+    }
   }
 }
 </script>

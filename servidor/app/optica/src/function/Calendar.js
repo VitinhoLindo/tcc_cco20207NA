@@ -86,9 +86,11 @@ class Calendar {
     }
   }
 
-  getGMT(date = new Date()) {
+  getGMT(date = new Date(), full = false) {
     let [DS, D, M, Y, H, CPM] = date.toGMTString().replace(/\,/, '').split(/\s/g);
-    return DS.toLowerCase();
+
+    if (full) return { DS, D, M, Y, H, CPM };
+    else return DS.toLowerCase();
   }
 
   getObjectDays(calendar = []) {
@@ -128,6 +130,24 @@ class Calendar {
     this.getNextDays(calendar, next);
 
     return this.getObjectDays(calendar);
+  }
+
+  getCurrentDateString(date = new Date()) {
+    let h = date.getHours();
+    let m = date.getMinutes();
+
+    let dateObject = this.getGMT(date, true);
+
+    return {
+      Day: parseInt(dateObject.D), 
+      Month: dateObject.M,
+      HM: `${h}:${m}`,
+      Y: dateObject.Y
+    };
+  }
+
+  createDateUsingObject(date = { year: 2020, month: 1, day: 1 }) {
+    return new Date(`${date.year}-${date.month}-${date.day}`);
   }
 }
 
