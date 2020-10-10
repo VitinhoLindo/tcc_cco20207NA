@@ -109,6 +109,26 @@ class File extends DataType {
       return fileExists;
     }
   };
+
+  async listDir(path) {
+    let dirFiles = [];
+    try {
+      let files = await this.fs.readdirSync(path)
+
+      for (let possibleFile of files) {
+        let stat = await this.getStat(`${path}${possibleFile}`);
+
+        if (!stat.isfile) continue;
+
+        let [name, extension] = possibleFile.split('.');
+        dirFiles.push(name);
+      }
+
+      return dirFiles;
+    } catch (error) {
+      return dirFiles;
+    }
+  }
 }
 
 module.exports = File;

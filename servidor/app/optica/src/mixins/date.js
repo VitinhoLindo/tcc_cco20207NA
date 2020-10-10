@@ -17,8 +17,8 @@ export default {
         month: 0,
         day: 1
       },
-      currentMonth: '',
-      days: null
+      days: null,
+      month: ''
     };
   },
   methods: {

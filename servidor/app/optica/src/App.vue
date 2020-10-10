@@ -79,7 +79,7 @@ html, body, #app {
       height: 24px;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex;
 
       .content {
         display: flex;
@@ -102,15 +102,6 @@ html, body, #app {
         }
 
         .calendar {
-          .show {
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 0 10px 10px 10px;
-            border-color: transparent transparent #ffffff transparent;
-            margin: auto;
-          }
-
           .dates {
             display: flex;
             flex-direction: column;
@@ -130,7 +121,6 @@ html, body, #app {
               .ds {
                 font-size: 12px;
                 margin: 0px;
-
                 color: #000000;
               }
 
@@ -159,49 +149,21 @@ html, body, #app {
                 width: 100%;
                 height: 10px;
 
-                .after {
-                  width: 0;
-                  height: 0;
-                  border-style: solid;
-                  border-width: 5px 5px 5px 0;
-                  border-color: transparent rgba($color: #000000, $alpha: 1) transparent  transparent ;
-                  margin: auto;
-                  cursor: pointer;
-                }
-                .after:hover {
-                  border-color: transparent rgba($color: #000000, $alpha: 0.6) transparent  transparent ;
-                }
-
                 .month {
                   width: 80%;
                   color: #000000;
                   text-align: center;
                 }
-
-                .next {
-                  width: 0;
-                  height: 0;
-                  border-style: solid;
-                  border-width: 5px 0px 5px 5px;
-                  border-color: transparent transparent transparent rgba($color: #000000, $alpha: 1);
-                  margin: auto;
-                  cursor: pointer
-                }
-                .next:hover {
-                  border-color: transparent transparent transparent rgba($color: #000000, $alpha: 0.6);
-                }
               }
 
               .days {
                 padding: 10px;
-                // border: 1px solid #000000;
                 color: #000000;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
 
                 .day-list {
-                  // border: 1px solid #000000;
                   text-align: center;
                   display: flex;
                   flex-direction: column;
@@ -241,91 +203,184 @@ html, body, #app {
     .super-menu {
       width: 33.3%;
       height: 24px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-end;
+
+      .app-options {
+        width: 120px;
+        top: 0px;
+        right: 0px;
+        display: flex;
+        position: absolute;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: flex-end;
+
+        .option-border {
+          width: 38px;
+          height: 20px;
+          padding: 2px 0px 0px 0px;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .option-border:hover {
+          width: 38px;
+          padding: 4px 0px 0px 0px;
+          height: 18px;
+          border-bottom: 2px solid rgba($color: orange, $alpha: 1);
+        }
+
+        .customer-options {
+          width: 240px;
+          height: 50px;
+        }
+      }
     }
-
-    // .options {
-    //   border: 1px solid #ffffff;
-    //   display: flex;
-    //   width: 33.3%;
-    //   height: 24px;
-    //   right: 0px;
-    //   position: absolute;
-    //   flex-direction: center;
-
-    //   .date {
-    //     width: 80%;
-    //     height: 23px;
-
-    //     .content {
-    //       width: 70%;
-
-    //       div {
-    //         height: 22px;
-    //         margin: 0px 1px;
-    //         font-size: 16px;
-    //         text-align: center;
-    //         vertical-align: middle;
-    //         line-height: 22px;
-    //         margin: auto;
-    //         width: 130px;
-    //         text-align: center;
-    //         cursor: pointer;
-    //       }
-    //       div:hover {
-    //         height: 20px;
-    //         line-height: 20px;
-    //         border-bottom: 2px solid orange;
-    //       }
-    //     }
-
-    //     .calendar {
-    //       width: 70%;
-
-    //       .show {
-    //         width: 0;
-    //         height: 0;
-    //         border-style: solid;
-    //         border-width: 0 10px 10px 10px;
-    //         border-color: transparent transparent #ffffff transparent;
-    //         margin: auto;
-    //       }
-
-    //       .content {
-    //         width: 340px;
-    //         height: 280px;
-    //         background-color: #ffffff;
-    //         margin: auto;
-    //       }
-    //     }
-    //   }
-
-    //   .content {
-    //     width: 20%;
-    //     height: 23px;
-    //   }
-    // }
   }
 }
 
+.card {
+  -webkit-border-radius: 5px;
+  background-color: #ffffff;
+}
 
-// #app {
-//   font-family: Avenir, Helvetica, Arial, sans-serif;
-//   -webkit-font-smoothing: antialiased;
-//   -moz-osx-font-smoothing: grayscale;
-//   text-align: center;
-//   color: #2c3e50;
-// }
+select:root {
+  --select-border: #777;
+  --select-focus: blue;
+  --select-arrow: var(--select-border);
+}
 
-// #nav {
-//   padding: 30px;
+.fields {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  padding: 4px 10px;
 
-//   a {
-//     font-weight: bold;
-//     color: #2c3e50;
+  label {
+    width: 40%;
+    color: #000000;
+    vertical-align: middle;
+    font-size: 16px;
+    line-height: 30px;
+  }
 
-//     &.router-link-exact-active {
-//       color: #42b983;
-//     }
-//   }
-// }
+  div {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  select {
+    width: 90%;
+    border: none;
+    background-color: transparent;
+    box-shadow: 0px 0px 3px 0px #4289e7;
+    text-align: center;
+    height: 22px;
+    outline: 0;
+    -webkit-border-radius: 5px;
+    cursor: pointer
+  }
+
+  select::-ms-expand {
+    display: none;
+  }
+
+  select:focus {
+    box-shadow: 0px 0px 5px 0px #4289e7;
+  }
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.m4 {
+  margin: 4px;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.w1-10 {
+  width: 10%;
+}
+
+.w9-10 {
+  width: 92.5%;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-right {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arrow-up {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 10px 10px 10px;
+  border-color: transparent transparent #ffffff transparent;
+}
+
+.arrow-left {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 5px 5px 0;
+  border-color: transparent rgba($color: #000000, $alpha: 1) transparent  transparent ;
+  cursor: pointer;
+}
+.arrow-left:hover {
+  border-color: transparent rgba($color: #000000, $alpha: 0.6) transparent  transparent ;
+}
+
+.arrow-right {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 0px 5px 5px;
+  border-color: transparent transparent transparent rgba($color: #000000, $alpha: 1);
+  cursor: pointer
+}
+.arrow-right:hover {
+  border-color: transparent transparent transparent rgba($color: #000000, $alpha: 0.6);
+}
+
+.arrow-down {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 10px 0 10px;
+  border-color: #ffffff transparent transparent transparent;
+}
 </style>

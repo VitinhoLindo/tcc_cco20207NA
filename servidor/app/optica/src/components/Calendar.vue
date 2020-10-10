@@ -1,6 +1,8 @@
 <template>
   <div class="calendar">
-    <div class="show"></div>
+    <div class="w-full flex-row flex-center">
+      <div class="arrow-up"></div>
+    </div>
     <div class="dates">
       <div class="apresentation">
         <div><h6 class="ds">{{ ds }}</h6></div>
@@ -8,9 +10,17 @@
       </div>
       <div class="internal-calendar">
         <div class="next-after">
-          <div class="after" @click="afterMonth"></div>
+          <div class="w-1_10">
+            <div class="w-full flex-row flex-center">
+              <div class="arrow-left" @click="afterMonth"></div>
+            </div>
+          </div>
           <div class="month">{{ month }}</div>
-          <div class="next" @click="nextMonth"></div>
+          <div class="w-1_10">
+            <div class="w-full flex-row flex-center">
+              <div class="arrow-right" @click="nextMonth"></div>
+            </div>
+          </div>
         </div>
 
         <div v-if="days" class="days">
@@ -28,7 +38,7 @@
 
 <script>
 import LanguageMixin from '../mixins/language'
-import DateMixin from '../mixins/date';
+import DateMixin from '../mixins/date'
 
 export default {
   name: 'Calendar',

@@ -12,4 +12,9 @@ route.get('/', (req, res) => {
   translateController.get();
 })
 
+route.get('/languages', (req, res) => {
+  const translateController = new TranslateController(req, res);
+  translateController.getLanguages();
+})
+
 module.exports = route;

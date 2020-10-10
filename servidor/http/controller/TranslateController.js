@@ -40,6 +40,13 @@ class TranslateController extends BaseController {
       return this.defaultResponseJSON({ result: JSON.parse(res.fileContent) });
     }  
   }
+
+  async getLanguages() {
+    let dir = this.app.dirFiles.getPublicLangPath();
+    let languages = await this.app.listDir(dir);
+
+    return this.defaultResponseJSON({ result: { languages } });
+  }
 }
 
 module.exports = TranslateController;

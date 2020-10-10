@@ -5,7 +5,7 @@
       <date />
     </div>
     <div class="super-menu">
-
+      <app-option />
     </div>
   </div>
 </template>

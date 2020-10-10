@@ -15,6 +15,7 @@ class App extends Cache {
     this.storage      = Storage;
     this.calendar     = Calendar;
     this.applications = Application;
+    this.languages    = null;
     this.timeInterval = 1000;
   }
 
@@ -37,7 +38,7 @@ class App extends Cache {
     try {
       let { data } = await Axios({
         url     : `${this.path}${option.url.toLowerCase()}`,
-        method  : option.method.toUpperCase(),
+        method: (option.method || 'get').toUpperCase(),
         headers : this.defaultHeader(option.headers),
         params  : option.params || {} ,
         data    : option.data || {}
@@ -144,10 +145,24 @@ class App extends Cache {
     };
 
     this.emit('language-change');
+    this.getLanguages();
+  }
+
+  async getLanguages() {
+    let res = await this.request({
+      url: '/translate/languages',
+      method: 'get'
+    });
+
+    this.languages = res.result.languages || null;
   }
 
   $Language() {
     return this.data.language;
+  }
+
+  $Languages() {
+    return this.languages;
   }
 }
 

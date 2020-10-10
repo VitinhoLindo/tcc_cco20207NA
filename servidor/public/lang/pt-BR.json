@@ -1,6 +1,8 @@
 {
   "activities-label": "Atividades",
+
   "of": "de",
+
   "day-sun": "Domingo",
   "day-mon": "Segunda",
   "day-tue": "Terça",
@@ -8,7 +10,8 @@
   "day-thu": "Quinta",
   "day-fri": "Sexta",
   "day-sat": "Sábado",
-  "oct": "Out",
+
+  "oct"    : "Out",
 
   "month-jan": "Janeiro",
   "month-feb": "Fevereiro",
@@ -21,6 +24,14 @@
   "month-sep": "Setembro",
   "month-oct": "Outubro",
   "month-nov": "Novembro",
-  "month-dec": "Dezembro"
+  "month-dec": "Dezembro",
 
+  "language": "Linguagem",
+
+  "en"      : "Inglês",
+  "pt-BR"   : "Português ( Brasil )",
+
+  "clear-data"   : "Limpar Dados",
+
+  "clear-button" : "limpar"
 }
