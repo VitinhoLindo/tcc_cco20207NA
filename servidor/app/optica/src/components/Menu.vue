@@ -1,5 +1,8 @@
 <template>
   <div class="menu">
+    <list-applications />
+
+    <applications />
   </div>
 </template>
 

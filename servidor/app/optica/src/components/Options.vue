@@ -10,14 +10,21 @@
         <div class="fields">
           <label>{{ language.labels['language'] || '' }}</label>
           <component 
-            :is="field" 
-            :name="field" 
+            :is="select" 
+            :name="select" 
             :data="getLanguageTranslate()" 
             :default="getCurrentLang()" 
-            @[field]="change" 
+            @[select]="change" 
           />
         </div>
         <div class="fields">
+          <label>{{ language.labels['clear-data'] || '' }}</label>
+          <component 
+            :is="button"
+            :name="button"
+            :data="{ label: language.labels['clear-button'] || '' }"
+            @[button]="click"
+          />
         </div>
       </div>
     </div>
@@ -32,11 +39,15 @@ export default {
   mixins: [LanguageMixin],
   data() {
     return {
-      field: 'select-field',
+      select: 'select-field',
+      button: 'button-field',
       option: false
     };
   },
   methods: {
+    click(event) {
+      console.log(event);
+    },
     change(value) {
       let originalLang = this.getOriginalLang(value);
 

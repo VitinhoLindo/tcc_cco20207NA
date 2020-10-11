@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <select v-model="value">
+  <div class="field-select">
+    <select class="select-field" v-model="value">
       <option 
         v-for="(_data, index) in data" 
         :key="index"

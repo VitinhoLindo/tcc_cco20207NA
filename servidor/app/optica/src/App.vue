@@ -42,6 +42,31 @@ html, body, #app {
     bottom: 0;
     left: 0;
     background-color: rgba($color: #2c3e50, $alpha: 0.8);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    overflow-x: auto;
+
+    .internal-system-apps {
+      width: 40px;
+      padding: 4px 0px 0px 0px;
+
+      .system-option {
+        cursor: pointer;
+        padding: 2px;
+        padding: 6px;
+        width: 22px;
+        height: 22px;
+        fill: #ffffff;
+      }
+
+      .system-option:hover {
+        -webkit-border-radius: 5px;
+        background-color: rgba($color: #405468, $alpha: 0.8);
+        box-shadow: 0px 0px 2px 0px #202b36;
+      }
+    }
   }
 
   .super-bar {
@@ -255,6 +280,14 @@ select:root {
   --select-arrow: var(--select-border);
 }
 
+.h-full {
+  height: 100%;
+}
+
+.w24px {
+  width: 24px;
+}
+
 .fields {
   display: flex;
   flex-direction: row;
@@ -277,7 +310,7 @@ select:root {
     justify-content: center;
   }
 
-  select {
+  .select-field {
     width: 90%;
     border: none;
     background-color: transparent;
@@ -288,13 +321,29 @@ select:root {
     -webkit-border-radius: 5px;
     cursor: pointer
   }
-
-  select::-ms-expand {
+  .select-field::-ms-expand {
     display: none;
   }
-
-  select:focus {
+  .select-field:focus {
     box-shadow: 0px 0px 5px 0px #4289e7;
+  }
+
+  .button-field {
+    width: 90%;
+    padding: 5px;
+    border: none;
+    background-color: #237df3;
+    color: #ffffff;
+    -webkit-border-radius: 5px;
+    cursor: pointer;
+  }
+  .button-field:hover {
+    background-color: #68a4f1;
+  }
+  .button-field:focus {
+    outline: 0;
+    background-color: #68a4f1;
+    box-shadow: 0px 0px 3px 0px #237df3;
   }
 }
 
@@ -312,6 +361,14 @@ select:root {
 
 .w1-10 {
   width: 10%;
+}
+
+.w5 {
+  width: 5%;  
+}
+
+.w95 {
+  width: 95%;
 }
 
 .w9-10 {
@@ -382,5 +439,23 @@ select:root {
   border-style: solid;
   border-width: 10px 10px 0 10px;
   border-color: #ffffff transparent transparent transparent;
+}
+
+*::-webkit-scrollbar-track
+{
+}
+
+*::-webkit-scrollbar
+{
+  width: 2px;
+  height: 2px;
+  background-color: #FFFFFF;
+}
+
+*::-webkit-scrollbar-thumb
+{
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 6px #aaaaaa;
+  background-color: #aaaaaa;
 }
 </style>

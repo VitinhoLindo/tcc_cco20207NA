@@ -10,13 +10,13 @@
       </div>
       <div class="internal-calendar">
         <div class="next-after">
-          <div class="w-1_10">
+          <div class="w1-10">
             <div class="w-full flex-row flex-center">
               <div class="arrow-left" @click="afterMonth"></div>
             </div>
           </div>
           <div class="month">{{ month }}</div>
-          <div class="w-1_10">
+          <div class="w1-10">
             <div class="w-full flex-row flex-center">
               <div class="arrow-right" @click="nextMonth"></div>
             </div>
