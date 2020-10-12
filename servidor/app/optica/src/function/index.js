@@ -5,6 +5,7 @@ import Storage from './Storage'
 import Cache from './Cache'
 import Request from './options/Request'
 import Application from '../applications'
+import IconsBase64 from './base64.json'
 
 class App extends Cache {
 
@@ -17,6 +18,7 @@ class App extends Cache {
     this.applications = Application;
     this.languages    = null;
     this.timeInterval = 1000;
+    this.iconsBase64  = IconsBase64;
   }
 
   defaultHeader(headers = {}) { 
@@ -28,8 +30,7 @@ class App extends Cache {
       if (headers[key]) continue;
       else headers[key] = defaultHeader[key];
 
-    if (this.data.auth)
-      headers['Autentication'] = `Bearer ${this.data.auth}`;
+    headers['Authorization'] = (this.storage.shared && this.storage.shared.auth) ? `Bearer ${this.storage.shared.auth}` : '';
 
     return headers;
   }
@@ -164,9 +165,20 @@ class App extends Cache {
   $Languages() {
     return this.languages;
   }
+
+  readStorage() {
+    for (let key of this.storage.default) {
+      this.storage.data[key] = this.storage.get(key, 'json') || {};
+    }
+  }
+
+  async build() {
+    this.readStorage();
+    await this.setlanguage(navigator.language);
+  }
 }
 
 export default async function (Vue) {
   Vue.config.globalProperties.$app = new App(Vue);
-  await Vue.config.globalProperties.$app.setlanguage(navigator.language);
+  await Vue.config.globalProperties.$app.build();
 }

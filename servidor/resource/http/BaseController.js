@@ -29,6 +29,10 @@ class BaseController {
         this.app = _request.getApp();
     }
 
+    _user() {
+        return this.app.getUser(this.request);
+    }
+
     setStatus(code) {
         this.response.status(code);
     }

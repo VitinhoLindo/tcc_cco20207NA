@@ -12,7 +12,7 @@ class DataType extends Repository {
       hour: date.getHours(),
       minute: date.getMinutes(),
       seccond: date.getSeconds(),
-      locale: date.toLocaleDateString(),
+      locale: date.toLocaleDateString().replace(/\//g, '-'),
       utc: `${date.getUTCFullYear()}-${date.getUTCMonth() + 1}-${date.getUTCDate()}`
     };
   }

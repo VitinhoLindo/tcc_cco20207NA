@@ -6,6 +6,7 @@ import Calendar from '../components/Calendar.vue'
 import Option from '../components/Options'
 import SelectField from '../components/Select.vue'
 import ButtonField from '../components/Button.vue'
+import MenuApplications from '../components/MenuApplications.vue'
 import Applications from '../components/Applications.vue'
 import ListApplications from '../components/ListApplications.vue'
 
@@ -18,6 +19,7 @@ export default function (Vue) {
   Vue.component('app-option', Option);
   Vue.component('select-field', SelectField);
   Vue.component('button-field', ButtonField);
+  Vue.component('menu-applications', MenuApplications);
   Vue.component('applications', Applications);
   Vue.component('list-applications', ListApplications);
 }

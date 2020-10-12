@@ -33,5 +33,7 @@
 
   "clear-data"   : "Limpar Dados",
 
-  "clear-button" : "limpar"
+  "clear-button" : "limpar",
+
+  "search": "procurar"
 }

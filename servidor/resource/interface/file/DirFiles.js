@@ -163,17 +163,18 @@ class DirFiles {
     let root = this.getResourseDbPath();
     return `${root}${this.resourse.database.crypto.dir}`;
   }
-
-  getResourseDbCryptFile(value = new Date()) {
+  
+  getResourseDbCryptFile(value = new Date(), path = true) {
     let root = this.getResourseDbCryptPath();
-    
+
     if (value.constructor.name !== 'Date') 
       value = new Date();
-    
-    return `${root}${this.resourse.database.crypto.file.replace(
+    let file = this.resourse.database.crypto.file.replace(
       /\@date\@/g,
-      value.getTime()
-    )}`;
+      value.toLocaleDateString().replace(/\//g, '-')
+    );
+    
+    return path ? `${root}${file}` : file;
   }
 
   getResourceDbJsonPath() {

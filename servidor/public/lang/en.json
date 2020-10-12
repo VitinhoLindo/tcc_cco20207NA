@@ -33,5 +33,7 @@
 
   "clear-data": "Clear Data",
 
-  "clear-button": "clear"
+  "clear-button": "clear",
+
+  "search": "find"
 }

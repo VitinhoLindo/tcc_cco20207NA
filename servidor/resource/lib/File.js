@@ -1,4 +1,5 @@
 const DataType = require('./DataType');
+const { File: { SetFile } } = require('../interface');
 const { file } = require('../interface/file/setFile');
 
 class File extends DataType {
@@ -50,8 +51,8 @@ class File extends DataType {
     if (!path) throw 'please inform path';
 
     var stat = await this.getStat(path);
-    if (!stat.isfile) throw `is not file ${path}`;
     try {
+      if (!stat.isfile) throw `is not file ${path}`;
       let file = await this.fs.readFileSync(path, { encoding: encoding });
 
       return {
@@ -85,12 +86,19 @@ class File extends DataType {
     }
   }
 
-  async getFileInfo(encoding, path) {
+  async getFileInfo(encoding, path, convert = '') {
     let fileExists = await this.fileExists(encoding, path);
 
     if (fileExists.exists) {
       let info = await this.moduleSignature.identify(path);
       if (!info) info = await this.getSimpleInfo(path);
+
+
+      if (convert == 'json' && fileExists.exists) {
+        try {
+          fileExists.fileContent = JSON.parse(fileExists.fileContent);
+        } catch (error) { }
+      }
 
       return {
         isfile: fileExists.isfile,
@@ -128,6 +136,14 @@ class File extends DataType {
     } catch (error) {
       return dirFiles;
     }
+  }
+
+  async saveFile(args = SetFile) {
+    await this.fs.writeFileSync(
+      `${args.path}${args.file}`,
+      args.value,
+      { encoding: args.encoding }
+    );
   }
 }
 

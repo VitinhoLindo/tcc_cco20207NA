@@ -17,33 +17,37 @@ class AppController extends BaseController {
   }
 
   async get() {
-    let validator = this.Validator.make(this.request.body, {
-      appNames: 'required|array|min:1'
-    }, {
-      appNames: {
-        required: 'appNames é necessário',
-        array: 'tipo de dado tem que ser array',
-        'min:1': 'minimo de 1 é requerido'
-      }
-    });
+    let user = await this._user();
 
-    if (validator.fails()) {
-      this.defaultResponseJSON(validator.modelResponse());
-      this.resEnd();
-      return;
-    }
+    return this.defaultResponseJSON({ result: await this.model.where({ column: 'auth', value: !!user }).get() });
 
-    let res = await this.model.whereIn({ column: 'name', value: this.request.body.appNames }).get();
+    // let validator = this.Validator.make(this.request.body, {
+    //   appNames: 'required|array|min:1'
+    // }, {
+    //   appNames: {
+    //     required: 'appNames é necessário',
+    //     array: 'tipo de dado tem que ser array',
+    //     'min:1': 'minimo de 1 é requerido'
+    //   }
+    // });
 
-    var apps = {};
+    // if (validator.fails()) {
+    //   this.defaultResponseJSON(validator.modelResponse());
+    //   this.resEnd();
+    //   return;
+    // }
 
-    res.values.forEach((app) => {
-      delete app._id;
-      apps[app.name] = app;
-    });
+    // let res = await this.model.whereIn({ column: 'name', value: this.request.body.appNames }).get();
 
-    this.defaultResponseJSON({ result: apps });
-    this.resEnd();
+    // var apps = {};
+
+    // res.values.forEach((app) => {
+    //   delete app._id;
+    //   apps[app.name] = app;
+    // });
+
+    // this.defaultResponseJSON({ result: apps });
+    // this.resEnd();
   }
 }
 

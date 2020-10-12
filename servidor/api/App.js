@@ -6,7 +6,7 @@ route.options('/', (request, response) => {
   (new AppController(request, response)).options();
 });
 
-route.post('/', (request, response) => {
+route.get('/', (request, response) => {
   (new AppController(request, response)).get();
 });
 

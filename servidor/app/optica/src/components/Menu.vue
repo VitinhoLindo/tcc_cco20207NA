@@ -2,7 +2,7 @@
   <div class="menu">
     <list-applications />
 
-    <applications />
+    <menu-applications />
   </div>
 </template>
 

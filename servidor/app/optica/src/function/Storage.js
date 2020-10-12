@@ -1,6 +1,8 @@
 class Storage {
   constructor() {
     this.storage = window.localStorage;
+    this.default = ['shared'];
+    this.data = {};
   }
 
   get(key, parser = 'json') {

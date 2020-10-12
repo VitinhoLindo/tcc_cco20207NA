@@ -1,7 +1,11 @@
 <template>
   <div class="home">
     <activities />
+
+    <applications />
+
     <background :src="background.image.src || ''" />
+
     <menu-app />
   </div>
 </template>

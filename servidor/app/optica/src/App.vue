@@ -38,7 +38,7 @@ html, body, #app {
     height: 40px;
     width: 100%;
     position: absolute;
-    z-index: 5;
+    z-index: 4;
     bottom: 0;
     left: 0;
     background-color: rgba($color: #2c3e50, $alpha: 0.8);
@@ -69,11 +69,68 @@ html, body, #app {
     }
   }
 
+  .applications {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 5;
+    background-color: rgba($color: #000000, $alpha: 0.6);
+
+    .close {
+      // border: 1px solid #ffffff;
+      height: 50px;
+
+      img {
+        widows: 28px;
+        height: 28px;
+        cursor: pointer;
+      }
+
+      img:hover {
+        -webkit-border-radius: 20px;
+        background-color: rgba($color: #405468, $alpha: 0.8);
+      }
+    }
+
+    .search {
+      div {
+        width: 70%;
+        border-bottom: 1px solid #ffffff;
+        padding-bottom: 10px;
+
+        input {
+          border: none;
+          text-align: center;
+          font-size: 18px;
+          -webkit-border-radius: 5px;
+          padding: 5px;
+          width: 300px;
+          height: 20px;
+        }
+
+        input:focus {
+          outline: 0;
+        }
+
+        img {
+          margin-left: -34px;
+          width: 30px;
+          height: 20px;
+          cursor: pointer;
+        }
+
+        img:hover {
+          opacity: 0.6;
+        }
+      }
+    }
+  }
+
   .super-bar {
     height: 22px;
     width: 100%;
     position: absolute;
-    z-index: 5;
+    z-index: 4;
     background-color: #222222;
     color: #ffffff;
     display: flex;
