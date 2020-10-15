@@ -48,6 +48,40 @@ html, body, #app {
     justify-content: center;
     overflow-x: auto;
 
+    .menu-app {
+      overflow-x: auto;
+      display: flex;
+      align-content: flex-start;
+      justify-content: flex-start;
+      overflow-x: auto;
+
+      .app {
+        border: none;
+        -webkit-border-radius: 5px;
+        background-color: rgba($color: #000000, $alpha: 0);
+        width: 40px;
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        img {
+          width: 25px;
+          height: 25px;
+        }
+      }
+
+      .app:hover {
+        background-color: rgba($color: #4b5d6f, $alpha: 0.8);
+      }
+
+      .app:focus {
+        outline: 0;
+      }
+    }
+
     .internal-system-apps {
       width: 40px;
       padding: 4px 0px 0px 0px;
@@ -77,8 +111,7 @@ html, body, #app {
     background-color: rgba($color: #000000, $alpha: 0.6);
 
     .close {
-      // border: 1px solid #ffffff;
-      height: 50px;
+      height: 8%;
 
       img {
         widows: 28px;
@@ -93,6 +126,8 @@ html, body, #app {
     }
 
     .search {
+      height: 8%;
+
       div {
         width: 70%;
         border-bottom: 1px solid #ffffff;
@@ -121,6 +156,76 @@ html, body, #app {
 
         img:hover {
           opacity: 0.6;
+        }
+      }
+    }
+
+    .apps {
+      width: 100%;
+      height: 84%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      .division-apps {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        overflow-y: auto;
+
+        .span-app {
+          -webkit-border-radius: 5px;
+          position: absolute;
+          z-index: 5;
+          max-width: 280px;
+          padding: 5px;
+          background-color: #ffffff;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+
+          .name {
+            margin-bottom: 10px;
+          }
+
+          .content {
+            text-align: center;
+          }
+        }
+
+        .div-app {
+          border: none;
+          -webkit-border-radius: 5px;
+          width: 60px;
+          height: 60px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          background-color: rgba($color: #ffffff, $alpha: 0);
+          cursor: pointer;
+
+          .app-image {
+            width: 25px;
+            height: 25px;
+          }
+
+          .app-name {
+            color: #ffffff;
+          }
+        }
+
+        .div-app:hover {
+          background-color: rgba($color: #405468, $alpha: 0.8);
+        }
+
+        .div-app:focus {
+          outline: 0;
+          border-bottom: 2px solid orange;
         }
       }
     }

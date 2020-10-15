@@ -12,7 +12,8 @@ class App extends Cache {
   constructor(Vue) {
     super();
     this.vue          = Vue;
-    this.path         = 'http://10.0.0.109:3000';
+    this.ip           = '10.0.0.109';
+    this.path         = `http://${this.ip}:3000`;
     this.storage      = Storage;
     this.calendar     = Calendar;
     this.applications = Application;

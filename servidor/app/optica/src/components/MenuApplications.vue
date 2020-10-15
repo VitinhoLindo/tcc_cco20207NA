@@ -42,7 +42,7 @@ export default {
           throw res.message;
         }
   
-        this.apps = res.result;
+        this.apps = res.result.values;
         this.on = true;
       } catch (error) {
         console.error(error);
