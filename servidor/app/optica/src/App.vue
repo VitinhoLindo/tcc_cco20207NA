@@ -18,6 +18,68 @@ html, body, #app {
   width: 100%;
   height: 100%;
 
+  .window-app {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    z-index: 2;
+    background-color: #ffffff;
+    width: 450px;
+    height: 450px;
+    border: 2px solid #2c3e50;
+
+    .window {
+      width: 100%;
+      height: 22px;
+      display: flex;
+      background-color: #2c3e50;
+
+      .img {
+        width: 10%;
+
+        img {
+          width: 15px;
+          height: 15px;
+        }
+      }
+
+      .label {
+        width: 60%;
+        color: #ffffff;
+
+        label {}
+      }
+
+      .options {
+        width: 30%;
+
+        img {
+          width: 18px;
+          height: 18px;
+          margin: 0px 2px;
+          cursor: pointer;
+        }
+
+        img:hover {
+          width: 16px;
+          height: 16px;
+          border: 1px solid #ffffff;
+        }
+      }
+    }
+
+    .content {
+      width: 100%;
+      height: calc(100% - 22px);
+      margin: 1px solid red;
+
+      .app-form {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
   .backgroud {
     position: absolute;
     z-index: 1;

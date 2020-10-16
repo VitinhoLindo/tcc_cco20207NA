@@ -1,14 +1,13 @@
 <template>
-  <div>
+  <div class="app-form">
   </div>
 </template>
 
 <script>
-export default {
+import FormMixins from '../mixins/FormMixins'
 
+export default {
+  name: "form-app",
+  mixins: [FormMixins]
 }
 </script>
-
-<style>
-
-</style>

@@ -7,29 +7,10 @@
 </template>
 
 <script>
+import AppsMixins from '../mixins/apps'
+
 export default {
   name: 'ListApplications',
-  mounted() {
-    this.listen();
-  },
-  data() {
-    return {
-      apps: []
-    };
-  },
-  methods: {
-    async listen() {
-      this.$app.on('open-app', (data) => this.controller('open', { app: data }));
-    },
-    controller(listen = '', opt) {
-      switch (listen) {
-        case 'open':
-          this.apps.push(opt.app);
-          break;
-        default:
-          break;
-      }
-    }
-  }
+  mixins: [AppsMixins]
 }
 </script>

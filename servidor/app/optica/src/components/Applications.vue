@@ -1,14 +1,17 @@
 <template>
   <div v-if="on" class="applications w-full h-full">
+
     <div class="close w-full flex-center">
       <img :src="$app.iconsBase64.close.src" :alt="$app.iconsBase64.close.alt" @click="close">
     </div>
+
     <div class="search w-full flex-center">
       <div class="flex-center">
         <input type="text" v-model="search" :placeholder="language.labels['search'] || ''">
         <img :src="$app.iconsBase64.search.src" :alt="$app.iconsBase64.search.alt" >
       </div>
     </div>
+
     <div class="apps">
       <div class="division-apps" v-for="(appList, index) in randleApps" :key="index">
         <button
@@ -53,6 +56,7 @@ export default {
     }
   },
   watch: {
+    // implementar quando tiver uma quantidade consideravel de apps
     search: function (_new, _last) {
     }
   },

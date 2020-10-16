@@ -10,6 +10,8 @@ import MenuApplications from '../components/MenuApplications.vue'
 import Applications from '../components/Applications.vue'
 import ListApplications from '../components/ListApplications.vue'
 import SpanAppName from '../components/SpanAppName.vue'
+import WindowApp from '../components/Window.vue'
+import FormApp from '../components/Form.vue'
 
 export default function (Vue) {
   Vue.component('background', Background);
@@ -24,4 +26,6 @@ export default function (Vue) {
   Vue.component('applications', Applications);
   Vue.component('list-applications', ListApplications);
   Vue.component('span-app-name', SpanAppName);
+  Vue.component('window-app', WindowApp);
+  Vue.component('form-app', FormApp);
 }

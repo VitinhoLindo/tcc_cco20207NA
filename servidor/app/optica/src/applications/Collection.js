@@ -15,6 +15,21 @@ class Collection {
     return info.final;
   }
 
+  where(field, value) {
+    let values = [];
+
+    try {
+      for (let _value of this.values) {
+        if (!_value[field]) continue;
+        if (_value[field] == value) values.push(_value);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    return new Collection(values)
+  }
+
   get() {
     return new Collection(this.values);
   }
@@ -22,6 +37,10 @@ class Collection {
   first() {
     let info = this.info();
     return this.values[info.initial];
+  }
+
+  toArray() {
+    return this.values;
   }
 
   last() {
