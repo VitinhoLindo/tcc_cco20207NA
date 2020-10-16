@@ -1,1 +1,0 @@
-exports.Collection = require('./Collection');
