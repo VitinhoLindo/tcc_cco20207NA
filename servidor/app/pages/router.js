@@ -1,30 +1,35 @@
 const BaseController = require('../../resource/http/BaseController');
+const VueApi = require('./vueApi');
 
 class RouterController extends BaseController {
   constructor(request, response) { super(request, response); }
 
+  static estance() {
+    return RouterController;
+  }
+
   async option() {
-    
+    return this.defaultResponseJSON();
   }
   
   async get() {
-    this.defaultResponseJSON();
-    this.resEnd();
+    let resource = this.request.params.resource;
+
+    return this.defaultResponseJSON({
+      result: VueApi[resource].render()
+    });
   }
 
   async delete() {
-    this.defaultResponseJSON();
-    this.resEnd();
+    return this.defaultResponseJSON();
   }
 
   async put() {
-    this.defaultResponseJSON();
-    this.resEnd();
+    return this.defaultResponseJSON();
   }
 
   async post() {
-    this.defaultResponseJSON();
-    this.resEnd();
+    return this.defaultResponseJSON();
   }
 }
 

@@ -22,6 +22,8 @@ html, body, #app {
     position: absolute;
     top: 5%;
     left: 5%;
+    padding: 0px;
+    margin: 0px;
     z-index: 2;
     background-color: #ffffff;
     width: 450px;

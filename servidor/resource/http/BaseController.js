@@ -74,6 +74,10 @@ class BaseController {
         this.resEnd();
     }
 
+    static using(_request, _response) {
+        return new (this.estance())(_request, _response);
+    }
+
     sendFile(path) {
         this.response.sendFile(path, (err) => {
             if (err == undefined) this.resEnd();

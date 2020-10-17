@@ -2,24 +2,24 @@ const { Router } = require('express');
 const ApiRouter = require('../app/pages/router');
 const route = Router();
 
-route.options('/', (request, response) => {
-  (new ApiRouter(request, response)).options();
+route.options('/:resource/', (request, response) => {
+  ApiRouter.using(request, response).option();
 });
 
-route.get('/', (request, response) => {
-  (new ApiRouter(request, response)).get();
+route.get('/:resource/', (request, response) => {
+  ApiRouter.using(request, response).get();
 });
 
-route.post('/', (request, response) => {
-  (new ApiRouter(request, response)).post();
+route.post('/:resource/', (request, response) => {
+  ApiRouter.using(request, response).post();
 });
 
-route.put('/', (request, response) => {
-  (new ApiRouter(request, response)).delete();
+route.put('/:resource/', (request, response) => {
+  ApiRouter.using(request, response).put();
 });
 
-route.delete('/', (request, response) => {
-  (new ApiRouter(request, response)).delete();
+route.delete('/:resource/', (request, response) => {
+  ApiRouter.using(request, response).delete();
 });
 
 module.exports = route;
