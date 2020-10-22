@@ -22,4 +22,8 @@ route.delete('/:resource/', (request, response) => {
   ApiRouter.using(request, response).delete();
 });
 
+// for (let apiRouter of ApiRouter.getRoutes()) {
+//   console.log(apiRouter);
+// }
+
 module.exports = route;

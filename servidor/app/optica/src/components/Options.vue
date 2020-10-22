@@ -21,8 +21,7 @@
           <label>{{ language.labels['clear-data'] || '' }}</label>
           <component 
             :is="button"
-            :name="button"
-            :data="{ label: language.labels['clear-button'] || '' }"
+            :data="{ name: button, shared: { label: language.labels['clear-button'] || '' } }"
             @[button]="click"
           />
         </div>
@@ -37,14 +36,22 @@ import LanguageMixin from '../mixins/language'
 export default {
   name: '',
   mixins: [LanguageMixin],
+  mounted() {
+    this.listen();
+  },
   data() {
     return {
       select: 'select-field',
-      button: 'button-field',
+      button: 'button-component',
       option: false
     };
   },
   methods: {
+    async listen() {
+      this.$app.on('body-click' , () => {
+        this.option = false;
+      });
+    },
     click(event) {
       console.log(event);
     },

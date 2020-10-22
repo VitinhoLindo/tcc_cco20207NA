@@ -1,3 +1,4 @@
 module.exports = {
-  Input: require('./input')
+  Input: require('./input'),
+  Button: require('./Button')
 };

@@ -12,6 +12,7 @@ import ListApplications from '../components/ListApplications.vue'
 import SpanAppName from '../components/SpanAppName.vue'
 import WindowApp from '../components/Window.vue'
 import FormApp from '../components/Form.vue'
+import Input from '../components/Input.vue'
 
 export default function (Vue) {
   Vue.component('background', Background);
@@ -21,11 +22,12 @@ export default function (Vue) {
   Vue.component('calendar', Calendar);
   Vue.component('app-option', Option);
   Vue.component('select-field', SelectField);
-  Vue.component('button-field', ButtonField);
   Vue.component('menu-applications', MenuApplications);
   Vue.component('applications', Applications);
   Vue.component('list-applications', ListApplications);
   Vue.component('span-app-name', SpanAppName);
   Vue.component('window-app', WindowApp);
   Vue.component('form-app', FormApp);
+  Vue.component('button-component', ButtonField);
+  Vue.component('input-component', Input);
 }

@@ -1,11 +1,6 @@
-const Field = require('../../resource/fields/Field');
 const Fields = require('../../resource/fields/index');
 
-class BaseApi extends Field {
-  constructor() {
-    super();
-  }
-
+class BaseApi {
   render() {
     let fields = this.fields();
 

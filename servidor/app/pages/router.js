@@ -4,6 +4,16 @@ const VueApi = require('./vueApi');
 class RouterController extends BaseController {
   constructor(request, response) { super(request, response); }
 
+  static getRoutes() {
+    return [
+      {
+        route: '/:resource/',
+        method: 'GET',
+        function: ''
+      }
+    ]
+  }
+
   static estance() {
     return RouterController;
   }

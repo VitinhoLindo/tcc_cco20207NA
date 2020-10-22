@@ -14,6 +14,7 @@
       <component 
         :is="'form-app'"
         :name="app.name"
+        :class="app.class"
       />
     </div> 
   </div>

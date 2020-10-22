@@ -14,12 +14,19 @@ class App extends Cache {
     this.vue          = Vue;
     this.ip           = '10.0.0.109';
     this.path         = `http://${this.ip}:3000`;
+    this.formData     = {};
     this.storage      = Storage;
     this.calendar     = Calendar;
     this.applications = Application;
     this.languages    = null;
     this.timeInterval = 1000;
     this.iconsBase64  = IconsBase64;
+  }
+
+  async saveTemporariCache(attribute, value, time) {
+    this.data[attribute] = value;
+    await this.sleep(time || 1);
+    delete this.data[attribute];
   }
 
   defaultHeader(headers = {}) { 
@@ -34,6 +41,19 @@ class App extends Cache {
     headers['Authorization'] = (this.storage.shared && this.storage.shared.auth) ? `Bearer ${this.storage.shared.auth}` : '';
 
     return headers;
+  }
+
+  addFormFunction(formName = '', func) {
+    if (!this.formData[formName]) this.formData[formName] = [];
+    this.formData[formName].push(func);
+  }
+
+  clearFormFunction(formName = '') {
+    if (this.formData[formName]) delete this.formData[formName];
+  }
+
+  getFormFunction(formName = '') {
+    return this.formData[formName] || [];
   }
 
   async request(option = Request) {

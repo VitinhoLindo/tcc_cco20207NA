@@ -7,11 +7,14 @@ class Input {
     let input = new Input();
 
     input.set({
-      field: 'input-component',
-      label: label,
-      attribute: (!field) ? label : field,
-      using: {},
-      rules: ''
+      name: 'input-component',
+      shared: {
+        label: label,
+        attribute: (!field) ? label : field,
+        type: "text",
+        using: { },
+        rules: ''
+      }
     });
 
     return input;
@@ -19,14 +22,24 @@ class Input {
 
   using(values = {}) {
     let response = this.get();
-    for (let key in values) { response.using[key] = values[key]; }
+    for (let key in values) { response.shared.using[key] = values[key]; }
+    this.set(response);
+    return this;
+  }
+
+  type(type = '') {
+    let types = { pass: 'password', password: 'password', mail: 'email', email: "email" };
+    if (!types[type]) throw `type input is not supported ${type}`;
+
+    let response = this.get();
+    response.shared.type = types[type];
     this.set(response);
     return this;
   }
 
   rules(value = '') {
     let response = this.get();
-    response.rules = value;
+    response.shared.rules = value;
     this.set(response);
     return this;
   }
@@ -36,7 +49,7 @@ class Input {
     if (!protectType[using]) throw `protect type is not supported ${using}`;
 
     let response = this.get();
-    response.protect = using;
+    response.shared.protect = using;
     this.set(response);
     return this;
   }

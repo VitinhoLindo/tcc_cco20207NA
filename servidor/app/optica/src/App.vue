@@ -78,6 +78,34 @@ html, body, #app {
       .app-form {
         width: 100%;
         height: 100%;
+
+      }
+      .login-app {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        
+        .input-component {
+          div {
+            width: 100%;
+            height: 30px;
+            text-align: center;
+
+            label {
+              font-size: 18px;
+            }
+
+            input {
+              border: none;
+              -webkit-border-radius: 5px;
+              box-shadow: 0px 0px 3px 0px #237df3;
+              font-size: 18px;
+            }
+          }
+        }
       }
     }
   }
