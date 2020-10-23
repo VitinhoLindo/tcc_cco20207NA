@@ -1,10 +1,10 @@
 {
   "name": "servidor",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "server-tcc",
   "main": "main.js",
   "scripts": {
-    "server": "nodemon main.js"
+    "start": "nodemon main.js"
   },
   "author": "victorpsf2@hotmail.com",
   "license": "ISC",
