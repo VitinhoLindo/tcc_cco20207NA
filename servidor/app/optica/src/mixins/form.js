@@ -1,6 +1,7 @@
 export default {
   props: ['name', 'class'],
   async mounted() {
+    this.fieldName = this.name;
     this.getFields();
     if (this.class)
       this.className = `${this.className} ${this.class}`;
@@ -8,14 +9,15 @@ export default {
   data: function () {
     return {
       fields: [],
-      className: 'app-form'
+      className: 'app-form',
+      fieldName: ''
     };
   },
   methods: {
     async getFields() {
       try {
         let response = await this.$app.request({
-          url: `/interface/${this.name}/`,
+          url: `/interface/${this.fieldName}/`,
           method: 'get'
         })
   
@@ -28,6 +30,9 @@ export default {
         console.error(error);
       }
     },
+    async sendData() {
+
+    },
     fieldEvent(field) {
       return (field.shared.event) ? true : false;
     },
@@ -38,11 +43,14 @@ export default {
     },
     fieldData() {
       let object = {};
-      for (let func of this.$app.getFormFunction(this.name)) {
-        let data = func();
+      let attributes = this.$app.getFormFunction(this.name);
+      for (let attributeName in attributes) {
+        let data = attributes[attributeName]();
         this.saveData(data);
         object[data.attribute] = data.value;
       }
+
+      console.log(object);
       return object;
     },
     fieldError(attribute, error) {
@@ -54,9 +62,9 @@ export default {
     async submit(action, data) {
       try {
         let response = await this.$app.request({
-          url: action.path,
-          method: action.method,
-          data: data
+          url: `/interface/${action.fieldName || this.fieldName}/`,
+          method: 'POST',
+          data: data || {}
         });
 
         if (response.status == 'error') {
@@ -69,16 +77,21 @@ export default {
 
           throw response.message;
         }
-        console.log(response);
       } catch (error) {
         console.error(error);
       }
+    },
+    async changeField(action, data) {
+      this.fieldName = action.fieldName;
+      this.getFields();
     },
     click(event) {
       try {
         switch (event.shared.action.actionName) {
           case 'submit':
             return this.submit(event.shared.action, this.fieldData());
+          case 'field':
+            return this.changeField(event.shared.action, this.fieldData());
         }
       } catch (error) {
         console.error(error);

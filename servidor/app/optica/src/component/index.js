@@ -13,6 +13,7 @@ import SpanAppName from '../components/SpanAppName.vue'
 import WindowApp from '../components/Window.vue'
 import FormApp from '../components/Form.vue'
 import Input from '../components/Input.vue'
+import Link from '../components/Link.vue'
 
 export default function (Vue) {
   Vue.component('background', Background);
@@ -30,4 +31,5 @@ export default function (Vue) {
   Vue.component('form-app', FormApp);
   Vue.component('button-component', ButtonField);
   Vue.component('input-component', Input);
+  Vue.component('link-component', Link);
 }

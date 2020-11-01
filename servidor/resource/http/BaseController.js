@@ -27,6 +27,14 @@ class BaseController {
         this.request = _request;
         this.response = _response;
         this.app = _request.getApp();
+        this.request.all = () => {
+            return Object.assign(
+                {}, 
+                this.request.body || {},
+                this.request.params || {},
+                this.request.query || {}
+            );
+        }
     }
 
     _user() {
@@ -75,7 +83,8 @@ class BaseController {
     }
 
     static using(_request, _response) {
-        return new (this.estance())(_request, _response);
+        let Controller = this.estance();
+        return new Controller(_request, _response);
     }
 
     sendFile(path) {

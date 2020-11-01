@@ -12,7 +12,8 @@ class App extends Cache {
   constructor(Vue) {
     super();
     this.vue          = Vue;
-    this.ip           = '10.0.0.109';
+    this.hashAlgoritm = 'sha256';
+    this.ip           = '10.0.0.105';
     this.path         = `http://${this.ip}:3000`;
     this.formData     = {};
     this.storage      = Storage;
@@ -43,17 +44,18 @@ class App extends Cache {
     return headers;
   }
 
-  addFormFunction(formName = '', func) {
-    if (!this.formData[formName]) this.formData[formName] = [];
-    this.formData[formName].push(func);
+  addFormFunction(formName = '', attribute = '', func) {
+    if (!this.formData[formName]) this.formData[formName] = {};
+    this.formData[formName][attribute] = func;
   }
 
-  clearFormFunction(formName = '') {
-    if (this.formData[formName]) delete this.formData[formName];
+  clearFormFunction(formName = '', attribute = '') {
+    if (!this.formData[formName]) return;
+    if (this.formData[formName][attribute]) delete this.formData[formName][attribute];
   }
 
   getFormFunction(formName = '') {
-    return this.formData[formName] || [];
+    return this.formData[formName] || {};
   }
 
   async request(option = Request) {

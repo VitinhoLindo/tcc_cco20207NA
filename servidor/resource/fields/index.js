@@ -1,4 +1,5 @@
 module.exports = {
   Input: require('./input'),
-  Button: require('./Button')
+  Button: require('./Button'),
+  Link: require('./Link')
 };

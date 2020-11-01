@@ -42,6 +42,11 @@ class Mongo {
     }
   }
 
+  async connect() {
+    const config = this.getConfig();
+    return await (new MongoClient(config.url, config.options)).connect();
+  }
+
   async find(arg = {
     dbName: '',
     collectionName: '',
@@ -49,8 +54,7 @@ class Mongo {
     select: {},
     project: {}
   }) {
-    const config = this.getConfig();
-    const client = await (new MongoClient(config.url, config.options)).connect();
+    const client = await this.connect();
     const collection = client.db(arg.dbName).collection(arg.collectionName);
     var doc = [];
 
@@ -67,15 +71,21 @@ class Mongo {
   async insert(arg = {
     dbName: '',
     collectionName: '',
-    doc: {}
+    doc: null // Array | Object
   }) {
-    const config = this.getConfig();
-    const client = await (new MongoClient(config.url, config.options)).connect();
+    const client = await this.connect();
     const collection = client.db(arg.dbName).collection(arg.collectionName);
     var result;
 
     if (arg.doc)
-      result = await collection.insert(arg.doc)
+      switch(arg.doc.constructor.name) {
+        case 'Array':
+          result = await collection.insertMany(arg.doc);
+          break;
+        case 'Object':
+          result = await collection.insertOne(arg.doc);
+          break;
+      }
 
     await client.close();
     return result;

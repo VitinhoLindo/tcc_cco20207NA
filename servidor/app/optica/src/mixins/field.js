@@ -16,6 +16,7 @@ export default {
       this.error = value;
     },
     get() {
+      console.log(this.data.shared.attribute);
       let data = {
         attribute: this.data.shared.attribute,
         value: this.value,
@@ -29,9 +30,9 @@ export default {
     }
   },
   mounted() {
-    this.$app.addFormFunction(this.formName, this.get);
+    this.$app.addFormFunction(this.formName, this.data.shared.attribute, this.get);
   },
   unmounted() {
-    this.$app.clearFormFunction(this.formName);
+    this.$app.clearFormFunction(this.formName, this.data.shared.attribute);
   }
 }

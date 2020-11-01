@@ -11,6 +11,10 @@ class ForgotemController extends BaseController {
     super(request, response);
   }
 
+  static estance() {
+    return ForgotemController;
+  }
+
   optionForgotem() {
     this.defaultResponseJSON({ result: { login: 'required|email|min:5' } });
     this.resEnd();

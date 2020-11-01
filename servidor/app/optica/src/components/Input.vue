@@ -24,7 +24,3 @@ export default {
   mixins: [FieldMixins]
 }
 </script>
-
-<style>
-
-</style>

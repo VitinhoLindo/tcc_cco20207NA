@@ -87,25 +87,6 @@ html, body, #app {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        
-        .input-component {
-          div {
-            width: 100%;
-            height: 30px;
-            text-align: center;
-
-            label {
-              font-size: 18px;
-            }
-
-            input {
-              border: none;
-              -webkit-border-radius: 5px;
-              box-shadow: 0px 0px 3px 0px #237df3;
-              font-size: 18px;
-            }
-          }
-        }
       }
     }
   }
@@ -582,8 +563,14 @@ select:root {
     box-shadow: 0px 0px 5px 0px #4289e7;
   }
 
+}
+
+.button-component {
+  margin: 10px auto;
+
   .button-field {
-    width: 90%;
+    min-width: 150px;
+    min-height: 35px;
     padding: 5px;
     border: none;
     background-color: #237df3;
@@ -598,6 +585,33 @@ select:root {
     outline: 0;
     background-color: #68a4f1;
     box-shadow: 0px 0px 3px 0px #237df3;
+  }
+}
+
+.input-component {
+  margin: 10px auto;
+
+  div {
+    width: 100%;
+    height: 30px;
+    text-align: center;
+
+    label {
+      font-size: 18px;
+    }
+
+    input {
+      border: none;
+      -webkit-border-radius: 5px;
+      border: 1px solid #cccccc;
+      font-size: 18px;
+      padding: 5px;
+    }
+
+    input:focus {
+      outline: 0;
+      border: 1px solid #237df3;
+    }
   }
 }
 

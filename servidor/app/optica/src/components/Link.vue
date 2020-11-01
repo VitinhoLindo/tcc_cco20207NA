@@ -1,12 +1,12 @@
 <template>
-  <div class="button-component">
-    <button class="button-field" @click="click">{{ data.shared.label }}</button>
+  <div class="link-component">
+    <a href="#" @click="click">{{ data.shared.label }}</a>
   </div>
 </template>
 
 <script>
 export default {
-  name: "Button-vue",
+  name: "Link-vue",
   props: ['data'],
   methods: {
     click(event) {

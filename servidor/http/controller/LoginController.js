@@ -10,6 +10,10 @@ class LoginController extends BaseController {
     super(request, response);
   }
 
+  static estance() {
+    return LoginController;
+  }
+
   option() {
     this.defaultResponseJSON({ result: { login: 'required|email|min:5', key: 'required|string|min:5' } });
     this.resEnd();
@@ -84,7 +88,9 @@ class LoginController extends BaseController {
     this.resEnd();
   }
 
-
+  async render() {
+    console.log(this.request.all());
+  }
 
   async singIn() {
     let validator = this.Validator.make(this.request.body, {

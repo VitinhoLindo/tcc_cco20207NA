@@ -1,3 +1,4 @@
 module.exports = {
-  'login': require('../vueApi/Login')
+  'login': require('../vueApi/Login'),
+  'forgotem': require('../vueApi/Forgotem')
 }

@@ -1,101 +1,74 @@
-# PROJETO TCC CIÊNCIA DA COMPUTAÇÂO 7 PERÍODO
+# Projeto aberto iniciado como ideia de TCC
 
-<div>
-  <h4>Informações</h4>
-  <p>Segue abaixo a lista contendo informações do sistema operacional de cada desenvolvedor.</p>
+<h3>Desenvolvedores</h3>
 
-  <ul>
-    <li><a>victorpsf2@hotmail.com</a> linux</li>
-    <li><a>marcondes166@gmail.com</a> windows</li>
-    <li><a>tiagosouza_tp@hotmail.com</a> windows</li>
-  </ul>
-</div>
+<ul>
+  <li><label>João Victor - </label><a href="https://github.com/VitinhoLindo">victorpsf2@hotmail.com</a></li>
+</ul>
 
-<div>
-  <h1>Tecnologias</h1>
+<h3>Linguagens</h3>
 
-  <p>segue a baixo a lista de tecnologias que estão sendo utilizadas no projeto.</p>
-</div>
+<ul>
+  <li>EcmaScript - es6/es5</li>
+  <li>Html5</li>
+  <li>Css3</li>
+</ul>
 
-<div>
-  <h3>Base de dados</h3>
+<h3>Banco de Dados</h3>
 
-  <ul>
-    <li><a href="https://www.mongodb.com/">mongodb</a></li>
-    <li><a href="https://dev.mysql.com/">mysql</a></li>
-  <ul>
-</div>
+<ul>
+  <li>Mysql</li>
+  <li>MongoDB</li>
+</ul>
 
-<div>
-  <h3>Servidor</h3>
 
-  <ul>
-    <li><a href="https://nodejs.org/en/">nodejs</a></li>
-  <ul>
-</div>
+<h3>Servidor</h3>
 
-<div>
-  <h3>Interface</h3>
+<ul>
+  <li>Nodejs</li>
+  <li>Mysql</li>
+</ul>
 
-  <ul>
-    <li><a href="https://vuejs.org/">vuejs</a></li>
-  <ul>
-</div>
+<h3>Frameworks</h3>
 
-<div>
-  <h3>Modelagem do sistema</h3>
-  <img src="https://user-images.githubusercontent.com/28913310/91219834-aa7c4880-e6f1-11ea-97f7-91e4c0ed52b1.png" alt="modelagem do sistema">
-</div>
+<ul>
+  <li>Vuejs - v3</li>
+  <li>Express</li>
+</ul>
 
-<div>
-  <h3>Apresentação do Sistema</h3>
-  <img src="https://user-images.githubusercontent.com/28913310/91220546-b4527b80-e6f2-11ea-8dd7-e3e41e12361e.png", alt="apresentação do sistema">
-</div>
+<h2>Configuração e instalação</h2>
 
-<div>
-  <h3>Como utilizar o projeto</h3>
 
-  <div style="margin: 10px 0px">
-    <h4>Requisitos</h4>
-    <ul>
-      <li>nodejs instalado</li>
-      <li>npm instalado</li>
-      <li>vuejs instalado</li>
-      <li>mysql-server instalado</li>
-      <li>mongodb-community instalado</li>
-    </ul>
-  </div>
+<h5>clonando projeto</h5>
+<pre>
+~$ git clone https://github.com/VitinhoLindo/tcc_cco20207NA.git
+</pre>
 
-  <div style="margin: 10px 0px">
-    <h4>Passos do servidor</h4>
-    <ol>
-      <li>Entrar do diretorio do servidor e rodar o comando 
-        <pre>~/tcc_cco20207NA/servidor$ npm install</pre>
-      </li>
-      <li>Entar no diretorio da interface e rodar o comando
-        <pre>~/tcc_cco20207NA/servidor/app/interface$ npm install</pre>
-      </li>
-    </ol>
-    <p>Se você tiver o Mysql-Workbench e desejar realizar por lá fique a vontade.</br>Este exemplo foi realizado no linux.</p>
-  </div>
+<h5>instalando Nodejs</h5>
+<a href="https://github.com/nodesource/distributions/blob/master/README.md">package manager</a>
+<pre>
+~$ curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+~$ sudo apt-get install -y nodejs
+</pre>
 
-  <div>
-    <h4>Passos do mysql</h4>
-    <ol>
-      <li>Executar os scripts da pasta
-        <pre>~/tcc_cco20207NA/database/mysql-scripts$ ls -l
-</br>-rw-rw-r-- 1 $GROUP $USER  697 ago 24 22:23 access.sql
--rw-rw-r-- 1 $GROUP $USER 2145 jul 23 00:59 sql1.sql
--rw-rw-r-- 1 $GROUP $USER 2215 jul 23 00:59 sql2.sql
--rw-rw-r-- 1 $GROUP $USER 3734 jul 23 00:59 sql3.sql
--rw-rw-r-- 1 $GROUP $USER 2050 jul 23 00:59 sql4.sql
--rw-rw-r-- 1 $GROUP $USER 3853 jul 23 00:59 sql5.sql
--rw-rw-r-- 1 $GROUP $USER  400 ago 24 15:14 sql6.sql
--rw-rw-r-- 1 $GROUP $USER  398 ago 24 15:18 sql7.sql
-</br>~/tcc_cco20207NA/database/mysql-scripts$ mysql -u root -p
-Enter password: 
+<h5>Versão do Nodejs</h5>
+<pre>
+~$ node --version
+v14.14.0
+~$ npm --version
+6.14.8
+</pre>
+
+<h5>instalando Mysql</h5>
+<pre>
+~$ sudo apt-get install -y mysql-server
+</pre>
+
+<h5>configuração Mysql</h5>
+<pre>
+~$ sudo mysql -u root -p
 Welcome to the MySQL monitor.  Commands end with ; or \g.
-Your MySQL connection id is 9
+Your MySQL connection id is 8
 Server version: 8.0.21-0ubuntu0.20.04.4 (Ubuntu)
 
 Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
@@ -106,31 +79,86 @@ owners.
 
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
-mysql>create database optica;
-Query OK, 1 row affected (0.01 sec)
-</br>mysql>exit
+mysql> use mysql
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> update user set plugin='caching_sha2_password' where User='root';
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select user.User, user.Host, user.plugin from user;
++------------------+-----------+-----------------------+
+| User             | Host      | plugin                |
++------------------+-----------+-----------------------+
+| debian-sys-maint | localhost | caching_sha2_password |
+| mysql.infoschema | localhost | caching_sha2_password |
+| mysql.session    | localhost | caching_sha2_password |
+| mysql.sys        | localhost | caching_sha2_password |
+| root             | localhost | caching_sha2_password |
++------------------+-----------+-----------------------+
+6 rows in set (0.00 sec)
+
+mysql> exit
 Bye
-</br>~/tcc_cco20207NA/database/mysql-scripts$ mysql -u root -p optica < sql1.sql
-~/tcc_cco20207NA/database/mysql-scripts$ mysql -u root -p optica < sql2.sql
-~/tcc_cco20207NA/database/mysql-scripts$ mysql -u root -p optica < sql3.sql
-~/tcc_cco20207NA/database/mysql-scripts$ mysql -u root -p optica < sql4.sql
-~/tcc_cco20207NA/database/mysql-scripts$ mysql -u root -p optica < sql5.sql
-~/tcc_cco20207NA/database/mysql-scripts$ mysql -u root -p optica < sql6.sql
-~/tcc_cco20207NA/database/mysql-scripts$ mysql -u root -p optica < sql7.sql
-~/tcc_cco20207NA/database/mysql-scripts$ mysql -u root -p optica < access.sql
-        </pre>
-      </li>
-    </ol>
-  </div>
+~$ sudo systemctl restart mysql.service
+</pre>
 
-  <div style="margin: 10px 0px">
-    <h4>Passos do Mongodb</h4>
-    <ol>
-      <li>Importar o backup da pasta<pre>~/tcc_cco20207NA/database/mongodb$ ls -l
-</br>-rw-rw-r-- 1 $GROUP $USER 2526544 ago 25 20:16 personConfig.json
-~/tcc_cco20207NA/database/mongodb$ mongoimport --db=config --collection=person --file=personConfig.json
-  </pre></li>
-    </ol>
-  </div>
-</div>
+<h5>Versão Mysql</h5>
+<pre>
+~$ sudo apt-get install -y mysql-server
+</pre>
 
+<h5>Instalando Mongodb</h5>
+<pre>
+~$ wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+OK
+~$ echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+~$ sudo apt-get update
+~$ sudo apt-get install -y mongodb
+</pre>
+
+<h5>Criando usuário MongoDB</h5>
+<pre>
+~$ mongo
+MongoDB shell version v3.6.8
+connecting to: mongodb://127.0.0.1:27017
+Implicit session: session { "id" : UUID("efd0ee4f-ff9a-48b1-8b53-5959394b5d93") }
+MongoDB server version: 3.6.8
+Welcome to the MongoDB shell.
+For interactive help, type "help".
+For more comprehensive documentation, see
+        http://docs.mongodb.org/
+Questions? Try the support group
+        http://groups.google.com/group/mongodb-user
+Server has startup warnings: 
+2020-10-24T22:30:06.319+0000 I STORAGE  [initandlisten] 
+2020-10-24T22:30:06.319+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+2020-10-24T22:30:06.319+0000 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
+2020-10-24T22:30:20.102+0000 I CONTROL  [initandlisten] 
+2020-10-24T22:30:20.104+0000 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
+2020-10-24T22:30:20.104+0000 I CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
+2020-10-24T22:30:20.104+0000 I CONTROL  [initandlisten] 
+> use admin
+switched to db admin
+db.createUser({ user: "root", pwd: "123456", roles: [ "readWrite", {role: "userAdminAnyDatabase" , db:"admin"} ] })
+Successfully added user: {
+  "user" : "root",
+  "roles" : [
+    "readWrite",
+    {
+      "role" : "userAdminAnyDatabase",
+      "db" : "admin"
+    }
+  ]
+}
+> exit
+bye
+</pre>
+
+<h5>Importando dados Mongodb</h5>
+<pre>
+~$ mongoimport --host=[host] --port=[port] --username=[user] --collection=person --db=config --file=personConfig.json
+~$ mongoimport --host=[host] --port=[port] --username=[user] --collection=configuration --db=apps --file=appConfiguration.json
+</pre>

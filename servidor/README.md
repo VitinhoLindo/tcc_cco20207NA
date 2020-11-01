@@ -1,1 +1,0 @@
-<p><strong>node</strong> <a href="https://github.com/nodesource/distributions/blob/master/README.md" target="_blank">package manager</a></p>

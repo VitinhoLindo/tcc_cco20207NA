@@ -24,10 +24,20 @@ class RouterController extends BaseController {
   
   async get() {
     let resource = this.request.params.resource;
+    resource = VueApi[resource];
 
+    if (!resource) return this.defaultResponseJSON({ status: 404 });
     return this.defaultResponseJSON({
-      result: VueApi[resource].render()
+      result: resource.render()
     });
+  }
+
+  async post() {
+    let resource = this.request.params.resource;
+    resource = VueApi[resource];
+
+    if (!resource) return this.defaultResponseJSON({ status: 404 });
+    return resource.build(this.request, this.response);
   }
 
   async delete() {
@@ -35,10 +45,6 @@ class RouterController extends BaseController {
   }
 
   async put() {
-    return this.defaultResponseJSON();
-  }
-
-  async post() {
     return this.defaultResponseJSON();
   }
 }

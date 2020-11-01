@@ -68,25 +68,13 @@ class MongoOrm {
     this.clearCache();
     let config = Model._getConfig();
 
-    if (data.constructor.name = 'Array') {
-      let results = [];
+    let result = await this.orm.insert({
+      dbName: config.database,
+      collectionName: config.collection,
+      doc: data
+    });
 
-      for(let x of data) {
-        if (!x) continue;
-
-        let result = await this.orm.insert({
-          dbName: config.database,
-          collectionName: config.collection,
-          doc: data
-        })
-
-        results.push(result.ops);
-      }
-
-      return results;
-    } else {
-      return result.ops;
-    }
+    return result.ops;
   }
 }
 
