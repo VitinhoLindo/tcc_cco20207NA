@@ -6,15 +6,23 @@ class Config extends Cache {
     port: ''
   }
 
+  serverOption = {
+    key: null,
+    cert: null
+  }
+
   constructor() { 
     super();
     this.setServerConfig();
   }
   
   getProtocol() {
+    this.serverOption.key = this.fs.readFileSync( `${this.dirFiles._dirname_}/config/ssl/rsa-priv.pem`);
+    this.serverOption.cert = this.fs.readFileSync(`${this.dirFiles._dirname_}/config/ssl/ssl.crt`);
+
     return {
       option: null,
-      protocol: this.http
+      protocol: this.https
     };
   }
   

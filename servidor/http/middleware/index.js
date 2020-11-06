@@ -6,6 +6,11 @@ const { request } = require('express');
 module.exports = (server = express(), app = Http()) => {
   setInterval(() => { resetRequests(); }, 60000);
 
+  /**
+   * <summay>
+   *   adicionar quantidade de requisição por ip de client
+   * </summay>
+   */
   var requests = {
     countable: 0,
     max: app.getMaxRequest()

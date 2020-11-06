@@ -7,12 +7,12 @@ class Http extends Config {
   }
 
   async listen() {
-    let result = this.getProtocol();
+    let result = await this.getProtocol();
     var server = null;
 
     Middleware(this.express, this);
     if (result.option) server = result.protocol.createServer(result.option, this.express);
-    else server = result.protocol.createServer(this.express);
+    else server = result.protocol.createServer(this.serverOption, this.express);
 
     this.cryptoListen();
 

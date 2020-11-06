@@ -8,11 +8,11 @@ import component from './component'
 (async () => {
   const app = createApp(App);
 
-  app.use(store)
-  app.use(router)
+  // app.use(store)
+  app.use(router);
 
   await functions(app);
   component(app);
 
-  app.mount('#app')
+  app.mount('#app');
 })();

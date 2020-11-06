@@ -94,7 +94,7 @@ const isNumber = (value) => {
 
 const isDate = (value) => {
   if (!dataExists(value)) return false;
-  var count = 1, end = 3;
+  var count = 1, end = 4;
   let bool = false;
 
   while (!bool) {
@@ -106,6 +106,10 @@ const isDate = (value) => {
       case 2:
         if (!isString(value)) break;
         if (/\d+\-\d+-\d+T\d+:\d+:\d+\.\d+Z$/.test(value) == true) bool = true;
+        break;
+      case 3:
+        let date = new Date(value);
+        if (date != 'Invalid Date') bool = true;
         break;
     }
     count++;

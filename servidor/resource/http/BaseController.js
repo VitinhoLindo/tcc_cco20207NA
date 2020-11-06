@@ -37,6 +37,16 @@ class BaseController {
         }
     }
 
+    all() {
+        let all = {};
+
+        if (this.request.query && this.request.query.constructor.name == 'Object') all = Object.assign({}, all, this.request.query);
+        if (this.request.params && this.request.params.constructor.name == 'Object') all = Object.assign({}, all, this.request.params);
+        if (this.request.body && this.request.body.constructor.name == 'Object') all = Object.assign({}, all, this.request.body);
+
+        return all;
+    }
+
     _user() {
         return this.app.getUser(this.request);
     }

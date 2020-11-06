@@ -1,5 +1,9 @@
-class Event {
+import Crypto from './Crypto'
+
+class Event extends Crypto {
+
   constructor() {
+    super();
     this.listiners = {};
     this.rules = {};
   }

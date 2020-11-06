@@ -13,7 +13,7 @@ class App extends Cache {
     super();
     this.vue          = Vue;
     this.hashAlgoritm = 'sha256';
-    this.ip           = '10.0.0.105';
+    this.ip           = '10.0.0.109';
     this.path         = `http://${this.ip}:3000`;
     this.formData     = {};
     this.storage      = Storage;
@@ -22,6 +22,39 @@ class App extends Cache {
     this.languages    = null;
     this.timeInterval = 1000;
     this.iconsBase64  = IconsBase64;
+  }
+
+  async sync(window) {
+    this.setCrypto(window.crypto);
+    await this.generateKeys();
+    // let crypto = this.storage.get('crypto', 'json');
+
+    // if (!crypto) {
+    //   let keys = [];
+    //   for(let x = 0; x < 10; x++) keys.push({ 
+    //     key: this.getRandomString(120), 
+    //     iv: window.crypto.getRandomValues(new Uint8Array(this.getRandomNumber(0,256))) 
+    //   });
+
+    //   crypto = { keys, date: new Date() };
+    // }
+
+    // this.storage.save('crypto', crypto, 'json');
+    // this.secret = crypto;
+
+    // let response = await this.request({
+    //   url: '/sync',
+    //   method: 'POST',
+    //   data: crypto
+    // });
+
+    // console.log(response);
+    // this.secret.app.privateKey   = response.result.pk;
+    // this.secret.app.publicKey    = response.result.pkp;
+    // this.secret.server.publicKey = response.result.pkps;
+    // this.secret.server.date      = new Date(response.result.date);
+
+    // this.storage.delete('crypto');
   }
 
   async saveTemporariCache(attribute, value, time) {
@@ -197,6 +230,7 @@ class App extends Cache {
 
   async build() {
     this.readStorage();
+    console.log(window.crypto.subtle);
     await this.setlanguage(navigator.language);
   }
 }
