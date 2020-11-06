@@ -12,7 +12,7 @@ class Http extends Config {
 
     Middleware(this.express, this);
     if (result.option) server = result.protocol.createServer(result.option, this.express);
-    else server = result.protocol.createServer(this.serverOption, this.express);
+    else server = result.protocol.createServer(this.express);
 
     this.cryptoListen();
 

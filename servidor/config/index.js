@@ -8,7 +8,8 @@ class Config extends Cache {
 
   serverOption = {
     key: null,
-    cert: null
+    cert: null,
+    passphare: ''
   }
 
   constructor() { 
@@ -19,10 +20,11 @@ class Config extends Cache {
   getProtocol() {
     this.serverOption.key = this.fs.readFileSync( `${this.dirFiles._dirname_}/config/ssl/rsa-priv.pem`);
     this.serverOption.cert = this.fs.readFileSync(`${this.dirFiles._dirname_}/config/ssl/ssl.crt`);
+    this.serverOption.passphare = this.process.env.SSL_PASS;
 
     return {
       option: null,
-      protocol: this.https
+      protocol: this.http
     };
   }
   

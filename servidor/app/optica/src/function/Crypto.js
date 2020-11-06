@@ -1,7 +1,6 @@
-// import CryptoJs from 'crypto-js'
 import Util from './CryptoUtil'
 
-class Crypto extends Util {
+class MyCrypto extends Util {
 
     constructor() {
         super();
@@ -27,9 +26,8 @@ class Crypto extends Util {
     }
 
     async generateKeys() {
-        console.log('aqui');
         try {
-            let { publicKey, privateKey } = await this.crypto.subtle.generateKey({
+            let { publicKey, privateKey } = await crypto.webcrypto.subtle.generateKey({
                 name: this.keyAlgorithm,
                 modulusLength: this.modulusLength,
                 publicExponent: this.publicExponent,
@@ -89,4 +87,4 @@ class Crypto extends Util {
     }
 }
 
-export default Crypto;
+export default MyCrypto;

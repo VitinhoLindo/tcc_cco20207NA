@@ -14,7 +14,8 @@ let { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
   privateKeyEncoding: {
     type: 'pkcs8',
     format: 'pem',
-    // cipher: 'aes-256-cbc'
+    cipher: 'aes-256-cbc',
+    passphrase: ''
   }
 });
 

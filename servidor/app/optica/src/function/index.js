@@ -24,8 +24,8 @@ class App extends Cache {
     this.iconsBase64  = IconsBase64;
   }
 
-  async sync(window) {
-    this.setCrypto(window.crypto);
+  async sync() {
+    // this.setCrypto(window.crypto);
     await this.generateKeys();
     // let crypto = this.storage.get('crypto', 'json');
 
@@ -230,7 +230,7 @@ class App extends Cache {
 
   async build() {
     this.readStorage();
-    console.log(window.crypto.subtle);
+    this.sync();
     await this.setlanguage(navigator.language);
   }
 }
