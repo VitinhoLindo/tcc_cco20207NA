@@ -38,8 +38,6 @@ class App extends Cache {
 
     this.secret.server.publicKey = await this.importPublicKey(response.result.key);
     this.secret.server.datePublic = new Date(response.result.date);
-
-    console.log(this.secret.server);
   }
 
   async saveTemporariCache(attribute, value, time) {
