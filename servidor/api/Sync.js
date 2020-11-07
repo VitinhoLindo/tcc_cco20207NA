@@ -10,8 +10,4 @@ route.post('/', (request, response) => {
     SyncController.using(request, response).post();
 });
 
-route.post('/test/', (request, response) => {
-    SyncController.using(request, response).testDecrypt();
-});
-
 module.exports = route;

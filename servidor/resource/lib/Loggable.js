@@ -39,7 +39,7 @@ class Loggable extends File {
     return colorObj[color];
   }
 
-  print(args = [{ message: '', color: '' }]) {
+  async print(args = [{ message: '', color: '' }]) {
     let message = '';
 
     args.forEach((arg, index) => {
@@ -51,4 +51,3 @@ class Loggable extends File {
 }
 
 module.exports = Loggable;
-

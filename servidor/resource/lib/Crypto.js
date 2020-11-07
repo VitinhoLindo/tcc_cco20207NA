@@ -275,18 +275,25 @@ class Crypto extends Mailer {
   }
 
   cryptoListen() {
+    Promise.all([
+      this.setCrypto(new Date),
+      this.setServerCrypto(new Date)
+    ]).then(() => { this.print([{ message: `Initialization crypografy server RSA and RSA WEB Crypto API started`, color: 'blue' }]) })
+      .catch(() => { this.print([{ message: `Initialization crypografy server RSA and RSA WEB Crypto API error occured`, color: 'red' }]) });
+
     setInterval(async () => {
       try {
         let res = await this.setCrypto(new Date);
         await this.setServerCrypto(new Date);
         let objectdate = this.getDateObject(res.date);
 
-        if (res.reset) this.print([{ message: `New cipher create in ${objectdate.locale}`, color: 'blue' }])
+        if (res.reset) this.print([{ message: `New cipher create in ${objectdate.locale}`, color: 'blue' }]);
+        this.print([{ message: `validated date cipher`, color: 'cyan' }])
       } catch (error) {
         console.log(error);
         this.print([{ message: error, color: 'red' }]);
       }
-    }, 1000);
+    }, 60000);
   }
 }
 
