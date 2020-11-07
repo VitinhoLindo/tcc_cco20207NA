@@ -17,7 +17,7 @@ class Http extends Config {
     this.cryptoListen();
 
     server.listen(this.config, () => {
-      this.print([{ message: 'server open in', color: 'blue' }, { message: `http://${this.config.host}:${this.config.port}/`, color: 'magenta' }]);
+      this.print([{ message: 'server open in', color: 'blue' }, { message: `${this.config.name}://${this.config.host}:${this.config.port}/`, color: 'magenta' }]);
     });
   }
 }

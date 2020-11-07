@@ -8,6 +8,20 @@ class Modules extends Event {
   saltRange = 24;
   passrange = 100;
 
+  publicKeyExportType = 'spki';
+  publicKeyExportFormat = 'pem';
+
+  privateKeyExportType = 'spki';
+  privateKeyExportFormat = 'pem';
+
+  privateKeyCipherServer = 'aes-256-cbc';
+  serverKeysAlgorithm = 'RSA-OAEP';
+  modulusLength = 2048;
+  serverKeyHash = 'SHA-256';
+  publicExponent = new Uint8Array([0, 1, 0]);
+
+
+
   http = require('http');
   https = require('https');
   fs = require('fs');

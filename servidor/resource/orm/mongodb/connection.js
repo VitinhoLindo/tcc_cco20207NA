@@ -1,16 +1,6 @@
 const { MongoClient } = require('mongodb');
 const { Mongo: { MongoConnect } } = require('../../interface');
 
-// let server = process.env.MONGO_URL,
-//   port = process.env.MONGO_PORT,
-//   user = process.env.MONGO_USER,
-//   password = process.env.MONGO_PASS;
-
-// options.useNewUrlParser = true;
-// options.useUnifiedTopology = true;
-// options.keepAlive = true;
-// options.autoReconnect = true;
-
 class Mongo {
   mongoConfig = MongoConnect;
   process = require('process');
@@ -32,7 +22,7 @@ class Mongo {
 
   getConfig() {
     let base = `mongodb://${this.mongoConfig.auth.user}:${this.mongoConfig.auth.password}@${this.mongoConfig.url}:${this.mongoConfig.port}/`;
-    
+
     return {
       url: base,
       options: {
@@ -78,7 +68,7 @@ class Mongo {
     var result;
 
     if (arg.doc)
-      switch(arg.doc.constructor.name) {
+      switch (arg.doc.constructor.name) {
         case 'Array':
           result = await collection.insertMany(arg.doc);
           break;

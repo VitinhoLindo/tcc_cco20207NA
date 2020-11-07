@@ -77,7 +77,7 @@ class File extends DataType {
     let _mime_ = this.mimeTypes.lookup(_file);
 
     if (_mime_) {
-      return { 
+      return {
         extension: _mime_.split('/')[1],
         mime: _mime_
       };

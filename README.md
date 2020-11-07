@@ -132,17 +132,17 @@ For more comprehensive documentation, see
         http://docs.mongodb.org/
 Questions? Try the support group
         http://groups.google.com/group/mongodb-user
-Server has startup warnings: 
-2020-10-24T22:30:06.319+0000 I STORAGE  [initandlisten] 
+Server has startup warnings:
+2020-10-24T22:30:06.319+0000 I STORAGE  [initandlisten]
 2020-10-24T22:30:06.319+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
 2020-10-24T22:30:06.319+0000 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
-2020-10-24T22:30:20.102+0000 I CONTROL  [initandlisten] 
+2020-10-24T22:30:20.102+0000 I CONTROL  [initandlisten]
 2020-10-24T22:30:20.104+0000 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
 2020-10-24T22:30:20.104+0000 I CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
-2020-10-24T22:30:20.104+0000 I CONTROL  [initandlisten] 
+2020-10-24T22:30:20.104+0000 I CONTROL  [initandlisten]
 > use admin
 switched to db admin
-db.createUser({ user: "root", pwd: "123456", roles: [ "readWrite", {role: "userAdminAnyDatabase" , db:"admin"} ] })
+db.createUser({ user: "root", pwd: "f603e12ed5c239702e03df708b290029497655a2b83a26d081dce185bbaebb13", roles: [ "readWrite", {role: "userAdminAnyDatabase" , db:"admin"} ] })
 Successfully added user: {
   "user" : "root",
   "roles" : [
@@ -161,4 +161,14 @@ bye
 <pre>
 ~$ mongoimport --host=[host] --port=[port] --username=[user] --collection=person --db=config --file=personConfig.json
 ~$ mongoimport --host=[host] --port=[port] --username=[user] --collection=configuration --db=apps --file=appConfiguration.json
+</pre>
+
+<h5>Gerar SSL</h5>
+<pre>
+~$ openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -nodes
+</pre>
+
+<h5>Permitindo acesso a portas menores que 1024 para o node</h5>
+<pre>
+~$ sudo setcap 'cap_net_bind_service=+ep' `which node`
 </pre>

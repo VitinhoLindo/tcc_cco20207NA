@@ -4,8 +4,9 @@ const { Crypto: { Encrypt, Decrypt, EncryptDecrypt } } = require('../interface')
 class Crypto extends Mailer {
 
   keys = {};
+  serverKeys = { publicKey: null, privateKey: null, date: new Date(), changeDate: new Date() };
 
-  constructor() { 
+  constructor() {
     super();
   }
 
@@ -19,18 +20,27 @@ class Crypto extends Mailer {
 
   getCryptoKeys(pass = '') {
     return this.crypto.generateKeyPairSync('rsa', {
-      modulusLength: 1024,
+      modulusLength: this.modulusLength,
       publicKeyEncoding: {
-        type: 'spki',
-        format: 'pem'
+        type: this.publicKeyExportType,
+        format: this.publicKeyExportFormat
       },
       privateKeyEncoding: {
-        type: 'pkcs8',
-        format: 'pem',
-        cipher: 'aes-256-cbc',
+        type: this.privateKeyExportType,
+        format: this.privateKeyExportFormat,
+        cipher: this.privateKeyCipherServer,
         passphrase: pass
       }
     });
+  }
+
+  async getCryptoKeysWeb() {
+    return await this.crypto.webcrypto.subtle.generateKey({
+      name: this.serverKeysAlgorithm,
+      modulusLength: this.modulusLength,
+      publicExponent: this.publicExponent,
+      hash: this.serverKeyHash
+    }, true, ['encrypt', 'decrypt']);
   }
 
   getIv() {
@@ -39,7 +49,7 @@ class Crypto extends Mailer {
 
   async getKeyDate(date = new Date()) {
     let objectDate = this.getDateObject(date);
-    let value      = this.keys[objectDate.locale];
+    let value = this.keys[objectDate.locale];
 
     if (!value) {
       value = await this.getFileInfo(this.dirFiles.getResourseDbCryptFile(date));
@@ -48,9 +58,9 @@ class Crypto extends Mailer {
     }
 
     return {
-      key  : await this.getKey(value.pass),
-      date : value.date,
-      iv   : Buffer.from(value.iv)
+      key: await this.getKey(value.pass),
+      date: value.date,
+      iv: Buffer.from(value.iv)
     };
   }
 
@@ -127,12 +137,12 @@ class Crypto extends Mailer {
 
   async setCrypto(date = new Date(), pass = '') {
     let ObjectDate = this.getDateObject(date);     // obtem um objeto de data
-    let value      = this.keys[ObjectDate.locale]; // verifica se já existe uma chave criada nestá data
+    let value = this.keys[ObjectDate.locale]; // verifica se já existe uma chave criada nestá data
 
     if (value) { // caso haja não ocorre nada, espera a proxima analise.
       return { reset: false, date: date };
     }
-    
+
 
     // caso não tenha verifica se já existe algum arquivo criado para está data
     let file = await this.getFileInfo('utf8', this.dirFiles.getResourseDbCryptFile(date), 'json');
@@ -163,12 +173,13 @@ class Crypto extends Mailer {
         privateKey: privateKey,
         publicKey: publicKey,
         pass: Buffer.from(pass),
-        date: ObjectDate.date
+        date: ObjectDate.date,
+        lastUse: ObjectDate.date
       };
 
       // salva as informações em um arquivo no log de cryptografia.
       await this.saveFile({
-        value: JSON.stringify({ 
+        value: JSON.stringify({
           privateKey: privateKey,
           publicKey: publicKey,
           pass: Buffer.from(pass),
@@ -182,38 +193,88 @@ class Crypto extends Mailer {
     return { reset: true, date: date };
   }
 
+  async setServerCrypto(date = new Date()) {
+    let ObjectDate = this.getDateObject(date);     // obtem um objeto de data
+
+    let { publicKey, privateKey } = await this.getCryptoKeysWeb();
+
+    this.serverKeys.publicKey = publicKey;
+    this.serverKeys.privateKey = privateKey;
+    this.serverKeys.date = new Date();
+    return true;
+  }
+
+  arrayBufferToBase64String(binary = new Uint8Array([])) {
+    return Buffer.from(binary).toString('base64');
+  }
+
+  base64StringToArrayBuffer(base64 = '') {
+    return Buffer.from(base64, 'base64');
+  }
+
+  exportBinaryToPem(binary = new Uint8Array([]), label = 'RSA PUBLIC KEY') {
+    let base64Export = this.arrayBufferToBase64String(binary);
+    let pemExport = `-----BEGIN ${label}-----\r\n`;
+    let nextIndex = 0;
+
+    while (nextIndex < base64Export.length) {
+      if ((nextIndex + 64) < base64Export.length) {
+        pemExport += base64Export.substr(nextIndex, 64) + '\r\n';
+      } else {
+        pemExport += base64Export.substr(nextIndex) + '\r\n';
+      }
+      nextIndex += 64;
+    }
+
+    pemExport += `-----END ${label}-----\r\n`;
+    return pemExport;
+  }
+
+
+  async serverExportPublicKey() {
+    let exportedKey = await this.crypto.webcrypto.subtle.exportKey(
+      this.publicKeyExportType,
+      this.serverKeys.publicKey
+    );
+
+    return { key: this.exportBinaryToPem(exportedKey, 'RSA PUBLIC KEY'), date: this.serverKeys.date }
+  }
+
+  convertPemToBinary(pem = '') {
+    let lines = pem.split('\n');
+    var encoded = '';
+
+    for (let line = 0; line < lines.length; line++) {
+      if (lines[line].trim().length > 0 &&
+        lines[line].indexOf('-BEGIN RSA PRIVATE KEY-') < 0 &&
+        lines[line].indexOf('-BEGIN RSA PUBLIC KEY-') < 0 &&
+        lines[line].indexOf('-END RSA PRIVATE KEY-') < 0 &&
+        lines[line].indexOf('-END RSA PUBLIC KEY-') < 0
+      ) {
+        encoded += lines[line].trim();
+      }
+    }
+
+    return this.base64StringToArrayBuffer(encoded);
+  }
+
+  async serverImportPublicKey(pem = '') {
+    return this.convertPemToBinary(pem);
+  }
+
   cryptoListen() {
     setInterval(async () => {
       try {
         let res = await this.setCrypto(new Date);
+        await this.setServerCrypto(new Date);
         let objectdate = this.getDateObject(res.date);
-  
+
         if (res.reset) this.print([{ message: `New cipher create in ${objectdate.locale}`, color: 'blue' }])
       } catch (error) {
         console.log(error);
         this.print([{ message: error, color: 'red' }]);
       }
     }, 1000);
-  }
-
-  convertHex(value = '') {
-    if (!value) return value;
-    let hex = [];
-
-    for(let _value of value) {
-      let type = /^\d+$/.test(_value) ? 'int': 'string';
-
-      switch (type) {
-        case 'int':
-          hex.push(_value.toString(16));
-          break;
-        default:
-          hex.push(_value.charCodeAt(0).toString(16));
-          break;
-      }
-    }
-
-    return hex;
   }
 }
 

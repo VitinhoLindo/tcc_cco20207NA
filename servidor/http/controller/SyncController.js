@@ -9,21 +9,25 @@ class SyncController extends BaseController {
   }
 
   async option() {
-      return this.defaultResponseJSON({ message: 'secret key' });
+    return this.defaultResponseJSON({ message: 'secret key' });
   }
 
   async post() {
-    let validator = this.Validator.make({ keys: 'required|array', date: 'required|datetime' });
+    let validator = this.Validator.make({ publicKey: 'required|string', date: 'required|datetime' });
 
     if (validator.fails()) {
       return this.defaultResponseJSON(validator.modelResponse());
     }
 
     let all = this.all();
-    this.app.setCache(this.request.socket.remoteAddress, { keys: all.keys, date: new Date(all.date) });
-    
+    let { key, date } = await this.app.serverExportPublicKey();
 
-    this.defaultResponseJSON({ result: null });
+    this.app.setCache(this.request.socket.remoteAddress, {
+      publicKey: await this.app.serverImportPublicKey(all.publicKey),
+      date: new Date(all.date)
+    });
+
+    this.defaultResponseJSON({ result: { key, date } });
     this.resEnd();
   }
 }

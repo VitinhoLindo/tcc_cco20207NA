@@ -11,50 +11,35 @@ class App extends Cache {
 
   constructor(Vue) {
     super();
-    this.vue          = Vue;
+    this.vue = Vue;
     this.hashAlgoritm = 'sha256';
-    this.ip           = '10.0.0.109';
-    this.path         = `http://${this.ip}:3000`;
-    this.formData     = {};
-    this.storage      = Storage;
-    this.calendar     = Calendar;
+    this.ip = '10.0.0.108';
+    this.port = '3000';
+    this.protocol = (this.port == '403') ? 'https' : 'http';
+    this.path = `${this.protocol}://${this.ip}:${this.port}`;
+    this.formData = {};
+    this.storage = Storage;
+    this.calendar = Calendar;
     this.applications = Application;
-    this.languages    = null;
+    this.languages = null;
     this.timeInterval = 1000;
-    this.iconsBase64  = IconsBase64;
+    this.iconsBase64 = IconsBase64;
   }
 
   async sync() {
-    // this.setCrypto(window.crypto);
     await this.generateKeys();
-    // let crypto = this.storage.get('crypto', 'json');
+    let key = await this.exportPublicKey();
 
-    // if (!crypto) {
-    //   let keys = [];
-    //   for(let x = 0; x < 10; x++) keys.push({ 
-    //     key: this.getRandomString(120), 
-    //     iv: window.crypto.getRandomValues(new Uint8Array(this.getRandomNumber(0,256))) 
-    //   });
+    let response = await this.request({
+      url: '/sync',
+      method: 'POST',
+      data: { publicKey: key, date: new Date() }
+    });
 
-    //   crypto = { keys, date: new Date() };
-    // }
+    this.secret.server.publicKey = await this.importPublicKey(response.result.key);
+    this.secret.server.datePublic = new Date(response.result.date);
 
-    // this.storage.save('crypto', crypto, 'json');
-    // this.secret = crypto;
-
-    // let response = await this.request({
-    //   url: '/sync',
-    //   method: 'POST',
-    //   data: crypto
-    // });
-
-    // console.log(response);
-    // this.secret.app.privateKey   = response.result.pk;
-    // this.secret.app.publicKey    = response.result.pkp;
-    // this.secret.server.publicKey = response.result.pkps;
-    // this.secret.server.date      = new Date(response.result.date);
-
-    // this.storage.delete('crypto');
+    console.log(this.secret.server);
   }
 
   async saveTemporariCache(attribute, value, time) {
@@ -63,12 +48,12 @@ class App extends Cache {
     delete this.data[attribute];
   }
 
-  defaultHeader(headers = {}) { 
+  defaultHeader(headers = {}) {
     let defaultHeader = {
       'Content-type': 'application/json',
     };
 
-    for (let key in defaultHeader) 
+    for (let key in defaultHeader)
       if (headers[key]) continue;
       else headers[key] = defaultHeader[key];
 
@@ -94,11 +79,11 @@ class App extends Cache {
   async request(option = Request) {
     try {
       let { data } = await Axios({
-        url     : `${this.path}${option.url.toLowerCase()}`,
+        url: `${this.path}${option.url.toLowerCase()}`,
         method: (option.method || 'get').toUpperCase(),
-        headers : this.defaultHeader(option.headers),
-        params  : option.params || {} ,
-        data    : option.data || {}
+        headers: this.defaultHeader(option.headers),
+        params: option.params || {},
+        data: option.data || {}
       });
 
       return data;
@@ -118,7 +103,7 @@ class App extends Cache {
   sleep(time) {
     time = (parseFloat(time) || 1) * 1000;
     return new Promise((resolve) => {
-      setTimeout(() => { resolve(true); }, time); 
+      setTimeout(() => { resolve(true); }, time);
     });
   }
 
@@ -129,13 +114,13 @@ class App extends Cache {
       _max = max; max = min; min = _max;
     }
 
-    while(max > decimalHouse) {
+    while (max > decimalHouse) {
       decimalHouse += 10;
     }
 
     do {
       rand = Math.floor(Math.random() * decimalHouse);
-    } while(rand < min || rand > max);
+    } while (rand < min || rand > max);
 
     return rand;
   }
@@ -153,18 +138,18 @@ class App extends Cache {
 
   randomString(len, _super = false) {
     let characters = this.characters(_super),
-        rand = '';
+      rand = '';
 
     if (len < 0) len = len * (-1);
     for (let x = 0; x < len; x++) {
       let keys, keyLen, key, values, valueLen, value;
 
-      keys     = Object.keys(characters);
-      keyLen   = this.random(0, keys.length - 1);
-      key      = keys[keyLen];
-      values   = characters[key];
+      keys = Object.keys(characters);
+      keyLen = this.random(0, keys.length - 1);
+      key = keys[keyLen];
+      values = characters[key];
       valueLen = this.random(0, values.length - 1);
-      value    = values[valueLen];
+      value = values[valueLen];
 
       rand += value;
     }
@@ -182,7 +167,7 @@ class App extends Cache {
       division = document.getElementById(id);
       await this.sleep(0.01);
       count++;
-    } while(!division);
+    } while (!division);
 
     return division;
   }
