@@ -8,6 +8,7 @@ class MyCrypto extends Util {
     this.hashAlgorithm = 'SHA-256';
     this.modulusLength = 2048;
     this.publicExponent = new Uint8Array([1, 0, 1]);
+    this.ivLen = 16;
 
     this.secret = {
       app: {
@@ -50,7 +51,32 @@ class MyCrypto extends Util {
   }
 
   async importPublicKey(pem = '') {
-    return this.pemToBinary(pem);
+    return await window.crypto.subtle.importKey('spki', this.pemToBinary(pem), {
+      name: this.keyAlgorithm,
+      hash: this.hashAlgorithm
+    }, false, ['encrypt']);
+  }
+
+  getIv() {
+    return window.crypto.getRandomValues(new Uint8Array(this.ivLen));
+  }
+
+  async encrypt(value = '') {
+    let encryptBuffer = await window.crypto.subtle.encrypt({
+      name: this.keyAlgorithm,
+      iv: this.getIv()
+    }, this.secret.server.publicKey, this.textToArrayBuffer(value));
+
+    return this.arrayBufferToBase64String(encryptBuffer);
+  }
+
+  async decrypt(value = '') {
+    let decryptBuffer = await window.crypto.subtle.decrypt({
+      name: this.keyAlgorithm,
+      iv: this.getIv()
+    }, this.secret.app.privateKey, this.base64StringToArrayBuffer(value));
+
+    return this.arrayBufferToString(decryptBuffer);
   }
 
   hashType() {

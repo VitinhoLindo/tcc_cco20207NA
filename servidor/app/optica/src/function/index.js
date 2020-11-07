@@ -38,6 +38,17 @@ class App extends Cache {
 
     this.secret.server.publicKey = await this.importPublicKey(response.result.key);
     this.secret.server.datePublic = new Date(response.result.date);
+
+    let encrypted = await this.encrypt('teste');
+
+    response = await this.request({
+      url: '/sync/test/',
+      method: 'POST',
+      data: { encrypted }
+    });
+
+    let decrypted = await this.decrypt(response.result.encrypted);
+    console.log(decrypted);
   }
 
   async saveTemporariCache(attribute, value, time) {

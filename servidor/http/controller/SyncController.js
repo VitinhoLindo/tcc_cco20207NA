@@ -30,6 +30,22 @@ class SyncController extends BaseController {
     this.defaultResponseJSON({ result: { key, date } });
     this.resEnd();
   }
+
+  async testDecrypt() {
+    let validator = this.Validator.make({ encrypted: 'required|string' });
+
+    if (validator.fails()) {
+      return this.defaultResponseJSON(validator.modelResponse());
+    }
+
+    let all = this.all();
+
+    let decrypted = await this.decrypt(all.encrypted);
+    let encrypted = await this.encrypt('teste voltando');
+
+    console.log(decrypted);
+    return this.defaultResponseJSON({ result: { encrypted } });
+  }
 }
 
 module.exports = SyncController;

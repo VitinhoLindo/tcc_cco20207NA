@@ -1,6 +1,16 @@
 class Util {
   constructor() { }
 
+  textToArrayBuffer(value = '') {
+    let buf = unescape(encodeURIComponent(value));
+    let bytes = new Uint8Array(buf.length);
+    for (let index = 0; index < buf.length; index++) {
+      bytes[index] = buf.charCodeAt(index);
+    }
+
+    return bytes;
+  }
+
   arrayBufferToBase64String(binary = new ArrayBuffer()) {
     // cria visualização do binario lido na chave
     var byteArray = new Uint8Array(binary);
@@ -13,6 +23,19 @@ class Util {
 
     // btoa converte para base 64
     return btoa(string);
+  }
+
+  arrayBufferToString(binary = new ArrayBuffer()) {
+    // cria visualização do binario lido na chave
+    var byteArray = new Uint8Array(binary);
+    var string = '';
+
+    for (var index = 0; index < byteArray.byteLength; index++) {
+      // obtem formato de string do binario
+      string += String.fromCharCode(byteArray[index]);
+    }
+
+    return string;
   }
 
   base64StringToArrayBuffer(base64 = '') {

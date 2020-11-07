@@ -29,12 +29,32 @@ class BaseController {
         this.app = _request.getApp();
         this.request.all = () => {
             return Object.assign(
-                {}, 
+                {},
                 this.request.body || {},
                 this.request.params || {},
                 this.request.query || {}
             );
         }
+    }
+
+    async encrypt(value) {
+        let cache = this.app.getCache(this.request.socket.remoteAddress);
+
+        let encryptBuffer = await this.app.crypto.webcrypto.subtle.encrypt({
+            name: this.app.serverKeysAlgorithm,
+            iv: this.app.getServerIv()
+        }, cache.publicKey, Buffer.from(value, 'utf-8'));
+
+        return Buffer.from(encryptBuffer).toString('base64');
+    }
+
+    async decrypt(value = '') {
+        let decryptoBuffer = await this.app.crypto.webcrypto.subtle.decrypt({
+            name: this.app.serverKeysAlgorithm,
+            iv: this.app.getServerIv()
+        }, this.app.serverKeys.privateKey, Buffer.from(value, 'base64'));
+
+        return Buffer.from(decryptoBuffer, 'utf-8').toString();
     }
 
     all() {

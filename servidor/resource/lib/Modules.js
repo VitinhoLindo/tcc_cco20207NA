@@ -20,8 +20,6 @@ class Modules extends Event {
   serverKeyHash = 'SHA-256';
   publicExponent = new Uint8Array([0, 1, 0]);
 
-
-
   http = require('http');
   https = require('https');
   fs = require('fs');

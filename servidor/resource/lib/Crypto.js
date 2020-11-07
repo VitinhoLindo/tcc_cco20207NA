@@ -230,6 +230,9 @@ class Crypto extends Mailer {
     return pemExport;
   }
 
+  getServerIv() {
+    return this.crypto.webcrypto.getRandomValues(new Uint8Array(this.ivLen));
+  }
 
   async serverExportPublicKey() {
     let exportedKey = await this.crypto.webcrypto.subtle.exportKey(
@@ -259,7 +262,16 @@ class Crypto extends Mailer {
   }
 
   async serverImportPublicKey(pem = '') {
-    return this.convertPemToBinary(pem);
+    let keyBuffer = this.convertPemToBinary(pem);
+    return await this.crypto.webcrypto.subtle.importKey(
+      this.publicKeyExportType,
+      keyBuffer,
+      {
+        name: this.serverKeysAlgorithm,
+        hash: this.serverKeyHash
+      },
+      false, ['encrypt']
+    );
   }
 
   cryptoListen() {
