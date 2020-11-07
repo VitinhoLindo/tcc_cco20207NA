@@ -1,7 +1,9 @@
-class Input {
+const Base = require('./Base');
+
+class Input extends Base {
   response = {};
 
-  constructor() { }
+  constructor() { super(); }
 
   static make(label, field) {
     let input = new Input();
@@ -12,7 +14,8 @@ class Input {
         label: label,
         attribute: (!field) ? label : field,
         type: "text",
-        using: { },
+        using: {},
+        style: {},
         rules: ''
       }
     });

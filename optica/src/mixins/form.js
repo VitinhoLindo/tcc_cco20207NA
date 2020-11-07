@@ -20,11 +20,11 @@ export default {
           url: `/interface/${this.fieldName}/`,
           method: 'get'
         })
-  
+
         if (response.status == 'error') {
           throw response.message;
         }
-  
+
         this.fields = response.result;
       } catch (error) {
         console.error(error);
@@ -85,7 +85,8 @@ export default {
       this.fieldName = action.fieldName;
       this.getFields();
     },
-    click(event) {
+    click(event, data) {
+      console.log(event, data);
       try {
         switch (event.shared.action.actionName) {
           case 'submit':

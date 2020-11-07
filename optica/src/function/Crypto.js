@@ -1,4 +1,5 @@
 import Util from './CryptoUtil'
+import CryptoJs from 'crypto-js'
 
 class MyCrypto extends Util {
 

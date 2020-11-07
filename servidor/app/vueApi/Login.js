@@ -1,6 +1,6 @@
-const { 
-  BaseApi, 
-  Fields: { 
+const {
+  BaseApi,
+  Fields: {
     Input,
     Button,
     Link
@@ -22,24 +22,26 @@ class Login extends BaseApi {
   fields() {
     return [
       Input.make('Login', 'login')
-           .using({ placeholder: 'login', cache: { time: 300 } })
-           .rules('min:5|email|required')
-           .protect('hash')
-           .type("mail"),
+        .using({ placeholder: 'login', cache: { time: 300 } })
+        .rules('min:5|email|required')
+        .protect('hash')
+        .type("mail")
+        .style({ 'text-align': 'center' }),
       Input.make('Senha', 'senha')
-           .using({ placeholder: 'senha', cache: { time: 300 } })
-           .rules('min:5|required')
-           .protect('hash')
-           .type('pass'),
+        .using({ placeholder: 'senha', cache: { time: 300 } })
+        .rules('min:5|required')
+        .protect('hash')
+        .type('pass')
+        .style({ 'text-align': 'center' }),
       Link.make('forgotem password')
-            .event('click')
-            .action('field')
-            .path('/interface/forgotem', 'GET')
-            .changeField('forgotem'),
+        .event('click')
+        .action('field')
+        .path('/interface/forgotem', 'GET')
+        .changeField('forgotem'),
       Button.make('sing-in')
-            .event('click')
-            .action('submit')
-            .path('/login', 'POST')
+        .event('click')
+        .action('submit')
+        .path('/login', 'POST')
     ];
   }
 
