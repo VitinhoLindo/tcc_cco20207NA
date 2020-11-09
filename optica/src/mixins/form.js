@@ -36,21 +36,45 @@ export default {
     fieldEvent(field) {
       return (field.shared.event) ? true : false;
     },
-    saveData(data) {
-      if (data.cache) {
-        this.$app.saveTemporariCache(data.attribute, data.value, data.cache.time);
+    async use(original, value) {
+
+      let { shared } = original;
+      console.log(shared);
+
+      if (shared.protect || false) {
+        switch (shared.protect) {
+          case 'hash':
+            value = this.$app.hash(value);
+            break;
+          case 'encrypt':
+            value = await this.$app.encrypt(value);
+            break;
+        }
       }
+
+      if (shared.using || false) {
+        if (shared.using.chache) {
+          if (shared.using.chache.time) {
+            this.$app.save(data.shared.attribute, value, shared.using.chache.time);
+          } else {
+            this.$app.save(data.shared.attribute, value);
+          }
+        }
+      }
+
+      return value;
     },
-    fieldData() {
+    async fieldData() {
       let object = {};
       let attributes = this.$app.getFormFunction(this.name);
+
       for (let attributeName in attributes) {
         let data = attributes[attributeName]();
-        this.saveData(data);
+
+        data.value = await this.use(data.original, data.value);
         object[data.attribute] = data.value;
       }
 
-      console.log(object);
       return object;
     },
     fieldError(attribute, error) {
@@ -68,15 +92,17 @@ export default {
         });
 
         if (response.status == 'error') {
-          if (response.result.error) {
-            let keys = Object.keys(response.result.error);
+          if (!response.result.error)
+            throw response.message;
 
-            for (let key of keys) this.fieldError(key, response.result.error[key]);
-            return;
-          }
+          let keys = Object.keys(response.result.error);
 
-          throw response.message;
+          for (let key of keys) this.fieldError(key, response.result.error[key]);
+
+          return;
         }
+
+        return response;
       } catch (error) {
         console.error(error);
       }
@@ -85,14 +111,13 @@ export default {
       this.fieldName = action.fieldName;
       this.getFields();
     },
-    click(event, data) {
-      console.log(event, data);
+    async click(event) {
       try {
         switch (event.shared.action.actionName) {
           case 'submit':
-            return this.submit(event.shared.action, this.fieldData());
+            return this.submit(event.shared.action, await this.fieldData());
           case 'field':
-            return this.changeField(event.shared.action, this.fieldData());
+            return this.changeField(event.shared.action, await this.fieldData());
         }
       } catch (error) {
         console.error(error);

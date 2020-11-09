@@ -1,6 +1,6 @@
-const { 
-  BaseApi, 
-  Fields: { 
+const {
+  BaseApi,
+  Fields: {
     Input,
     Button,
     Link
@@ -22,14 +22,15 @@ class Forgotem extends BaseApi {
   fields() {
     return [
       Input.make('Login', 'login')
-           .using({ placeholder: 'login', cache: { time: 300 } })
-           .rules('min:5|email|required')
-           .protect('hash')
-           .type("mail"),
+        .using({ placeholder: 'login', cache: { time: 300 } })
+        .rules('min:5|email|required')
+        .protect('hash')
+        .type("mail")
+        .style({ 'text-align': 'center' }),
       Button.make('send')
-            .event('click')
-            .action('submit')
-            .path('/forgotem', 'POST')
+        .event('click')
+        .action('submit')
+        .path('/forgotem', 'POST')
     ];
   }
 

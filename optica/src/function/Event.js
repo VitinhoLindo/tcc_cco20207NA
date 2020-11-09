@@ -4,8 +4,6 @@ class Event extends Crypto {
 
   constructor() {
     super();
-    this.listiners = {};
-    this.rules = {};
   }
 
   addRuleEvent(listiner, count) {
@@ -35,9 +33,9 @@ class Event extends Crypto {
 
   emit(listiner, ...args) {
     if (typeof listiner != 'string') return;
-    if (!this.listiners[listiner])   return;
+    if (!this.listiners[listiner]) return;
 
-    for(let func of this.listiners[listiner])
+    for (let func of this.listiners[listiner])
       func.apply(null, args);
   }
 }

@@ -28,7 +28,6 @@ class Login extends BaseApi {
         .type("mail")
         .style({ 'text-align': 'center' }),
       Input.make('Senha', 'senha')
-        .using({ placeholder: 'senha', cache: { time: 300 } })
         .rules('min:5|required')
         .protect('hash')
         .type('pass')

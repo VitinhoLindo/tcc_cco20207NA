@@ -16,17 +16,12 @@ export default {
       this.error = value;
     },
     get() {
-      console.log(this.data.shared.attribute);
-      let data = {
+      return {
         attribute: this.data.shared.attribute,
         value: this.value,
+        original: this.data,
         error: this.setError
       };
-
-      if (this.data.shared.using && this.data.shared.using.cache)
-        data.cache = { time: this.data.shared.using.cache.time };
-
-      return data;
     }
   },
   mounted() {

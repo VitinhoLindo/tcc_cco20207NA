@@ -1,25 +1,25 @@
-class Storage {
+import Cache from './Cache'
+
+class Storage extends Cache {
   constructor() {
-    this.storage = window.localStorage;
-    this.default = ['shared'];
-    this.data = {};
+    super();
   }
 
-  get(key, parser = 'json') {
+  getStorage(key, parser = 'json') {
     try {
       let value = this.storage.getItem(key);
 
-      if (parser == 'json') 
+      if (parser == 'json')
         return JSON.parse(value);
-      else 
+      else
         return value;
     } catch (error) {
       console.error(error);
-      return null;      
+      return null;
     }
   }
 
-  save(key, value, parser = 'json') {
+  saveStorage(key, value, parser = 'json') {
     try {
       if (parser == 'json')
         value = JSON.stringify(value);
@@ -31,7 +31,7 @@ class Storage {
     }
   }
 
-  delete(key) {
+  deleteStorage(key) {
     try {
       this.storage.removeItem(key);
     } catch (error) {
@@ -39,6 +39,12 @@ class Storage {
       throw error;
     }
   }
+
+  readStorage() {
+    for (let key of this.storageDefault) {
+      this.saveCache(key, this.getStorage(key, 'json') || {});
+    }
+  }
 }
 
-export default new Storage;
+export default Storage;

@@ -1,7 +1,7 @@
-import Collection from '../applications/Collection'
+import Language from './Language'
 
-class Calendar {
-  constructor() {}
+class Calendar extends Language {
+  constructor() { super(); }
 
   getDateObject(date = new Date()) {
     let [day, month, year] = date.toLocaleDateString().split(/\-|\//);
@@ -51,7 +51,7 @@ class Calendar {
   }
 
   getLastDays(calendar = [], current = [], last = []) {
-    let collection = new Collection(current);
+    let collection = new this.Collection(current);
     let info = collection.info(),
       initial = current[info.min],
       gmt = this.getGMT(new Date(initial)),
@@ -139,7 +139,7 @@ class Calendar {
     let dateObject = this.getGMT(date, true);
 
     return {
-      Day: parseInt(dateObject.D), 
+      Day: parseInt(dateObject.D),
       Month: dateObject.M,
       HM: `${h}:${m}`,
       Y: dateObject.Y
@@ -149,6 +149,16 @@ class Calendar {
   createDateUsingObject(date = { year: 2020, month: 1, day: 1 }) {
     return new Date(`${date.year}-${date.month}-${date.day}`);
   }
+
+  getSeccondsUsingMinute(time = 1) {
+    time = parseInt(time) || 1;
+    return time * 60;
+  }
+
+  getMillisecondsUsingMinute(time = 1) {
+    time = this.getSeccondsUsingMinute(time);
+    return time * 1000;
+  }
 }
 
-export default new Calendar;
+export default Calendar;

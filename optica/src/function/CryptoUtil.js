@@ -1,5 +1,8 @@
-class Util {
-  constructor() { }
+import Calendar from './Calendar'
+
+class CryptoUtil extends Calendar {
+
+  constructor() { super(); }
 
   textToArrayBuffer(value = '') {
     let buf = unescape(encodeURIComponent(value));
@@ -92,4 +95,4 @@ class Util {
   }
 }
 
-export default Util;
+export default CryptoUtil;

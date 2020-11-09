@@ -8,10 +8,11 @@ class Modules extends Event {
   saltRange = 24;
   passrange = 100;
 
-  publicKeyExportType = 'spki';
+  publicKeyExportWebType = 'spki';
+  publicKeyExportType = 'pkcs1';
   publicKeyExportFormat = 'pem';
 
-  privateKeyExportType = 'spki';
+  privateKeyExportType = 'pkcs1';
   privateKeyExportFormat = 'pem';
 
   privateKeyCipherServer = 'aes-256-cbc';

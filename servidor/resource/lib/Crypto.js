@@ -236,7 +236,7 @@ class Crypto extends Mailer {
 
   async serverExportPublicKey() {
     let exportedKey = await this.crypto.webcrypto.subtle.exportKey(
-      this.publicKeyExportType,
+      this.publicKeyExportWebType,
       this.serverKeys.publicKey
     );
 
@@ -264,7 +264,7 @@ class Crypto extends Mailer {
   async serverImportPublicKey(pem = '') {
     let keyBuffer = this.convertPemToBinary(pem);
     return await this.crypto.webcrypto.subtle.importKey(
-      this.publicKeyExportType,
+      this.publicKeyExportWebType,
       keyBuffer,
       {
         name: this.serverKeysAlgorithm,
@@ -288,7 +288,6 @@ class Crypto extends Mailer {
         let objectdate = this.getDateObject(res.date);
 
         if (res.reset) this.print([{ message: `New cipher create in ${objectdate.locale}`, color: 'blue' }]);
-        this.print([{ message: `validated date cipher`, color: 'cyan' }])
       } catch (error) {
         console.log(error);
         this.print([{ message: error, color: 'red' }]);

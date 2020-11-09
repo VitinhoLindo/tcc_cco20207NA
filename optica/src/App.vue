@@ -2,15 +2,6 @@
 <router-view />
 </template>
 
-<script>
-export default {
-    mounted() {
-        console.log();
-        // this.$app.sync(window);
-    },
-};
-</script>
-
 <style lang="scss">
 html,
 body,

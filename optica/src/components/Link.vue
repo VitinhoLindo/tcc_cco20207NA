@@ -12,7 +12,6 @@ export default {
         click(event = new MouseEvent()) {
             event.preventDefault();
             this.data.internalEvent = event;
-            console.log(this.data);
             this.$emit("event", this.data);
         },
     },

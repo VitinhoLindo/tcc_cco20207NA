@@ -1,27 +1,8 @@
-import Util from './CryptoUtil'
-import CryptoJs from 'crypto-js'
+import CryptoUtil from './CryptoUtil'
 
-class MyCrypto extends Util {
+class MyCrypto extends CryptoUtil {
 
-  constructor() {
-    super();
-    this.keyAlgorithm = 'RSA-OAEP';
-    this.hashAlgorithm = 'SHA-256';
-    this.modulusLength = 2048;
-    this.publicExponent = new Uint8Array([1, 0, 1]);
-    this.ivLen = 16;
-
-    this.secret = {
-      app: {
-        privateKey: '',
-        publicKey: ''
-      },
-      server: {
-        publicKey: '',
-        datePublic: new Date()
-      },
-    };
-  }
+  constructor() { super(); }
 
   async generateKeys() {
     try {
@@ -95,18 +76,32 @@ class MyCrypto extends Util {
     switch (option.algorithm) {
       case 'sha256':
       default:
-        hashable = CryptoJs.SHA256(value);
+        hashable = this.CryptoJs.SHA256(value);
         break;
     }
 
     switch (option.format) {
       case 'hex':
       default:
-        hash = hashable.toString(CryptoJs.enc.Hex);
+        hash = hashable.toString(this.CryptoJs.enc.Hex);
         break;
     }
 
     return hash;
+  }
+
+  async sync() {
+    await this.generateKeys();
+    let key = await this.exportPublicKey();
+
+    let response = await this.request({
+      url: '/sync',
+      method: 'POST',
+      data: { publicKey: key, date: new Date() }
+    });
+
+    this.secret.server.publicKey = await this.importPublicKey(response.result.key);
+    this.secret.server.datePublic = new Date(response.result.date);
   }
 }
 
